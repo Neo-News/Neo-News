@@ -1,50 +1,55 @@
 {% extends 'base.html' %}
 {% block head %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
 {% endblock head %}
 
 {% block content %}
 <section class="signup-detail">
   <div class="signup-detail-logo"><h1>SIGN IN</h1></div>
   <div class="signup-detail-user-base-infor">
-    <label for="base-user-name">이름</label>
-    <input id="base-user-name" type="text" placeholder="손희정">
-    <label for="base-user-email">메일주소</label>
+    <label class="base-user-name-label" for="base-user-name">이름</label><br>
+    <input id="base-user-name" type="text" placeholder="손희정"><br>
+    <label class="base-user-email-label" for="base-user-email">메일주소</label><br>
     <input id="base-user-email" type="text" placeholder="dkfkffkf115@naver.com">
   </div>
 
   <form action=""method="POST">
     {% csrf_token %}
-  <div class="signup-detail-category-title">관심있는 카테고리를 선택해주세요 :-)</div>
-  <ul class="signup-detail-category">
+  <div class="signup-detail-category-title"><span> 관심있는 카테고리를 선택해주세요 :-)</span></div>
+  <ul class="signup-detail-category-ul">
     <div class="category-li01">
     <li><label for="policy"><input id="policy" name='checkbox' type="checkbox">정치</label></li>
-    <li><label for=""><input id="" name='checkbox' type="checkbox">경제</label></li>
-    <li><label for=""><input id=""name='checkbox' type="checkbox">사회</label></li>
+    <li><label for=""><input id="" name='checkbox01' type="checkbox">경제</label></li>
+    <li><label for=""><input id=""name='checkbox02' type="checkbox">사회</label></li>
   </div>
   <div class="category-li02">
-    <li><label for=""><input name='checkbox' type="checkbox">정치</label></li>
-    <li><label for=""><input name='checkbox' type="checkbox">경제</label></li>
-    <li><label for=""><input name='checkbox' type="checkbox">사회</label></li>
+    <li><label for=""><input name='checkbox03' type="checkbox">정치</label></li>
+    <li><label for=""><input name='checkbox04' type="checkbox">경제</label></li>
+    <li><label for=""><input name='checkbox05' type="checkbox">사회</label></li>
   </div>
   <div class="category-li03">
-    <li><label for=""><input name='checkbox' type="checkbox">정치</label></li>
+    <li><label for=""><input name='checkbox06' type="checkbox">정치</label></li>
   </div>
   </ul>
-  <div class="signup-detail-keyword-title">추가하고 싶은 키워드를 입력해주세요 :-)</div>
+  <div class="signup-detail-keyword-title"><span> 추가하고 싶은 키워드를 입력해주세요 :-)</span></div><br>
   
   <div class="signup-detail-keyword-div">
-  <input class="signup-detail-keyword-input" type="text" name="keyword">
-  <a href="">추가</a>
+  <input class="signup-detail-keyword-input" type="text" name="keyword" placeholder="키워드를 입력해주세요">
+  <a class="keyword-add" href="">추가</a>
 
   <ul class="keyword-input-ul">
     <li class="keyword-list">
       <span class="keyword">BTS</span>
       <i class="fas fa-times"></i>
     </li>
+    <li class="keyword-list">
+      <span class="keyword">BTS</span>
+      <i class="fas fa-times"></i>
+    </li>
   </ul>
-</div>
-<button type="submit">가입하기</button>
+</div><br>
+<button class="signup-detail-submit" type="submit">가입하기</button>
 
 </form>
 </section>
