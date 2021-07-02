@@ -1,0 +1,24 @@
+/* 전체 */
+body{
+  font-size: 10px;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+/* base.html */
+.container{
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color:rgb(249, 247, 244);
+}
+.main-section{
+  background-color: red;
+  display: flex;
+  justify-content: space-between;
+}
+.main-div{
+  background-color: pink;
+  display: flex;
+}
+.main-user{
+  background-color: yellow;
+}
