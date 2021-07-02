@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import View
-
+from django.contrib.auth.views import LoginView
 
 class SignupDeatilView(View):
   def get(self,request, *args, **kwargs):
@@ -8,3 +8,7 @@ class SignupDeatilView(View):
 
   def post(self, *args, **kwargs):
     pass
+
+class UserLoginView(LoginView):
+    template_name = 'login.html'
+    

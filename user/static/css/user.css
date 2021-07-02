@@ -1,0 +1,43 @@
+.panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 0;
+}
+
+.login-form > input{
+    width: 204px;
+    height: 25px;
+    margin: 3px 0;
+    border-radius: 4px;
+    border: 1px solid beige;
+}
+
+.login-btn {
+    width: 208px;
+    height: 33px;
+    margin: 3px 0;
+    border: none;
+    border-radius: 4px;
+    background-color: pink;
+}
+
+.kakao-btn > a> img {
+    width: 210px;
+    height: 30px;
+    margin: 3px 0;
+}
+
+.naver-btn > a > img {
+    width: 210px;
+    height: 30px;
+    margin: 3px 0;
+}
+
+.resend-email {
+    position: relative;
+    left: 130px;
+    text-decoration: none;
+    color: dodgerblue;
+}
