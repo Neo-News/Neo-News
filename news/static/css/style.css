@@ -1,4 +1,15 @@
 /* 전체 */
+*{
+  margin: 0;
+  padding: 0;
+}
+li{
+  list-style: none;
+}
+a{
+  color: black;
+  text-decoration: none;
+}
 body{
   font-size: 10px;
   font-family: 'Noto Sans', sans-serif;
@@ -6,20 +17,176 @@ body{
 
 /* base.html */
 .container{
-  max-width: 1200px;
+  max-width: 1100px;
   margin: 0 auto;
-  background-color:rgb(249, 247, 244);
+  box-sizing: border-box; 
 }
 .main-section{
-  background-color: red;
+  background-color: rgb(249, 247, 244);
+  padding:15px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
 }
+.main-logo{
+  width: 50px;
+  height: 40px;
+}
+.main-title{
+  color: rgb(63, 63, 63);
+  margin-left: 5px;
+  line-height: 1.5;
+  letter-spacing:2px;
+  font-weight: 300;
+  font-size: 1.6rem;
+  font-family: 'Black Han Sans', sans-serif;
+}
 .main-div{
-  background-color: pink;
   display: flex;
 }
 .main-user{
-  background-color: yellow;
+}
+.signin,
+.signup{
+  margin-left: 20px;
+  width: 70px;
+  height: 35px;
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(219, 217, 217);
+  cursor: pointer;
 }
 
+/* banner */
+.banner{
+  background-color: rgb(249, 247, 244);
+  text-align: center;
+  height: 470px;
+  position: relative;
+}
+.banner-all{
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.banner-deco{
+  display: flex;
+  justify-content: space-between;
+  align-items:center
+}
+.banner-deco-word{
+  display: flex;
+  align-self: flex-end;
+  margin-bottom: 30px;
+}
+.banner-word1,
+.banner-word2{
+  font-size: 2rem;
+  margin-right:15px;
+  font-family: 'Black Han Sans', sans-serif;
+  color: rgb(63, 63, 63);
+}
+.banner-word3{
+  font-family: 'Black Han Sans', sans-serif;
+  margin-top: 17px;
+  font-size: 2rem;
+  color: rgb(63, 63, 63);
+}
+.banner-img{
+  width: 200px;
+  animation: balloon 1.5s infinite;
+  background-color: #fff;
+}
+
+@keyframes balloon{
+  0%{
+    transform: rotate(-5deg);
+  }
+  50%{
+    transform: rotate(15deg);
+  }
+  100%{
+    transform: rotate(-5deg);
+  }
+}
+
+.banner-balloon{
+  display: inline-block;
+
+}
+
+/* index - login category, non-login category */
+.category{
+  margin: 40px 0;
+  text-align: center;
+}
+.cateogry-ul{
+  display: flex;
+  display: none;
+}
+.category-li{
+  margin: 0 10px;
+}
+.category-li a{
+  font-size: .9rem;
+  letter-spacing: 3px;
+  padding: 5px;
+  border-radius: 5px;
+}
+.active{
+  background-color: rgb(248, 161, 104);
+}
+.category-non-login{
+  color: rgb(83, 82, 82);
+  font-size: 1.1rem;
+}
+.quote{
+  font-size: 13px;
+}
+
+/* index - article lists */
+.news-ul{
+  border-top: 1px solid #eee;
+  position: relative;
+}
+.news-li{
+  padding: 40px 0;
+  box-sizing: border-box;
+  display: flex;
+  border-bottom: 1px solid #eee;
+}
+.news-img img{
+  width: 130px;
+  height: 130px;
+}
+.news-contents{
+  margin-left: 20px;
+}
+.news-title{
+  font-size: 1.6rem;
+  margin-bottom: 15px;
+}
+.news-content{
+  line-height: 1.2;
+  font-size: 1.2rem;
+}
+.news-social{
+  color: rgb(97, 94, 94);
+  font-size: .8rem;
+  display: flex;
+  position: absolute;
+  bottom: 45px;
+}
+.news-social-infor{
+  margin-left: 20px;
+}
+.news-social-comment{
+  margin-right: 5px;
+}
+.news-social-like,
+.news-social-comment{
+  color:rgb(143, 141, 141);
+}

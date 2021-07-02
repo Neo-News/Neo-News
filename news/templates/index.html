@@ -4,14 +4,25 @@
 {% endblock head %}
 
 {% block content %}
-
+{% include 'banner.html' %}
 <section class="category">
-  <p class="category-non-login"><i class="fas fa-quote-left"></i>로그인 하시면 관심있는 이슈를 기사별로 선택해서 보실 수 있어요<i class="fas fa-quote-right"></i></p>
+  <p class="category-non-login"><i class="quote fas fa-quote-left"> </i> 로그인 하시면 관심있는 이슈를 기사별로 선택해서 보실 수 있어요 <i class="quote fas fa-quote-right"> </i></p>
+  <ul class="cateogry-ul">
+    <li class="category-li">
+      <a class="active" href="">전체보기</a>
+    </li>
+    <li class="category-li">
+      <a href="">정치</a>
+    </li>
+    <li class="category-li">
+      <a href="">경제</a>
+    </li>
+  </ul>
 </section>
 
 <ul class="news-ul">
   <li class="news-li">
-    <div class="news-img"><img src="" alt="">
+    <div class="news-img"><img src="static/img/logo.png" alt="">
     </div>
     <div class="news-contents">
       <div class="news-title">Text Double click to edit</div>
@@ -19,16 +30,17 @@
       </div>
       <div class="news-social">
         <div class="news-infor">
-        <span class="news-portal">네이버</span>
-        <span class="news-press">인사이트</span>
-        <span class="news-date">2021-07-01</span>
+        <span class="news-portal">네이버 · </span>
+        <span class="news-press"> 인사이트 · </span>
+        <span class="news-date"> 2021-07-01</span>
       </div>
-      <div class="news-social infor">
-        <span class="news-social-comment"><i class="fas fa-comment-alt"></i>12</span>
-        <span class="news-social-like"><i class="fas fa-heart"></i>2</span>
+      <div class="news-social-infor">
+        <span class="news-social-comment"><i class="fas fa-comment-alt"> </i> 12</span>
+        <span class="news-social-like"><i class="fas fa-heart"> </i> 2</span>
       </div>
       </div>
     </div>
   </li>
+  
 </ul>
 {% endblock content %}
