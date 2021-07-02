@@ -20,10 +20,10 @@
     <section class="main-section">
       <div class="main-div">
         <img class="main-logo" src="{% static 'img/logo.png' %}" alt="로고이미지">
-        <h1 class="main-title">너뉴스</h1>
+        <a href="{% url 'index' %}"><h1 class="main-title">너뉴스</h1></a>
       </div>
       <div class="main-user">
-        <!-- <a href="{% url 'user:signup_detail' %}"><button class="signin">로그인</button></a> -->
+        <a href="{% url 'user:signup_detail' %}"><button class="signin">설문</button></a>
         <a href="{% url 'user:login' %}"><button class="signin">로그인</button></a>
         <button class="signup">회원가입</button>
       </div>
