@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock head %}
+
+{% block content %}
+<section class="detail-section">
+  <div class="detail-section-title">
+    <h1 class="detail-title">너는 어디 있으랴?</h1>
+    <div class="detail-infor">
+      <span class="detail-portal">네이버</span>
+      <span class="detail-date">21.07.21</span>
+    </div>
+  </div>
+
+  <div class="detail-image"><img src= "{% static 'img/logo.png' %}" alt=""></div>
+  <p class="detail-content">
+    너는 어디 있으랴?
+    그와 같지 못하다 할지라도 창공에 반짝이는 뭇 별과 같이 산야에 피어나는 군영과 같이 이상은 실로 인간의
+    
+    뿐이다 낙원을 장식하는 천자만홍이 어디 있으며 인생을 풍부하게 하는 온갖 과실이 어디 있으랴? 이상! 우리의 청춘이 가장 많이 품고 있는 이상! 이것이야말로 무한한 가치를 가진 것이다 사람은 크고 작고 간에 이상이 있음으로써 용감하고 굳세게 살 수 있는 것이다 석가는 무엇을 위하여 설산에서
+    
+    가장 많이 품고 있는 이상! 이것이야말로 무한한 가치를 가진 것이다 사람은 크고 작고 간에 이상이 있음으로써 용감하고 굳세게 살 수 있는 것이다 석가는 무엇을 위하여 설산에서 고행을 하였으며
+  </p>
+  <div class="detail-original">
+    <a href="">원본기사 보러가기</a>
+  </div>
+  <div class="detail-social">
+    <span>이 기사 찜하기</span>
+    <span>카카오톡으로 공유하기</span>
+  </div>
+
+  <div class="detail-comment">
+    <form action=""method='POST'>
+      <input type="text" class="detail-comment-input" placeholder="댓글을 입력해주세요.">
+      <button class="detail-comment-submit">등록</button>
+    </form>
+  </div>
+  <ul class="detail-comments-ul">
+    <li class="detail-comment-list">
+      <div class="comment-user-infor">
+        <span class="user-nickname">뚜바</span>
+        <span class="user-date">2시간전</span>
+      </div>
+      <div class="comment-content">
+        <p>아싸 뚜바두바 이네요, 그럼 어떻게 되는 건가욤</p>
+      </div>
+    </li>
+  </ul>
+</section>
+{% endblock content %}

@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', IndexDetailView.as_view(), name='index'),
     path('user/', include('user.urls')),
+    path('news/', include('news.urls')),
 ]
