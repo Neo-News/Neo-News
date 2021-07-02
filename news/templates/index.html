@@ -1,2 +1,34 @@
 {% extends 'base.html' %}
+{% block head %}
+{% load static %}
+{% endblock head %}
 
+{% block content %}
+
+<section class="category">
+  <p class="category-non-login"><i class="fas fa-quote-left"></i>로그인 하시면 관심있는 이슈를 기사별로 선택해서 보실 수 있어요<i class="fas fa-quote-right"></i></p>
+</section>
+
+<ul class="news-ul">
+  <li class="news-li">
+    <div class="news-img"><img src="" alt="">
+    </div>
+    <div class="news-contents">
+      <div class="news-title">Text Double click to edit</div>
+      <div class="news-content">Text - Double click to edit. Text - Double click to edit. Text - Double click to edit. Text - Double click to edit. Text - Double click. Text - Double cli...
+      </div>
+      <div class="news-social">
+        <div class="news-infor">
+        <span class="news-portal">네이버</span>
+        <span class="news-press">인사이트</span>
+        <span class="news-date">2021-07-01</span>
+      </div>
+      <div class="news-social infor">
+        <span class="news-social-comment"><i class="fas fa-comment-alt"></i>12</span>
+        <span class="news-social-like"><i class="fas fa-heart"></i>2</span>
+      </div>
+      </div>
+    </div>
+  </li>
+</ul>
+{% endblock content %}
