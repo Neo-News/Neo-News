@@ -298,3 +298,154 @@ body{
   color: #fff;
   cursor: pointer;
 }
+
+/* news detail page */
+.detail-section{
+  padding-top: 50px;
+  background-color: rgb(249, 247, 244);
+  text-align: center;
+}
+.detail-section-title{
+  padding-bottom: 40px;
+  border-bottom: 1px solid rgb(209, 207, 207);
+  width: 70%;
+  margin: 0 auto;
+
+}
+.detail-title{
+  font-size: 2rem;
+}
+.detail-infor{
+  color: rgb(97, 94, 94);
+  margin-top: 5px;
+  font-size: .8rem;
+}
+
+.detail-image{
+  padding: 40px 0;
+}
+.detail-image img{
+  width: 70%;
+  height: 400px;
+}
+
+.detail-content{
+  margin: 0 auto;
+  width: 70%;
+  padding: 40px 0;
+  font-size: 1.3rem;
+  line-height: 1.5;
+}
+.detail-original{
+  width: 70%;
+  margin: 0 auto;
+  text-align: left;
+  padding: 40px 0;
+  font-size: .9rem;
+}
+.detail-original a:hover{
+  color:rgb(248, 161, 104);
+  font-weight: bold;
+}
+.detail-social{
+  border-bottom: 1px solid rgb(209, 207, 207);
+  padding-bottom:40px ;
+  width: 70%;
+  margin: 0 auto;
+  text-align: right;
+  font-size: .9rem;
+}
+.detail-social span{
+  margin-left: 15px;
+  cursor: pointer;
+}
+.social-heart{
+  font-size: 1.1rem;
+  color: rgb(209, 207, 207);
+}
+.social-share{
+  font-size: 1.1rem;
+  color: rgb(206, 173, 28);
+}
+
+.detail-comment{
+  width: 70%;
+  margin: 0 auto;
+  padding:40px 0 ;
+}
+.detail-comment-input{
+  padding: 14px 10px;
+  border: none;
+  border: 1px solid rgb(197, 194, 194);
+  border-radius: 5px;
+ width: 80%;
+}
+.detail-comment-submit{
+  padding: 12px 10px;
+  border-radius: 5px;
+  border: none;
+  color: #fff;
+  background-color:rgb(248, 161, 104);
+  cursor: pointer; 
+}
+.detail-comments-ul{
+  width: 70%;
+  margin: 0 auto;
+  padding: 0px 35px 50px 35px;
+  box-sizing: border-box;
+  text-align: left;
+}
+.detail-comment-list{
+  position: relative;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgb(230, 225, 225);
+}
+.comment-user-infor{
+  display: flex;
+  justify-content: space-between;
+}
+.user-nickname{
+  font-size: .9rem;
+  font-weight: bold;
+}
+.user-date{
+  font-size: .7rem;
+}
+.fa-ellipsis-v{
+  cursor: pointer;
+  margin-right: 10px;
+  font-size: .9rem;
+}
+.comment-edit-div{
+  width: 100px;
+  height: 100px;
+  background-color: rgb(235, 233, 233);
+  border-radius: 5px;
+  position: absolute;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  top: 20px;
+}
+.comment-content{
+  margin-top: 3px;
+  font-size: .8rem;
+}
+.comment-edit,
+.comment-delete{
+  margin: 10px;
+  height: 30px;
+  width: 90%;
+  border: none;
+  border-radius: 5px;
+  background-color:rgb(124, 123, 122);
+  color: #fff;
+  cursor: pointer;
+}
+.comment-edit-div button:hover{
+  background-color:rgb(248, 161, 104);
+}
+.non-clicked{
+  display: none;
+}
