@@ -10,9 +10,8 @@
   <div class="news-infor-div">
   <div class="news-infor">
     <ul class="infor-ul">
-      <li class="profile-infor"><button class="clicked profile-btn" onclick="profileInfor(event)" ; href="#"><i
-            class="fas fa-user-circle"></i><span>언론사 선택</span></button></li>
-      <li class="write-infor"><button class="write-btn" onclick="writeInfor(event)" ;><i class="fas fa-pen"></i><span>키워드 선택</span></button></li>
+      <li class="press-infor"><button class="clicked press-btn" onclick="pressInfor(event)" ; href="#"><i class="far fa-newspaper"></i><span>언론사 선택</span></button></li>
+      <li class="keyword-infor"><button class="keyword-btn" onclick="keywordInfor(event)" ;><i class="far fa-bell"></i><span>키워드 선택</span></button></li>
       
     </ul>
   </div>
@@ -29,3 +28,23 @@
   </div>
 </section>
 {% endblock content %}
+
+{% block script %}
+<script>
+function pressInfor(e){
+  document.querySelector('.press-btn').classList.add('clicked');
+  document.querySelector('.keyword-btn').classList.remove('clicked');
+  document.querySelector('.news-infor-edit-title').innerText = '언론사 선택하기'
+  document.querySelector('.news-infor-edit-content').innerText="언론사 선택해제시 해당 언론사에 관한 기사들은 제외되요 :-) 받고싶지 않은 언론사가 있다면 선택을 해제해주세요."
+  document.querySelector('.news-infor-contents').innerHTML =`{% include 'infor-press.html' %}`
+}
+
+function keywordInfor(e){
+  document.querySelector('.press-btn').classList.remove('clicked');
+  document.querySelector('.keyword-btn').classList.add('clicked');
+  document.querySelector('.news-infor-edit-title').innerText = '키워드 선택하기'
+  document.querySelector('.news-infor-edit-content').innerText="키워드 삭제 시 키워드가 카테고리에서 사라져요 :-) 새롭게 추가할 키워드가 있다면 입력해주세요."
+  document.querySelector('.news-infor-contents').innerHTML =`{% include 'infor-keyword.html' %}`
+}
+</script>
+{% endblock script %}
