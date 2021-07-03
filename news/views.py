@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.views.generic import DetailView
+from django.views.generic import DetailView,View
 # Create your views here.
 
 
@@ -14,3 +14,9 @@ class IndexDetailView(DetailView):
 class NewsDetailView(DetailView):
   def get(self, request, **kwargs):
     return render(request, 'detail.html')
+
+
+# 카테고리나, 키워드 수정하는 페이지
+class NewsInforEditView(View):
+    def get(self, request, **kwargs):
+      return render(request, 'infor-edit.html')

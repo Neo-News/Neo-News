@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock head %}
+
+{% block content %}
+<section class="news-infor-edit">
+  <div class="news-infor-div">
+  <div class="news-infor">
+    <ul class="infor-ul">
+      <li class="profile-infor"><button class="clicked profile-btn" onclick="profileInfor(event)" ; href="#"><i
+            class="fas fa-user-circle"></i><span>언론사 선택</span></button></li>
+      <li class="write-infor"><button class="write-btn" onclick="writeInfor(event)" ;><i class="fas fa-pen"></i><span>키워드 선택</span></button></li>
+      
+    </ul>
+  </div>
+  <div class="news-infor-description">
+    <p class="news-infor-edit-title">언론사 선택하기</p>
+    <p class="news-infor-edit-content">언론사 선택해제시 해당 언론사에 관한 기사들은 제외되요 :-) 
+      받고싶지 않은 언론사가 있다면 선택을 해제해주세요.
+    </p>
+  </div>
+  </div>
+
+  <div class="news-infor-contents">
+    {% include 'infor-press.html' %}
+  </div>
+</section>
+{% endblock content %}
