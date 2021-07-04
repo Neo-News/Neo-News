@@ -211,7 +211,6 @@ body{
 }
 .signup-detail-user-base-infor{
   display: inline-block;
-  /* background-color: red; */
   align-items: center;
   position: relative;
   margin-bottom: 70px;
@@ -763,9 +762,23 @@ border-bottom: 1px solid rgb(228, 226, 226);
 .infor-keyword-input{
   width: 70%;
 }
+.signup-detail-keyword-div{
+  width: 90%;
+}
+.signup-detail-keyword-input{
+  width: 70%;
+}
+.keyword-list{
+  width: 80%;
+  margin: 0 auto;
+}
+
 }
 
 @media screen and (max-width:370px){
+  .banner{
+    height: 350px;
+  }
   .banner-word1,
   .banner-word2{
     font-size: 1.2rem;
