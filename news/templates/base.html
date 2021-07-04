@@ -25,7 +25,7 @@
       <div class="main-user">
         <span class="main-social">
           <a href="{% url 'news:infor-edit' %}"><i class="adjust-icon fas fa-sliders-h"></i></a>
-          <a href=""><i class="user-icon fas fa-user"></i></a>
+          <a href="{% url 'user:infor-edit' %}"><i class="user-icon fas fa-user"></i></a>
         </span>
         <a href="{% url 'user:signup_detail' %}"><button class="signin">설문</button></a>
         <a href="{% url 'user:login' %}"><button class="signin">로그인</button></a>

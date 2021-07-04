@@ -9,6 +9,12 @@ class SignupDeatilView(View):
   def post(self, *args, **kwargs):
     pass
 
+
 class UserLoginView(LoginView):
     template_name = 'login.html'
     
+
+class UserInforEditView(View):
+
+    def get(self, request, **kwargs):
+      return render(request, 'user-infor-edit.html')

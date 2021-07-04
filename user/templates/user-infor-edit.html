@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/user.css' %}">
+{% endblock head %}
+
+{% block content %}
+<section class="user-infor-edit">
+  <div class="user-infor-div">
+  <div class="user-infor">
+    <ul class="user-infor-ul">
+      <li class="user-infor"><button class="clicked user-infor-btn" onclick="userInfor(event)" ; href="#"><i class="far fa-newspaper"></i><span>정보 수정</span></button></li>
+      <li class="user-like"><button class="user-like-btn" onclick="likeInfor(event)" ;><i class="far fa-bell"></i><span>찜 한 기사</span></button></li>
+      <li class="user-comment"><button class="user-comment-btn" onclick="commentInfor(event)" ;><i class="far fa-bell"></i><span>댓글 단 기사</span></button></li>
+      
+    </ul>
+  </div>
+  </div>
+
+  <div class="user-infor-contents">
+ {% include 'user-infor.html' %}
+  </div>
+</section>
+{% endblock content %}
+
+{% block script %}
+<script>
+function userInfor(e){
+  document.querySelector('.user-infor-btn').classList.add('clicked');
+  document.querySelector('.user-like-btn').classList.remove('clicked');
+  document.querySelector('.user-comment-btn').classList.remove('clicked');
+  document.querySelector('.user-infor-contents').innerHTML=`{% include 'user-infor.html'%}`;
+}
+function commentInfor(e){
+  document.querySelector('.user-infor-btn').classList.remove('clicked');
+  document.querySelector('.user-like-btn').classList.remove('clicked');
+  document.querySelector('.user-comment-btn').classList.add('clicked');
+  document.querySelector('.user-infor-contents').innerHTML=`{% include 'user-comment.html'%}`;
+}
+function likeInfor(e){
+  document.querySelector('.user-infor-btn').classList.remove('clicked');
+  document.querySelector('.user-like-btn').classList.add('clicked');
+  document.querySelector('.user-comment-btn').classList.remove('clicked');
+  document.querySelector('.user-infor-contents').innerHTML=`{% include 'user-like.html'%}`;
+}
+  
+  
+</script>
+{% endblock script %}
