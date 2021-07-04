@@ -1,3 +1,10 @@
+/* user login, signup page */
+.base {
+  background-color: rgb(249, 247, 244);
+  box-sizing: border-box;
+  padding-top: 90px;
+}
+
 .panel {
     display: flex;
     flex-direction: column;
@@ -39,10 +46,10 @@
     border-radius: 3px;
     font-weight: bold;
     color: white;
-    background-color: #E68A00;
-}
-.login-btn:hover, .signup-btn:hover {
-  background-color: #F7B34F;
+    background-color: rgb(248, 161, 104);
+  }
+  .login-btn:hover, .signup-btn:hover {
+    background-color: #F7B34F;
   box-shadow: 0px 0px 5px 0px rgb(150, 147, 147);
 }
 
@@ -62,6 +69,7 @@
     text-decoration: none;
     color: dodgerblue;
     margin: 5px 0;
+    font-size: 12px;
 }
 
 
