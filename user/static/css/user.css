@@ -6,47 +6,69 @@
     padding: 50px 0;
 }
 
-.login-form > input{
-    width: 204px;
-    height: 25px;
-    margin: 3px 0;
-    border-radius: 4px;
-    border: 1px solid beige;
+.neonews-logo {
+  position: relative;
+  left: 5px;
+  width: 250px;
+  height: 250px;
+  /* width: 250px;
+  height: 200px; */
 }
 
-.login-btn {
-    width: 208px;
-    height: 33px;
+.login-form,.resend-email {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-form > input, .signup-form > input{
+    width: 260px;
+    height: 30px;
+    margin: 13px 0;
+    border-radius: 3px;
+    border: 1px solid beige;
+    box-shadow: 0px 0px 5px 0px rgb(150, 147, 147);
+}
+
+.login-btn, .signup-btn {
+    width: 267px;
+    height: 35px;
     margin: 3px 0;
     border: none;
-    border-radius: 4px;
-    background-color: pink;
+    border-radius: 3px;
+    font-weight: bold;
+    color: white;
+    background-color: #E68A00;
+}
+.login-btn:hover, .signup-btn:hover {
+  background-color: #F7B34F;
+  box-shadow: 0px 0px 5px 0px rgb(150, 147, 147);
 }
 
 .kakao-btn > a> img {
-    width: 210px;
-    height: 30px;
-    margin: 3px 0;
+  width: 267px;
+  height: 35px;
+  margin: 5px 0;
 }
 
 .naver-btn > a > img {
-    width: 210px;
-    height: 30px;
-    margin: 3px 0;
+  width: 267px;
+  height: 35px;
+  margin: 5px 0;
 }
 
-.resend-email {
-    position: relative;
-    left: 130px;
+.resend-email, .find_password {
     text-decoration: none;
     color: dodgerblue;
+    margin: 5px 0;
 }
 
 
 /* user infor edit page */
 .user-infor-edit{
-  display: flex;
-  justify-content: space-around;
+    display: flex;
+    justify-content: space-around;
     background-color: rgb(249, 247, 244);
     padding-top: 150px;
     height: 800px;
