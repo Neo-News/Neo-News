@@ -759,12 +759,34 @@ border-bottom: 1px solid rgb(228, 226, 226);
   margin:0px;
 }
 
-
 /* news infor page - include infor-keyword page */
-
-
 .infor-keyword-input{
   width: 70%;
 }
 }
 
+@media screen and (max-width:370px){
+  .banner-word1,
+  .banner-word2{
+    font-size: 1.2rem;
+  }
+  .banner-word3{
+    font-size: 1.4rem;
+  }
+  .banner-img{
+    width: 130px;
+  }
+
+}
+@media screen and (max-width:320px){
+  .banner-word1,
+  .banner-word2{
+    font-size: 1rem;
+  }
+  .banner-word3{
+    font-size: 1.4rem;
+  }
+  .banner-img{
+    width: 100px;
+  }
+}

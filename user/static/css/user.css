@@ -166,3 +166,17 @@
   font-size: 1rem;
   cursor: pointer;
 }
+
+/* user responsive */
+@media screen and (max-width:576px){
+  .user-infor-edit{
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+ 
+  .user-infor-contents{
+    margin: 0 auto;
+    width: 90%;
+  }
+}
