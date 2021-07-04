@@ -613,4 +613,158 @@ border-bottom: 1px solid rgb(228, 226, 226);
   cursor: pointer;
 }
 
-/*  */
+/* responsive 반응형 layout */
+
+/*news banner page responsive */
+@media screen and (max-width:576px){
+  .main-section{
+    width: 90%;
+    margin: 0 auto;
+  }
+  .category-non-login{
+    width: 80%;
+    margin: 0 auto;
+  }
+  .banner-all{
+    width: 80%;
+    top: 15%;
+  }
+  .banner-word1,
+  .banner-word2{
+    font-size: 1.3rem;
+  }
+  .banner-word3{
+    font-size: 1.6rem;
+  }
+  .banner-img{
+    width: 150px;
+  }
+
+/*news/list responsive */
+  .news-ul{
+    width: 80%;
+    margin: 0 auto;
+  }
+  .news-img img{
+    width: 100px;
+    height: 100px;
+  }
+  .news-title{
+    font-size: 1.1rem;
+  }
+  .news-content{
+    display: none;
+  }
+  .news-social{
+    font-size: .7rem;
+    flex-direction: column;
+  }
+  .news-social-infor{
+    margin: 0;
+    margin-left: 5px;
+  }
+  .news-social-comment{
+    margin-right: 5px;
+  }
+/* news/detail responsive */
+.detail-section-title{
+  width: 90%;
+}
+.detail-image{
+  text-overflow: ellipsis;
+}
+.detail-image img{
+  width: 90%;
+  height: 300px;
+  /* text-overflow: ellipsis; */
+}
+.detail-content{
+  width: 90%;
+  padding: 20px 0;
+  font-size: 1.2rem;
+}
+.detail-original{
+  width: 87%;
+
+}
+.detail-social{
+  width: 90%;
+  text-align: right;
+  font-size: .8rem;
+}
+.social-heart{
+  font-size: 1rem;
+}
+.social-share{
+  font-size: 1rem;
+}
+.detail-comment{
+  width: 90%;
+  margin: 0 auto;
+}
+.detail-comment-input{
+  width: 70%;
+}
+
+.detail-comments-ul{
+  width: 90%;
+  padding: 20px;
+}
+
+.comment-user-infor{
+  margin-bottom: 10px;
+}
+.detail-comment-list p{
+  width: 90%;
+}
+.comment-edit,
+.comment-delete{
+  margin: 10px;
+  padding: 0px 5px;
+  box-sizing: border-box;
+  border: none;
+  border-radius: 5px;
+  background-color:rgb(124, 123, 122);
+  color: #fff;
+  cursor: pointer;
+}
+.comment-edit-div{
+  width: 80px;
+  transform: translateX(-40px);
+}
+/* news infor edit page */
+.news-infor-edit{
+  background-color: rgb(249, 247, 244);
+  /* padding-top: 50px; */
+  height: 800px;
+}
+.news-infor-back{
+  margin-left: 30px;
+  font-size: 1.9rem;
+  margin-bottom: 40px;
+}
+
+.news-infor-div{
+  text-align: center;
+  flex-direction: column-reverse;
+  width: 80%;
+}
+
+.news-infor-description{
+  width: 100%;
+  margin-bottom: 40px;
+}
+
+.infor-ul{
+  margin:0px;
+}
+
+
+/* news infor page - include infor-keyword page */
+
+
+.infor-keyword-input{
+  width: 70%;
+}
+}
+
