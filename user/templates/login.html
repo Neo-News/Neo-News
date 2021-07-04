@@ -17,35 +17,36 @@
 
 <div class="panel registration">
     <div class="panel-body">
-        <img src="" alt="" width="208" height="250">
+        <img class="neonews-logo" src="{% static 'img/neonews_logo.png' %}" alt="neonews_logo">
         <form action="." method="POST">
             {% csrf_token %}
             
             {% for field in form %}
             {{field.errors}}   <!--필드 상단에 오류 메시지 출력-->
             <div class="login-form">
-                <input id="{{field.id_for_label}}" type="{{field.field.widget.input_type}}" name="{{field.html_name}}">
-            </div>
+                <input id="{{field.id_for_label}}" type="{{field.field.widget.input_type}}" name="{{field.html_name}}" placeholder="{{field.html_name}}">
             {% endfor %}
-            <div class="form-actions">
-                <button class="login-btn" type="submit">로그인</button>
+                <div class="form-actions">
+                    <button class="login-btn" type="submit">LOGIN</button>
+                </div>
+                <div class="kakao-btn">
+                    <a href="#"><img src="{% static 'img/kakao_login.png' %}" 
+                                     onmouseover="src='{{kakao_button_hover}}'"
+                                     onmouseleave="src='{{kakao_button}}'"
+                                     alt="kakao-login-button">
+                    </a>
+                </div>
+                <div class="naver-btn">
+                    <a href="#"><img src="{% static 'img/naver_login_green.png' %}" 
+                                     onmouseover="src='{{naver_button_hover}}'"
+                                     onmouseleave="src='{{naver_button}}'"
+                                     alt="naver-login-button" >
+                    </a>
+                </div>
             </div>
         </form>
-        <div class="kakao-btn">
-            <a href="#"><img src="{% static 'img/kakao_login.png' %}" 
-                             onmouseover="src='{{kakao_button_hover}}'"
-                             onmouseleave="src='{{kakao_button}}'"
-                             alt="">
-            </a>
-        </div>
-        <div class="naver-btn">
-            <a href="#"><img src="{% static 'img/naver_login_green.png' %}" 
-                             onmouseover="src='{{naver_button_hover}}'"
-                             onmouseleave="src='{{naver_button}}'"
-                             alt="" >
-            </a>
-        </div>
         <a class="resend-email" href="#">인증이메일 재발송</a>
+        <a class="find_password" href="#">비밀번호 찾기</a>
     </div>
 </div>
 
