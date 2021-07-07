@@ -15,7 +15,10 @@
     </section>
     <section class="panel registration">
         <div class="panel-body">
-            <img class="neonews-logo" src="{% static 'img/neonews_logo.png' %}" alt="neonews_logo">
+            <div class="logo-image">
+                <img class="neonews-balloon" src="{% static 'img/balloon.png' %}" alt="neonews_logo">
+                <img class="neonews-logo" src="{% static 'img/news-logo.png' %}" alt="neonews_logo">
+            </div>
             <form action="." method="POST">
                 {% csrf_token %}
                 <div class="signup-form">

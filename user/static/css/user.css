@@ -4,182 +4,184 @@
   box-sizing: border-box;
   padding-top: 90px;
 }
-
 .panel {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 50px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 50px 0;
 }
-
+.logo-image {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+}
+.neonews-balloon {
+  margin: 6px;
+  width: 150px;
+  animation: balloon 1.5s infinite;
+}
+@keyframes balloon{
+  0%{
+    transform: rotate(-5deg);
+  }
+  50%{
+    transform: rotate(15deg);
+  }
+  100%{
+    transform: rotate(-5deg);
+  }
+}
 .neonews-logo {
-  position: relative;
-  left: 5px;
-  width: 250px;
-  height: 250px;
-  /* width: 250px;
-  height: 200px; */
+  width: 150px;
 }
-
 .login-form,.resend-email {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-
 .login-form > input, .signup-form > input{
-    width: 260px;
-    height: 30px;
-    margin: 13px 0;
-    border-radius: 3px;
-    border: 1px solid beige;
-    box-shadow: 0px 0px 5px 0px rgb(150, 147, 147);
-}
-
-.login-btn, .signup-btn {
-    width: 267px;
-    height: 35px;
-    margin: 3px 0;
-    border: none;
-    border-radius: 3px;
-    font-weight: bold;
-    color: white;
-    background-color: rgb(248, 161, 104);
-  }
-  .login-btn:hover, .signup-btn:hover {
-    background-color: #F7B34F;
+  width: 260px;
+  height: 30px;
+  margin: 13px 0;
+  border-radius: 3px;
+  border: 1px solid beige;
   box-shadow: 0px 0px 5px 0px rgb(150, 147, 147);
 }
-
+.login-btn, .signup-btn {
+  width: 267px;
+  height: 35px;
+  margin: 3px 0;
+  border: none;
+  border-radius: 3px;
+  font-weight: bold;
+  color: white;
+  background-color: rgb(248, 161, 104);
+}
+.login-btn:hover, .signup-btn:hover {
+  background-color: #F7B34F;
+  box-shadow: 0px 0px 5px 0px rgb(150, 147, 147);
+}
 .kakao-btn > a> img {
   width: 267px;
   height: 35px;
   margin: 5px 0;
 }
-
 .naver-btn > a > img {
   width: 267px;
   height: 35px;
   margin: 5px 0;
 }
-
 .resend-email, .find_password {
-    text-decoration: none;
-    color: dodgerblue;
-    margin: 5px 0;
-    font-size: 12px;
+  text-decoration: none;
+  color: dodgerblue;
+  margin: 5px 0;
+  font-size: 12px;
 }
 
 
 /* user infor edit page */
 .user-infor-edit{
-    display: flex;
-    justify-content: space-around;
-    background-color: rgb(249, 247, 244);
-    padding-top: 150px;
-    height: 800px;
-
+  display: flex;
+  justify-content: space-around;
+  background-color: rgb(249, 247, 244);
+  padding-top: 150px;
+  height: 800px;
+}
+.user-infor-contents{
+  height: 300px;
+  text-align: center;
+  width: 60%;
+  border-radius: 5px;
+  box-shadow: 0px 0px 2px 2px #eee;
+  background-color: rgb(253, 253, 253);
+  padding-top: 20px;
+  /* text-align: center; */
+}
+.edit-nickname{
+  position: relative;
+  top: 45%;
+  transform: translateY(-50%);
+}
+.user-infor-contents h2{
+  font-size: 1.2rem;
+  margin-top: 30px;
+  margin-bottom: 60px;
+}
+.user-infor-contents input{
+  border: none;
+  width: 50%;
+  padding: 10px 10px;
+  border-radius: 5px;
+  background-color: rgb(235, 233, 233);
+}
+.user-infor-contents  button{
+  margin-left: 15px;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 5px;
+}
+.user-infor-edit-title{
+  margin: 10px 0 20px 0;
+  font-size: 1rem;
+}
+.user-infor-edit-content{
+  letter-spacing: 2px;
+  font-size: 1rem;
+}
+.user-infor-ul{
+  width: 250px;
+  border-radius: 5px;
+  background-color: #eee;
+  display: inline-block;
+  margin-right: 5%;
+}
+.user-infor-ul li{
+  margin: 20px;
+  z-index: 1;
+}
+.user-infor-ul li:hover,
+.user-infor-ul li:focus{
+  border-radius: 5px;
+  transition: all 200ms;
+}
+.user-infor-ul li:hover button,
+.user-infor-ul li:focus button {
+  border-radius: 5px;
+  color: #eee;
+  background-color: rgba(87, 84, 84, 0.671);
+  transition: all 200ms;
+}
+.user-infor-ul li button{
+  padding: 5px 10px;
+  width: 100%;
+  font-size: 2em;
+  border: none;
+}
+.user-infor-ul li button i{
+  width: 20%;
+  margin-right: 20px;
+  text-align: left;
+  display: inline-block;
+  font-size: 1.3em;
+}
+.user-infor-ul li button span{
+  font-size: 1em;
+  width: 80%;
+  margin-right: 20px;
+  text-align: left;
+}
+.clicked{
+  border-radius: 5px;
+  color: #eee;
+  background-color:rgb(248, 161, 104);
 }
 
-  .user-infor-contents{
-    height: 300px;
-    text-align: center;
-    width: 60%;
-    border-radius: 5px;
-    box-shadow: 0px 0px 2px 2px #eee;
-    background-color: rgb(253, 253, 253);
-    padding-top: 20px;
-    /* text-align: center; */
-  }
-  .edit-nickname{
-    position: relative;
-    top: 45%;
-    transform: translateY(-50%);
-  }
-  .user-infor-contents h2{
-    font-size: 1.2rem;
-    margin-top: 30px;
-    margin-bottom: 60px;
-  }
-  .user-infor-contents input{
-    border: none;
-    width: 50%;
-    padding: 10px 10px;
-    border-radius: 5px;
-    background-color: rgb(235, 233, 233);
-  }
-  .user-infor-contents  button{
-    margin-left: 15px;
-    padding: 8px 10px;
-    border: none;
-    border-radius: 5px;
-  }
-  .user-infor-edit-title{
-    margin: 10px 0 20px 0;
-    font-size: 1rem;
-  }
-  .user-infor-edit-content{
-    letter-spacing: 2px;
-    font-size: 1rem;
-  }
-  .user-infor-ul{
-  
-    width: 250px;
-    border-radius: 5px;
-    background-color: #eee;
-    display: inline-block;
-    margin-right: 5%;
-  }
-  
-  .user-infor-ul li{
-    margin: 20px;
-  
-    z-index: 1;
-  }
-  .user-infor-ul li:hover,
-  .user-infor-ul li:focus{
-    border-radius: 5px;
-    transition: all 200ms;
-  }
-  .user-infor-ul li:hover button,
-  .user-infor-ul li:focus button {
-    border-radius: 5px;
-    color: #eee;
-    background-color: rgba(87, 84, 84, 0.671);
-    transition: all 200ms;
-  }
-  .user-infor-ul li button{
-    padding: 5px 10px;
-    width: 100%;
-    font-size: 2em;
-    border: none;
-  }
-  .user-infor-ul li button i{
-    width: 20%;
-    margin-right: 20px;
-    text-align: left;
-    display: inline-block;
-    font-size: 1.3em;
-  }
-  .user-infor-ul li button span{
-    font-size: 1em;
-    width: 80%;
-    margin-right: 20px;
-    text-align: left;
-  }
-
-  
-  .clicked{
-    border-radius: 5px;
-    color: #eee;
-    background-color:rgb(248, 161, 104);
-  }
   
 /* user my page - comment,like page */
-
-
 .user-comment-li,
 .user-like-li{
   display: flex;
