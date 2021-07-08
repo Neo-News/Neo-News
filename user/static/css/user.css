@@ -2,14 +2,14 @@
 .base {
   background-color: rgb(249, 247, 244);
   box-sizing: border-box;
-  padding-top: 90px;
+  padding-top: 70px;
 }
 .panel {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 50px 0;
+  padding: 40px 0;
 }
 .logo-image {
   display: flex;
@@ -45,15 +45,16 @@
 }
 .login-form > input, .signup-form > input{
   width: 260px;
+  padding: 5px 10px;
   height: 30px;
   margin: 13px 0;
   border-radius: 3px;
-  border: 1px solid beige;
-  box-shadow: 0px 0px 5px 0px rgb(150, 147, 147);
+  border: none;
+  box-shadow: 0px 0px 5px 0px rgb(219, 218, 218);
 }
 .login-btn, .signup-btn {
-  width: 267px;
-  height: 35px;
+  width: 280px;
+  height: 40px;
   margin: 3px 0;
   border: none;
   border-radius: 3px;
@@ -63,13 +64,66 @@
 }
 .login-btn:hover, .signup-btn:hover {
   background-color: #F7B34F;
-  box-shadow: 0px 0px 5px 0px rgb(150, 147, 147);
+  box-shadow: 0px 0px 5px 0px rgb(197, 195, 195);
 }
-.kakao-btn > a> img {
+/* 회원가입/로그인 버튼 변경부분 */
+.kakao-btn{
+  text-align: center;
+  align-items: center;
+  width: 280px;
+  height: 40px;
+  margin: 25px 0 5px 0;
+  background-color:#FEF01B ;
+  border-radius: 3%;
+}
+.kakao-btn:hover,
+.naver-btn:hover{
+  box-shadow: 0px 0px 8px 0px rgb(184, 181, 181);
+}
+.naver-btn{
+  text-align: center;
+  align-items: center;
+  width: 280px;
+  height: 40px;
+  margin: 10px 0 15px 0;
+  background-color:#1cc02f ;
+  border-radius: 3%;
+  position: relative;
+}
+.naver-btn img{
+  position: absolute;
+  left: 24%;
+  top: 5%;
+  /* top: 50%; */
+  /* transform: translateY(-50%); */
+}
+.kakao-span{
+  font-weight: 600;
+  align-items: center;
+  line-height: 3.7;
+  font-size: .7rem;
+  margin-left: 15px;
+}
+.naver-span{
+  font-weight: 600;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 33%;
+  transform: translateY(-50%);
+  line-height: 1;
+  font-size: .7rem;
+  margin-left: 10px;
+  color: #fff;
+}
+.kakao-btn i{
+  font-size: 1.2rem;
+}
+/* .kakao-btn > a> img {
   width: 267px;
   height: 35px;
   margin: 5px 0;
-}
+} */
 .naver-btn > a > img {
   width: 267px;
   height: 35px;
@@ -78,7 +132,7 @@
 .resend-email, .find_password {
   text-decoration: none;
   color: dodgerblue;
-  margin: 5px 0;
+  margin: 5px 0 ;
   font-size: 12px;
 }
 
@@ -211,4 +265,23 @@
     margin: 0 auto;
     width: 90%;
   }
+}
+
+@media screen and (max-width:450px){
+  .main-section{
+  }
+  .base{
+    padding: 0;
+  }
+  .category >.category-non-login{
+     display: none;
+}
+.registration{
+  padding-top: 0px;
+  margin-top: 0;
+}
+.category{
+  padding: 0;
+  margin: 0;
+}
 }

@@ -11,7 +11,8 @@
 
 <section class="base">
     <section class="category">
-      <p class="category-non-login"><i class="fas fa-quote-left"></i>회원가입 하시면 관심있는 이슈를 기사별로 선택해서 보실 수 있어요<i class="fas fa-quote-right"></i></p>
+        <p class="category-non-login"><i class="fas fa-quote-left"></i>회원가입 하시면 관심있는 이슈를 기사별로 선택해서 보실 수 있어요<i
+                class="fas fa-quote-right"></i></p>
     </section>
     <section class="panel registration">
         <div class="panel-body">
@@ -29,11 +30,21 @@
                         <button class="signup-btn" type="submit">SIGN UP</button>
                     </div>
                     <div class="kakao-btn">
-                        <a href="#"><img src="{% static 'img/kakao_login.png' %}" alt="kakao-signup-button">
+                        <a href="#"><i class="fas fa-comment"></i><span class="kakao-span">카카오계정으로 로그인</span>
+                            <!-- <img src="{% static 'img/kakao.png' %}" 
+                                         onmouseover="src='{{kakao_button_hover}}'"
+                                         onmouseleave="src='{{kakao_button}}'"
+                                         alt="kakao-login-button"> -->
                         </a>
                     </div>
                     <div class="naver-btn">
-                        <a href="#"><img src="{% static 'img/naver_login_green.png' %}" alt="naver-signup-button" >
+                        <a href="#"><img src="{% static 'img/naver_non.png' %}" style="width: 25px; height: 25px;"><span
+                                class="naver-span">네이버 아이디로 로그인</span>
+
+                            <!-- <a href="#"><img src="{% static 'img/naver_login_green.png' %}" 
+                                         onmouseover="src='{{naver_button_hover}}'"
+                                         onmouseleave="src='{{naver_button}}'"
+                                         alt="naver-login-button" > -->
                         </a>
                     </div>
                 </div>
