@@ -73,6 +73,10 @@ class User(AbstractBaseUser, PermissionsMixin, TimeStampable, Deleteable):
         verbose_name=('Is active'),
         default=False
     )
+    date_joined = models.DateTimeField(
+    verbose_name=('Date joined'),
+    default=timezone.now
+)
 
     objects = UserManager() 
 
