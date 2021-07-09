@@ -73,10 +73,6 @@ class User(AbstractBaseUser, PermissionsMixin, TimeStampable, Deleteable):
         verbose_name=('Is active'),
         default=False
     )
-    date_joined = models.DateTimeField(
-    verbose_name=('Date joined'),
-    default=timezone.now
-)
 
     objects = UserManager() 
 
@@ -84,8 +80,6 @@ class User(AbstractBaseUser, PermissionsMixin, TimeStampable, Deleteable):
     USERNAME_FIELD = 'email' 
     REQUIRED_FIELDS = ['nickname', ]
 
-    class Meta:
-        ordering = ('-date_joined',)
 
     def __str__(self):
         return self.nickname
