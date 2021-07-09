@@ -56,23 +56,10 @@ class User(AbstractBaseUser, PermissionsMixin, TimeStampable, Deleteable):
     장고의 auth앱에 있는 모델 클래스로 사용자 정보의 기본적인 형태를 갖는 추상적인  형태의 
     클래스, 사용자가 가져야 할 최소한의 정보를 갖는 클래스를 상속받아 user 클래스를 생성함
     """
-    image = models.TextField(
-        verbose_name=('Profile image'),
-    )
-    email = models.EmailField(
-        verbose_name=('Email address'),
-        max_length=255,
-        unique=True,
-    )
-    nickname = models.CharField(
-        verbose_name=('Nickname'),
-        max_length=30,
-        unique=True
-    )
-    is_active = models.BooleanField(
-        verbose_name=('Is active'),
-        default=False
-    )
+    image = models.TextField(verbose_name=('Profile image'),)
+    email = models.EmailField(verbose_name=('Email address'),max_length=255,unique=True,)
+    nickname = models.CharField(verbose_name=('Nickname'),max_length=30,unique=True)
+    is_active = models.BooleanField(verbose_name=('Is active'),default=False)
 
     objects = UserManager() 
 
