@@ -24,6 +24,7 @@ class UserManager(BaseUserManager):
     def create_superuser(self, email, password, **extra_fields):
         extra_fields.setdefault('is_active', True)
         extra_fields.setdefault('is_superuser', True)
+        extra_fields.setdefault('is_staff', True)
         return self._create_user(email, password, **extra_fields)
 
 
@@ -32,6 +33,7 @@ class User(AbstractBaseUser, PermissionsMixin, TimeStampable, Deleteable):
     email = models.EmailField(verbose_name=('Email address'),max_length=255,unique=True,)
     nickname = models.CharField(verbose_name=('Nickname'),max_length=30,unique=True)
     is_active = models.BooleanField(verbose_name=('Is active'),default=False)
+    is_staff = models.BooleanField(verbose_name=('Is staff'),default=False)
 
     objects = UserManager()
     
@@ -64,6 +66,19 @@ class Keyword(models.Model):
     name = models.CharField(max_length=32)
 
     def __str__(self):
-        return self.name
+        return self.name          
 
-          
+
+
+
+
+
+
+
+
+
+
+
+
+
+

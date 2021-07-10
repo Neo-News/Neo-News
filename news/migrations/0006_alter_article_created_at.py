@@ -6,12 +6,12 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('user', '0001_initial'),
+        ('news', '0005_alter_article_created_at'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='user',
+            model_name='article',
             name='created_at',
             field=models.TextField(default=1625923487.5682392),
         ),
