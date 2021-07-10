@@ -79,8 +79,10 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = my_settings.DATABASES
-
+# DATABASES = my_settings.DATABASES
+DATABASES = {
+    'default' : env.db()
+}
 
 AUTH_USER_MODEL = 'user.User'
 
