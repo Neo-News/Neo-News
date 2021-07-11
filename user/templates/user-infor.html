@@ -1,7 +1,18 @@
 <!-- <h2>내 닉네임 수정하기</h2> -->
 <div class="edit-nickname">
 <form action=""method="POST">
-  <input type="text" name="infor-user-nickname"placeholder="변경할 닉네임을 입력해주세요">
-  <button submit="type">변경하기</button>
+    <input type="text" name="infor-user-nickname"placeholder="변경할 닉네임을 입력해주세요">
+    <button submit="type">변경하기</button>
 </form>
+</div>
+
+<div class="edit-profile-img">
+    <img class="img" src="{{img.url}}" alt="{{img.title}}" width="100" height="100">
+   
+    <form action="{% url 'user:image-upload' %}" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <input type="file" name="img" />
+        <!-- <input type="text" name="title" placeholder="title"/><br> -->
+        <button type="submit">등록</button>
+    </form>
 </div>

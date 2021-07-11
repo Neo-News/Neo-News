@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 import environ
 import my_settings
+
 env = environ.Env()
 environ.Env.read_env()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -135,3 +136,10 @@ LOGIN_REDIRECT_URL = '/'
 
 # 로그아웃 되면
 LOGOUT_REDIRECT_URL = '/'
+
+# AWS s3 설정
+AWS_ACCESS_KEY_ID=env('AWS_ACCESS_KEY_ID')
+AWS_SECRET_ACCESS_KEY=env('AWS_SECRET_ACCESS_KEY')
+AWS_STORAGE_BUCKET_NAME=env('AWS_STORAGE_BUCKET_NAME')
+AWS_S3_REGION_NAME='ap-northeast-2'
+AWS_S3_FILE_OVERWRITE=False
