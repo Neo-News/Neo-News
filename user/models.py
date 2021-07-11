@@ -66,7 +66,15 @@ class Keyword(models.Model):
     name = models.CharField(max_length=32)
 
     def __str__(self):
-        return self.name          
+        return self.name         
+
+
+class ProfileImage(models.Model):
+    title = models.CharField(max_length=64) 
+    url = models.TextField()
+
+    def __str__(self):
+        return self.title
 
 
 
