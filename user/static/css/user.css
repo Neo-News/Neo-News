@@ -157,7 +157,7 @@
 }
 .edit-nickname{
   position: relative;
-  top: 45%;
+  top: 25%;
   transform: translateY(-50%);
 }
 .user-infor-contents h2{
@@ -233,7 +233,11 @@
   color: #eee;
   background-color:rgb(248, 161, 104);
 }
-
+.edit-profile-img{
+  position: relative;
+  top: 55%;
+  transform: translateY(-50%);
+}
   
 /* user my page - comment,like page */
 .user-comment-li,
