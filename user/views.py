@@ -1,16 +1,45 @@
-from django.shortcuts import render, redirect
-from django.views.generic import View
-from django.contrib.auth.views import LoginView
-from django.views.generic.edit import CreateView
+import os
 import boto3
 from boto3.session import Session
-from config.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME, AWS_S3_REGION_NAME
 from datetime import datetime
+
+from django.shortcuts import render, redirect, reverse
+from django.views.generic import View
+from django.contrib.auth.views import LoginView
+from django.contrib import messages
+from django.views.generic.edit import CreateView
+
+from config.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME, AWS_S3_REGION_NAME
 from .models import ProfileImage
+from .exception import SocialLoginException, KakaoException
+
 
 class UserLoginView(LoginView):
     template_name = 'login.html'
     
+
+# 카카오 로그인 뷰
+def kakao_login(request):
+    try:
+        if request.user.is_authenticated:
+            raise SocialLoginException("User arleady logged in")
+
+        client_id = os.environ.get("KAKAO_CLIENT_ID")
+        redirect_uri = "http://127.0.0.1:8000/user/login/social/kakao/callback/"
+    
+        return redirect(
+            f"https://kauth.kakao.com/oauth/authorize?response_type=code&client_id={client_id}&redirect_uri={redirect_uri}"
+        )
+    
+    except KakaoException as error:
+        messages.error(request, error)
+        return redirect("index")
+
+    except SocialLoginException as error:
+        messages.error(request, error)
+        return redirect("index")
+
+
 # user모델 생기면 수정 필요
 # class UserSignupView(CreateView):
 #     template_name = 'signup.html'
