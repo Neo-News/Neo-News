@@ -20,7 +20,6 @@ class Potal(models.Model):
 
 class Article(TimeStampable, Countable):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='article')
-    keyword = models.ForeignKey(Keyword, on_delete=models.CASCADE, related_name='article')
     press = models.ForeignKey(Press, on_delete=models.SET_NULL, null=True, related_name='press')
     potal = models.ForeignKey(Potal, on_delete=models.SET_NULL, null=True, related_name='potal')
     code = models.CharField(max_length=62)

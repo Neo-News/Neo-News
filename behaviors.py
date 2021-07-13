@@ -4,7 +4,7 @@ import time
 
 class TimeStampable(models.Model):
   created_at = models.TextField(default=time.time())
-  updated_at = models.TextField()
+  updated_at = models.TextField(blank=True)
 
   class Meta:
     abstract = True
