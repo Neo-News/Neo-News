@@ -43,7 +43,9 @@
   justify-content: center;
   align-items: center;
 }
-.login-form > input, .signup-form > input{
+
+/* formview에서 form 레이아웃 */
+.login-form > input, .signup-form input{
   width: 260px;
   padding: 5px 10px;
   height: 30px;
@@ -52,10 +54,22 @@
   border: none;
   box-shadow: 0px 0px 5px 0px rgb(219, 218, 218);
 }
-.login-btn, .signup-btn {
+.login-btn {
   width: 280px;
   height: 40px;
   margin: 3px 0;
+  border: none;
+  border-radius: 3px;
+  font-weight: bold;
+  color: white;
+  background-color: rgb(248, 161, 104);
+}
+
+.form-actions input{
+  display: block;
+  width: 280px;
+  height: 40px;
+  margin: 3px 0px;
   border: none;
   border-radius: 3px;
   font-weight: bold;
@@ -66,6 +80,21 @@
   background-color: #F7B34F;
   box-shadow: 0px 0px 5px 0px rgb(197, 195, 195);
 }
+
+/* formview 레이아웃 */
+.error{
+  text-align: center;
+  margin: 20px 0 15px 0;
+  color: #1cc02f;
+  font-weight: bold;
+  letter-spacing: 2px;
+}
+.error-word{
+  
+  font-size: .9rem;
+  text-align: center;
+}
+
 /* 회원가입/로그인 버튼 변경부분 */
 .kakao-btn{
   text-align: center;

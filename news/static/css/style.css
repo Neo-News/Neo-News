@@ -303,7 +303,95 @@ body{
   color: #fff;
   cursor: pointer;
 }
+.detail-popup-section{
+  /* position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: yellow;
+  width: 100%;
+  min-height: 1100px; */
 
+  background-color:rgba(0,0,0,.3); 
+  justify-content:center; 
+  align-items:center;     
+  position:fixed;         
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;               
+  display:none; 
+   display:flex;
+  padding:15px; 
+  backdrop-filter: blur(3px)
+}
+/* signup detail popup창 */
+.detail-popup{
+  width:100%;               
+  max-width:400px;          
+  border-radius:10px;       
+  overflow:hidden;          
+  background-color:#eee; 
+  box-shadow: 5px 10px 10px 1px rgba(0,0,0,.3); 
+}
+.email-popup{
+  text-align: center;
+  position: relative;
+  height: 150px;
+/* border-radius: 10px;
+  margin: auto;
+  background-color: pink;
+  /* width: 45%; */
+  /* height: 250px;  */
+
+}
+.email-popup-close{
+  text-align: right;
+  font-size: 1.2rem;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  /* right:20px; */
+  cursor: pointer;
+  width: 100%;
+  /* height: 20px; */
+  background-color: rgb(248, 161, 104);
+  padding-bottom: 30px; 
+}
+.email-popup-title{
+  font-weight: bold;
+  position: absolute;
+  top: 22%;
+  left: 50%;
+  font-size: .9rem;
+  transform: translate(-50%,-50%);
+  background-color: rgb(248, 161, 104);
+  width: 100%;
+  height: 20px;
+}
+.fa-user-check{
+  font-size: 1.1rem;
+  margin-right: 6px;
+}
+.email-popup-content1{
+position: absolute;
+font-size: .7rem;
+top: 50%;
+left: 50%;
+transform: translate(-50%,-50%);
+}
+.email-popup-content2{
+  position: absolute;
+  font-size: .7rem;
+  top: 75%;
+  left: 50%;
+transform: translate(-50%,-50%);
+}
+.popup-close{
+  margin-right: 20px;
+  
+}
 /* news detail page */
 .detail-section{
   padding-top: 50px;

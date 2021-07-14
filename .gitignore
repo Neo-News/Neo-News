@@ -8,6 +8,10 @@ __pycache__/
 # C extensions
 *.so
 
+# celery 관련 파일
+dump.rdb
+redis-stable 
+
 # Distribution / packaging
 .Python
 build/

@@ -8,10 +8,10 @@
 <section class="signup-detail">
   <div class="signup-detail-logo"><h1>SIGN IN</h1></div>
   <div class="signup-detail-user-base-infor">
-    <label class="base-user-name-label" for="base-user-name">이름</label><br>
-    <input id="base-user-name" type="text" placeholder="손희정"><br>
+    <label class="base-user-name-label" for="base-user-name">닉네임</label><br>
+    <input id="base-user-name" type="text" placeholder="{{user.nickname}}" disabled><br>
     <label class="base-user-email-label" for="base-user-email">메일주소</label><br>
-    <input id="base-user-email" type="text" placeholder="dkfkffkf115@naver.com">
+    <input id="base-user-email" type="text" placeholder="{{user.email}}" disabled>
   </div>
 
   <form action=""method="POST">
@@ -53,4 +53,24 @@
 
 </form>
 </section>
+<section class="detail-popup-section">
+  <div class="detail-popup">
+  <div class="email-popup">
+    <span class="email-popup-close"><i class="popup-close fas fa-times" onclick="popupClose(event)"></i></span>
+    <p class="email-popup-title"><i class="fas fa-user-check"></i> 이메일 인증에 성공하셨습니다 !</p>
+    <p class="email-popup-content1">여러분의 정보들을 입력해주세요 :-)</p>
+    <p class="email-popup-content2">여러분이 선택하신 카테고리나 관심 있는 키워드를 입력하시면 그에 맞는 각종 포털에 있는 뉴스 기사들을 보여드려요</p>
+  </div>
+</div>
+</section>
 {% endblock content %}
+
+{% block script %}
+<script>
+
+function popupClose(e){
+  document.querySelector('.detail-popup-section').style.display='none';
+}
+
+</script>
+{% endblock script %}
