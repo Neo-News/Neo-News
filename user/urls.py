@@ -1,6 +1,6 @@
 from django.urls import path
 
-from user.views import UserLoginView, UserSignupView, SignupDeatilView, UserInforEditView, ImageUpload
+from user.views import UserLoginView, UserSignupView, SignupDeatilView, UserInforEditView, ImageUpload, Activate
 
 app_name = 'user'
 
@@ -10,4 +10,5 @@ urlpatterns = [
     path('signup/detail/', SignupDeatilView.as_view() ,name='signup_detail'),
     path('infor/edit/', UserInforEditView.as_view() ,name='infor-edit'),
     path('infor/edit/image/', ImageUpload, name='image-upload'),
+        path('account/activate/<str:uidb64>/<str:token>/', Activate.as_view()),
 ]

@@ -1,8 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.utils.translation import ugettext_lazy as _
-
 from user.models import User, UserManager
+from django import forms
+from . import models
+from django.contrib.auth import get_user_model
 
 
 class UserCreationForm(forms.ModelForm):
@@ -91,9 +93,6 @@ class UserChangeForm(forms.ModelForm):
         # field does not have access to the initial value
         return self.initial["password"]
 
-from django import forms
-from . import models
-
 
 class LoginForm(forms.Form):
 
@@ -114,3 +113,100 @@ class LoginForm(forms.Form):
             self.add_error('email', forms.ValidationError("User not exist"))
 
 
+
+class SignupForm(forms.ModelForm):
+    """
+    author: Son Hee Jung
+    date: 0713
+    description: 
+    회원가입 form 커스터마이징, 데이터에 대한 유효성 검증(clean)
+    """
+    email = forms.CharField(
+      label='email',
+      required=True,
+      widget=forms.EmailInput(
+      attrs={
+        'class':'user-email',
+        'placeholder': 'email',
+        'name':'user-email'
+      }
+    ),
+    error_messages={'required': '이메일을 입력해주세요 !'}
+    )
+
+    nickname = forms.CharField(
+      label='nickname',
+      required=True,
+      widget=forms.TextInput(
+      attrs={
+        'class':'user-nickname',
+        'placeholder': ' nickname'
+      }
+    ),)
+
+    password = forms.CharField(
+      label='password',
+      required=False,
+      widget=forms.PasswordInput(
+      attrs={
+        'class':'user-pwd',
+        'placeholder': ' password'
+      }
+    ),)
+
+    password_chk = forms.CharField(
+      label='password 확인',
+      required=True,
+      widget=forms.PasswordInput(
+      attrs={
+        'class':'user-pwd-chk',
+        'placeholder': 're-password'
+      }
+    ),)
+  
+    # 폼 input 순서 명시적으로 나열
+    field_order = [
+    'email',
+    'nickname',
+    'password',
+    'password_chk'
+    ]
+  
+    class Meta:
+        model = get_user_model()
+        fields = ['email','nickname','password']
+
+    # 회원가입 로직 유효성 검사
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get('email')
+        nickname = cleaned_data.get('nickname')
+        password = cleaned_data.get('password')
+        password_chk = cleaned_data.get('password_chk')
+
+        if not email or not nickname or not password_chk or not password:
+            raise forms.ValidationError('모든 정보를 입력해주세요')
+
+        if '@' not in email or '.' not in email:
+            raise forms.ValidationError('올바른 이메일 형식이 아니에요')
+
+        if User.objects.filter(email=email):
+            raise forms.ValidationError('이메일이 이미 존재해요')
+
+        if password != password_chk:
+            raise forms.ValidationError('비밀번호가 달라요')
+        
+        elif len(nickname) <= 2:
+            raise forms.ValidationError('닉네임을 3자리 이상 지어주세요')
+
+        elif User.objects.filter(nickname=nickname):
+            raise forms.ValidationError('닉네임이 이미존재해요')
+
+        self.email = email
+        self.nickname = nickname
+        self.password = password
+        self.password_chk = password_chk
+
+
+class VerifyEmailForm(forms.Form):
+    pass
