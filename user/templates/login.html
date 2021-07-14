@@ -32,7 +32,7 @@
                         <button class="login-btn" type="submit">LOGIN</button>
                     </div>
                     <div class="kakao-btn">
-                        <a href="#"><i class="fas fa-comment"></i><span class="kakao-span">카카오계정으로 로그인</span>
+                        <a href="{% url 'user:kakao-login' %}"><i class="fas fa-comment"></i><span class="kakao-span">카카오계정으로 로그인</span>
                             <!-- <img src="{% static 'img/kakao.png' %}" 
                                          onmouseover="src='{{kakao_button_hover}}'"
                                          onmouseleave="src='{{kakao_button}}'"
