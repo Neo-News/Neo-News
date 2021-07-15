@@ -6,18 +6,25 @@
 {% block content %}
 {% include 'banner.html' %}
 <section class="category">
-  <p class="category-non-login"><i class="quote fas fa-quote-left"> </i> 로그인 하시면 관심있는 이슈를 기사별로 선택해서 보실 수 있어요 <i class="quote fas fa-quote-right"> </i></p>
+  {% if user.is_authenticated %}
   <ul class="cateogry-ul">
     <li class="category-li">
       <a class="active" href="">전체보기</a>
     </li>
+    {% for category in categories %}
     <li class="category-li">
-      <a href="">정치</a>
+      <a href="">{{category.name}}</a>
     </li>
+    {% endfor %}
+    {% for keyword in keywords %}
     <li class="category-li">
-      <a href="">경제</a>
+      <a href="">{{keyword.name}}</a>
     </li>
+    {% endfor %}
   </ul>
+  {% else %}
+  <p class="category-non-login"><i class="quote fas fa-quote-left"> </i> 로그인 하시면 관심있는 이슈를 기사별로 선택해서 보실 수 있어요 <i class="quote fas fa-quote-right"> </i></p>
+  {% endif %}
 </section>
 
 <ul class="news-ul">

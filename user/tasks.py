@@ -8,4 +8,7 @@ def send_email(mail_title, message_data, mail_to):
   """
   # print('제발 이게 작동해야 한다규.. 제발...')
   email = EmailMessage(mail_title, message_data, to=[mail_to])
+  print(email)
   email.send()
+  print('보내졌는디요...?')
+  return None

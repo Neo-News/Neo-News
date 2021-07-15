@@ -1,17 +1,21 @@
+
 import os
 import boto3
 import requests
 from boto3.session import Session
 from datetime import datetime
-
 from django.http.response import JsonResponse
 from django.shortcuts import render, redirect, reverse
+from os import name
+from django.shortcuts import render, redirect
 from django.views.generic import View
 from django.contrib.auth.views import LoginView
 from django.contrib import messages
 from config.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME, AWS_S3_REGION_NAME
 from .models import ProfileImage, User
 from .exception import SocialLoginException, KakaoException
+from datetime import datetime
+from .models import Category, Keyword, ProfileImage
 from utils import context_infor
 from user.forms import SignupForm
 from django.utils.encoding import force_text
@@ -23,6 +27,7 @@ from user.tasks import send_email
 from user.services import UserService
 from .dto import SignupDto
 from django.contrib.auth import login as auth_login
+from user.models import User
 
 import jwt
 import json
@@ -188,7 +193,9 @@ class Activate(View):
 
 class SignupDeatilView(View):
   def get(self,request, *args, **kwargs):
-    return render(request, 'signup_detail.html')
+    categories = Category.objects.all()
+    context = context_infor(categories=categories)
+    return render(request, 'signup_detail.html', context)
 
   def post(self, *args, **kwargs):
     pass
@@ -227,3 +234,31 @@ def ImageUpload(request):
 
     # return render(request, 'user-infor.html', {'imgs' : imgs})
     
+
+class UserInforAddView(View):
+  def get(self, request, *args, **kwargs):
+    pass
+
+  def post(self, request, *args, **kwargs):
+      if request.is_ajax():
+        data = json.loads(request.body)
+        category = Category.objects.all()
+        keyword_list = Keyword.objects.all()
+        # 카테고리/ 아직 설문 버튼이 보이기 때문에 user의 카테고리 설문 버튼 눌러서 수정될 수 있게 remove -> add 해줌
+        for lists in category:
+          category = Category.objects.filter(name=lists).first().users.remove(request.user)
+        for category in data.get('category_list'):
+          category = Category.objects.filter(name=category).first().users.add(request.user)
+        
+
+        for keyword in keyword_list:
+          keyword = Keyword.objects.filter(name=keyword).first().users.remove(request.user)
+        for keyword in data.get('todo_list'):
+          Keyword.objects.create(
+            name = keyword,
+          )
+          Keyword.objects.filter(name=keyword).first().users.add(request.user)
+        return JsonResponse({
+          'success':True,
+          'url': 'http://127.0.0.1:8000/'
+          })
