@@ -257,14 +257,18 @@ body{
   font-size: 1.1rem;
 }
 .signup-detail-category-ul{
-  width: 360px;
+  width: 50%;
   margin: 0 auto;
   margin-bottom: 70px;
 }
 .category-div{
   display: flex;
+  text-align: left;
   flex-wrap: wrap;
   margin-left: 25px;
+  width: 80%;
+  justify-content: space-between;
+  margin: 0 auto;
 }
 .category-scroll{
   display: flex;
@@ -280,6 +284,11 @@ body{
   align-items: center;
   justify-content: space-around;
   width: 70px;
+}
+
+.detail-category-li{
+  width: 80px;
+  margin: 10px 10px;
 }
 
 .signup-detail-category-ul label{
@@ -306,7 +315,7 @@ body{
   font-size: .8rem;
   box-sizing: border-box;
   border-radius: 5px;
-  padding: 10px 18px;
+  padding: 10px 6px;
   border: none;
 }
 
@@ -372,7 +381,7 @@ body{
 .email-popup{
   text-align: center;
   position: relative;
-  height: 150px;
+  height: 250px;
 
 
 /* border-radius: 10px;
@@ -392,7 +401,7 @@ body{
   /* right:20px; */
   cursor: pointer;
   width: 100%;
-  /* height: 20px; */
+  height: 60px;
   background-color: rgb(248, 161, 104);
   padding-bottom: 30px; 
 }
@@ -732,9 +741,6 @@ border-bottom: 1px solid rgb(228, 226, 226);
 
 /*news banner page responsive */
 @media screen and (max-width:576px){
-  .main-user{
-    margin-right: 20px;
-  }
   .main-logo{
     display: none;
   }
@@ -830,12 +836,13 @@ border-bottom: 1px solid rgb(228, 226, 226);
   opacity: 1;
 }
 .category-scroll{
-  height:100vh;
   overflow: auto;
   position: fixed;
   top: 0;
   left: 0;
   background-color: #fff;
+  width: 100%;
+  height: 100vh;
 }
 .category-close-ani{
   transform: translateX(-120%);
@@ -969,14 +976,27 @@ border-bottom: 1px solid rgb(228, 226, 226);
   width: 70%;
 }
 .signup-detail-keyword-div{
-  width: 90%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 .signup-detail-keyword-input{
   width: 70%;
 }
+.signup-detail > form{
+  padding: 0px 10px;
+}
 .keyword-list{
   width: 80%;
   margin: 0 auto;
+}
+.signup-detail-keyword-title span,
+.signup-detail-category-title span{
+  font-size: .9rem;
+}
+.signup-detail-category-ul{
+  width: 100%;
 }
 
 }

@@ -6,9 +6,9 @@
 {% block content %}
 {% include 'banner.html' %}
 <!-- <div class="category-div"> -->
-<section class="category">
-    <i class="fas fa-bars category-open" onclick="categoryOpen()"></i>
+  <section class="category">
   {% if user.is_authenticated %}
+    <i class="fas fa-bars category-open" onclick="categoryOpen()"></i>
   <ul class="category-ul">
     <div class="category-scroll">
       <i class="fas fa-times category-close" onclick="categoryClose()"></i>
@@ -28,6 +28,7 @@
     </div>
   </ul>
   {% else %}
+
   <p class="category-non-login"><i class="quote fas fa-quote-left"> </i> 로그인 하시면 관심있는 이슈를 기사별로 선택해서 보실 수 있어요 <i class="quote fas fa-quote-right"> </i></p>
   {% endif %}
 </section>

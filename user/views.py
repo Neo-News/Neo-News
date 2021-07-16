@@ -153,13 +153,14 @@ def kakao_login_callback(request):
                 email=email,
                 nickname=nickname,
                 image="default.png",
-                password=None 
+                password=None ,
+                is_active = True
             )
             user.set_unusable_password()
             user.is_active = True
             user.is_detailed = True
             user.save()
-        messages.success(request, f"{user.email} signed up and logged in with Kakao" )
+        # messages.success(request, f"{user.email} signed up and logged in with Kakao" )
         auth_login(request, user)
         return redirect("user:signup_detail")
 
@@ -170,10 +171,6 @@ def kakao_login_callback(request):
     except SocialLoginException as error:
         messages.error(request, error)
         return redirect("index")
-
-# user모델 생기면 수정 필요
-# class UserSignupView(CreateView):
-#     template_name = 'signup.html'
 
 
 class UserSignupView(View):
@@ -297,6 +294,14 @@ def ImageUpload(request):
     
 
 class UserInforAddView(View):
+  """
+  author: Son Hee Jung
+  date: 0715
+  description: 
+  ajax를 통해 유저가 선택한 카테고리, 키워드 저장 후 메인에 카테고리 띄어줌. 
+  is_detailed true로 변환해 설문 페이지 뜨지 않게 설정
+  코드 리팩토링 필요함
+  """
   def get(self, request, *args, **kwargs):
     pass
 
@@ -319,6 +324,9 @@ class UserInforAddView(View):
             name = keyword,
           )
           Keyword.objects.filter(name=keyword).first().users.add(request.user)
+        User.objects.filter(pk=request.user.pk).update(
+          is_detailed = True
+        )
         return JsonResponse({
           'success':True,
           'url': 'http://127.0.0.1:8000/'

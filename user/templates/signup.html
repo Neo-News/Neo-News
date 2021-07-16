@@ -34,7 +34,7 @@
                     {% endfor %}
                    
                     <div class="form-actions">
-                        <input class="signup-btn" type="submit" value="SIGN UP"onclick="signupBtn(event)">
+                        <input class="signup-btn" type="submit" value="SIGN UP" onclick="signupBtn(event)">
                     </div>
                     <div class="social-signup">
                       <span class="social-signup-text"><i class="fas fa-quote-left"></i>소셜 계정으로도 가입 가능합니다<i
@@ -70,6 +70,7 @@ function signupBtn(e) {
   $password_chk = document.querySelector('.user-pwd-chk').value;
 
   let signupCsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+  
   let param = {
     'email':$email,
     'nickname':$nickname,
