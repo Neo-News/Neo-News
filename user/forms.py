@@ -1,8 +1,9 @@
 from django import forms
-from django.contrib.auth.forms import ReadOnlyPasswordHashField
+from django.contrib.auth.forms import AuthenticationForm, ReadOnlyPasswordHashField
 from django.utils.translation import ugettext_lazy as _
 from user.models import User, UserManager
 from django import forms
+from django.forms.fields import EmailField
 from . import models
 from django.contrib.auth import get_user_model
 
@@ -94,24 +95,17 @@ class UserChangeForm(forms.ModelForm):
         return self.initial["password"]
 
 
-class LoginForm(forms.Form):
+class LoginForm(AuthenticationForm):
+    """
+    author: Oh Ji Yun
+    date: 0715
+    description: 
+    authenticate가 있는 authentication form 상속
+    기본적으로 email, password를 렌더링하는데 username=forms.TextInput()이 기본이라 EmailField로 변경
+    clean 메서드 안에서 authenticate해주는 로직 있음
+    """
 
-    email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput)
-
-    def clean(self):
-        email = self.cleaned_data.get('email')
-        password = self.cleaned_data.get('password')
-        try:
-            user = models.User.objects.get(email=email)
-            if user.check_password(password):
-                return self.cleaned_data
-            else:
-                self.add_error(
-                    'password', forms.ValidationError('Password wrong'))
-        except models.User.DoesNotExist:
-            self.add_error('email', forms.ValidationError("User not exist"))
-
+    username = EmailField(widget=forms.EmailInput(attrs={'autofocus':True, 'placeholder': _('email'), }))
 
 
 class SignupForm(forms.ModelForm):

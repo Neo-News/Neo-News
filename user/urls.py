@@ -1,7 +1,8 @@
 from django.urls import path
 
-from user.views import UserLoginView, UserSignupView, SignupDeatilView, UserInforEditView, ImageUpload, Activate, kakao_login, kakao_login_callback
-from user.views import UserLoginView, UserSignupView, SignupDeatilView, UserInforEditView, ImageUpload, Activate, UserInforAddView
+from django.contrib.auth.views import LogoutView
+from user.views import UserLoginView, UserSignupView, SignupDeatilView, UserInforEditView, ImageUpload, Activate, UserInforAddView, kakao_login, kakao_login_callback
+
 
 
 app_name = 'user'
@@ -17,6 +18,6 @@ urlpatterns = [
     path('account/activate/<str:uidb64>/<str:token>/', Activate.as_view()),
     path('infor/edit/image/', ImageUpload, name='image-upload'),
     path('account/activate/<str:uidb64>/<str:token>/', Activate.as_view()),
-    path('infor/', UserInforAddView.as_view(), name='infor'),
+    path('logout/', LogoutView.as_view(), name='logout'),
 
 ]
