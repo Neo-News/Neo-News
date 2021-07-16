@@ -7,8 +7,6 @@ from datetime import datetime
 from django.http.response import JsonResponse
 from django.shortcuts import render, redirect, reverse
 from os import name
-from django.shortcuts import render, redirect
-from django.views.generic import View
 from django.contrib.auth.views import LoginView
 from django.contrib import messages
 from config.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME, AWS_S3_REGION_NAME
@@ -17,28 +15,66 @@ from .exception import SocialLoginException, KakaoException
 from datetime import datetime
 from .models import Category, Keyword, ProfileImage
 from utils import context_infor
-from user.forms import SignupForm
+from user.forms import SignupForm, LoginForm
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_text
-from django.views.generic import View
+from django.views.generic import View, FormView
 from user.forms import SignupForm
 from user.tasks import send_email
 from user.services import UserService
 from .dto import SignupDto
-from django.contrib.auth import login as auth_login
+from django.contrib.auth import authenticate, login as auth_login
 from user.models import User
 
 import jwt
 import json
 
 
-class UserLoginView(LoginView):
+class UserLoginView(FormView):
+    """
+    author: Oh Ji Yun
+    date: 0715
+    description:
+    FormView 상속받아서 로그인 기능 구현
+    Form은 authenticate가 있는 authentication form 사용 
+    """
+    form_class = LoginForm
     template_name = 'login.html'
+    success_url = '/'
+    
+    def form_valid(self, form):
+        email = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password')
+        user = authenticate(self.request, username=email, password=password)
+        print(user)
+        if user is not None:
+            auth_login(self.request, user)
+            print('로그인 성공')
+        return super().form_valid(form)
+
+# class UserLoginView(LoginView):
+#     """
+#     author: Oh Ji Yun
+#     date: 0715
+#     description:
+#     FormView 상속받아서 로그인 기능 구현
+#     Form은 authenticate가 있는 authentication form 사용 
+#     """
+#     template_name = 'login.html'
     
 
 # 카카오 로그인 뷰
 def kakao_login(request):
+    """
+    author: Oh Ji Yun
+    date: 0713
+    description: 
+    카카오 계정으로 로그인하기 버튼 누르면 authorization server가 정상적인 요청인지 확인
+    로그인 페이지로 이동
+    로그인 정보 입력하면 authorization server가 authroization_code 응답에 담고, 장고 서버로 redirect
+    """
+    
     try:
         if request.user.is_authenticated:
             raise SocialLoginException("User arleady logged in")
@@ -60,6 +96,17 @@ def kakao_login(request):
 
 # 카카오 로그인 콜백뷰
 def kakao_login_callback(request):
+    """
+    author: Oh Ji Yun
+    date: 0713
+    description: 
+    authorization_code 받고, 콜백 요청이 정상적이라고 판단되면
+    code, client_id, client_secret와 함께 access_token 발급 요청 보냄
+    authorization server에서 확인하고 인증되면 access_token 발금됨
+    발급된 access_token으로 카카로 프로필 api 호출
+    이메일, 닉네임 가져와서 유저 생성하고, 로그인 시켜줌    
+    """
+
     try: 
         if request.user.is_authenticated:
             raise SocialLoginException("User arleady logged in")
@@ -95,7 +142,12 @@ def kakao_login_callback(request):
         email = kakao_account.get("email", None)
 
         user = User.objects.filter(email=email).first()
-        print(user)
+
+        if user.is_detailed:
+            auth_login(request, user)
+            return redirect("index")
+
+        # print(user)
         if user is None:
             user = User.objects.create_user(
                 email=email,
@@ -104,10 +156,12 @@ def kakao_login_callback(request):
                 password=None 
             )
             user.set_unusable_password()
+            user.is_active = True
+            user.is_detailed = True
             user.save()
         messages.success(request, f"{user.email} signed up and logged in with Kakao" )
         auth_login(request, user)
-        return redirect(reverse("index"))
+        return redirect("user:signup_detail")
 
     except KakaoException as error:
         messages.error(request, error)
@@ -210,6 +264,13 @@ class UserInforEditView(View):
 
 # 프로필 이미지 등록하는 함수
 def ImageUpload(request):
+    """
+    author: Oh Ji Yun
+    date: 0711
+    description: 
+    
+    """
+
     if request.method == 'POST':
         file = request.FILES.get('img')
         session = Session(

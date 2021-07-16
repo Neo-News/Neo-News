@@ -30,7 +30,7 @@
         <!-- <a href="{% url 'user:signup_detail' %}"><button class="signin">설문</button></a> -->
         {% if user.is_authenticated %}
         <span class="main-user-nickname"><strong>{{request.user.nickname}}</strong>님</span>
-        <a href="{% url 'user:login' %}"><button class="signout">로그아웃</button></a>
+        <a href="{% url 'user:logout' %}"><button class="signout">로그아웃</button></a>
         {% else %}
         <a href="{% url 'user:login' %}"><button class="signin">로그인</button></a>
         <a href="{% url 'user:signup' %}"><button class="signup">회원가입</button></a>
