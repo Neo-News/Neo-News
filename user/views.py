@@ -141,28 +141,20 @@ def kakao_login_callback(request):
         nickname = profile.get("nickname", None)
         email = kakao_account.get("email", None)
 
-        user = User.objects.filter(email=email).first()
-
-        if user.is_detailed:
-            auth_login(request, user)
-            return redirect("index")
-
-        # print(user)
-        if user is None:
-            user = User.objects.create_user(
-                email=email,
-                nickname=nickname,
-                image="default.png",
-                password=None ,
-                is_active = True
-            )
-            user.set_unusable_password()
-            user.is_active = True
-            user.is_detailed = True
-            user.save()
-        # messages.success(request, f"{user.email} signed up and logged in with Kakao" )
+        # user = User.objects.filter(email=email).first()
+        user, created = User.objects.get_or_create(email=email)
+        if created:
+          user.set_password(None)
+          user.nickname = nickname
+          user.image = "default.png"
+          user.is_active = True
+          user.is_detailed = True
+          user.save()
+          auth_login(request, user)
+          return redirect("user:signup_detail")
+        
         auth_login(request, user)
-        return redirect("user:signup_detail")
+        return redirect("index")
 
     except KakaoException as error:
         messages.error(request, error)
