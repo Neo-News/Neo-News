@@ -142,6 +142,7 @@ def kakao_login_callback(request):
         email = kakao_account.get("email", None)
 
         # user = User.objects.filter(email=email).first()
+
         user, created = User.objects.get_or_create(email=email)
         if created:
           user.set_password(None)

@@ -15,6 +15,7 @@
   {% block head %}
   {% endblock head %}
 </head>
+
 <body>
   <div class="container">
     <section class="main-section">
@@ -37,7 +38,9 @@
         {% endif %}
       </div>
     </section>
-
+    
+    {% block body %}
+    {% endblock body %}
     {% block content %}
     {% endblock content %}
 

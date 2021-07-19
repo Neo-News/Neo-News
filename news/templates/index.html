@@ -34,19 +34,20 @@
 </section>
 <!-- </div> -->
 
+{% if user.is_authenticated %}
 <ul class="news-ul">
+  {% for article in articles %}
   <li class="news-li">
-    <div class="news-img"><img src="static/img/logo.png" alt="">
+    <div class="news-img"><img src="{{article.preview_img}}" alt="">
     </div>
-    <a href="{% url 'news:detail' %}"><div class="news-contents">
-      <div class="news-title">Text Double click to edit</div>
-      <div class="news-content">Text - Double click to edit. Text - Double click to edit. Text - Double click to edit. Text - Double click to edit. Text - Double click. Text - Double cli...
-      </div>
+    <a href="{% url 'news:detail' article.pk %}"><div class="news-contents">
+      <div class="news-title">{{article.title}}</div>
+      <div class="news-content">{{article.preview_content |truncatechars:150}}</div>
       <div class="news-social">
         <div class="news-infor">
-        <span class="news-portal">네이버 · </span>
-        <span class="news-press"> 인사이트 · </span>
-        <span class="news-date"> 2021-07-01</span>
+        <span class="news-portal">{{article.potal.name}} · </span>
+        <span class="news-press">{{article.press.name}} · </span>
+        <span class="news-date">{{article.created_string}}</span>
       </div>
       <div class="news-social-infor">
         <span class="news-social-comment"><i class="fas fa-comment-alt"> </i> 12</span>
@@ -57,18 +58,24 @@
   </a>
   
   </li>
+  {% endfor %}
+</ul>
+{% else %}
+{% endif %}
+
+<ul class="news-ul">
+  {% for article in articles %}
   <li class="news-li">
-    <div class="news-img"><img src="static/img/logo.png" alt="">
+    <div class="news-img"><img src="{{article.preview_img}}" alt="">
     </div>
-    <a href="{% url 'news:detail' %}"><div class="news-contents">
-      <div class="news-title">Text Double click to edit</div>
-      <div class="news-content">Text - Double click to edit. Text - Double click to edit. Text - Double click to edit. Text - Double click to edit. Text - Double click. Text - Double cli...
-      </div>
+    <a href="{% url 'news:detail' article.pk %}"><div class="news-contents">
+      <div class="news-title">{{article.title}}</div>
+      <div class="news-content">{{article.preview_content |truncatechars:150}}</div>
       <div class="news-social">
         <div class="news-infor">
-        <span class="news-portal">네이버 · </span>
-        <span class="news-press"> 인사이트 · </span>
-        <span class="news-date"> 2021-07-01</span>
+        <span class="news-portal">{{article.potal.name}} · </span>
+        <span class="news-press">{{article.press.name}} · </span>
+        <span class="news-date">{{article.created_string}}</span>
       </div>
       <div class="news-social-infor">
         <span class="news-social-comment"><i class="fas fa-comment-alt"> </i> 12</span>
@@ -79,29 +86,7 @@
   </a>
   
   </li>
-  <li class="news-li">
-    <div class="news-img"><img src="static/img/logo.png" alt="">
-    </div>
-    <a href="{% url 'news:detail' %}"><div class="news-contents">
-      <div class="news-title">Text Double click to edit</div>
-      <div class="news-content">Text - Double click to edit. Text - Double click to edit. Text - Double click to edit. Text - Double click to edit. Text - Double click. Text - Double cli...
-      </div>
-      <div class="news-social">
-        <div class="news-infor">
-        <span class="news-portal">네이버 · </span>
-        <span class="news-press"> 인사이트 · </span>
-        <span class="news-date"> 2021-07-01</span>
-      </div>
-      <div class="news-social-infor">
-        <span class="news-social-comment"><i class="fas fa-comment-alt"> </i> 12</span>
-        <span class="news-social-like"><i class="fas fa-heart"> </i> 2</span>
-      </div>
-      </div>
-    </div>
-  </a>
-  
-  </li>
-  
+  {% endfor %}
 </ul>
 {% endblock content %}
 
