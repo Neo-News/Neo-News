@@ -9,7 +9,14 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 40px 0;
+}
+.registration{
+  min-height: 100vh;
+  margin-top: -150px;
+  background-color: rgb(249, 247, 244);
+}
+.registration-signup{
+  margin-top: -100px;
 }
 .logo-image {
   display: flex;
@@ -88,9 +95,24 @@
 .social-signup-text{
   color: #81530d;
   font-size: 0.8rem;
+  margin: 0px 5px;
   
 }
-
+.social-signup-text-icon{
+  color: #81530d;
+  display: inline-block;
+  font-size: 0.5rem;
+  
+}
+.social-quote{
+  font-size: .8rem;
+}
+.social-non-login-text{
+  margin: 0px 5px;
+}
+.social-strong{
+  color: #F7B34F;
+}
 /* formview 레이아웃 */
 .error{
   text-align: center;
@@ -308,6 +330,9 @@
     margin: 0 auto;
     width: 90%;
   }
+  .registration-signup{
+    margin-top: -100px;
+  }
 }
 
 @media screen and (max-width:450px){
@@ -322,6 +347,9 @@
 .registration{
   padding-top: 0px;
   margin-top: 0;
+}
+.registration-signup{
+  padding-top: 50px;
 }
 .category{
   padding: 0;

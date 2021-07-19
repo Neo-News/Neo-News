@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, ReadOnlyPasswordHashField
+from django.forms.widgets import EmailInput
 from django.utils.translation import ugettext_lazy as _
 from user.models import User, UserManager
 from django import forms
@@ -108,7 +109,7 @@ class LoginForm(AuthenticationForm):
     username = EmailField(widget=forms.EmailInput(attrs={'autofocus':True, 'placeholder': _('email'), }))
 
 
-class SignupForm(forms.ModelForm):
+class SignupForm(forms.Form):
     """
     author: Son Hee Jung
     date: 0713
@@ -136,7 +137,7 @@ class SignupForm(forms.ModelForm):
         'class':'user-nickname',
         'placeholder': ' nickname'
       }
-    ),)
+    ))
 
     password = forms.CharField(
       label='password',
@@ -159,16 +160,17 @@ class SignupForm(forms.ModelForm):
     ),)
   
     # 폼 input 순서 명시적으로 나열
-    field_order = [
-    'email',
-    'nickname',
-    'password',
-    'password_chk'
-    ]
+    # field_order = [
+    # 'email',
+    # 'nickname',
+    # 'password',
+    # 'password_chk'
+    # ]
+
   
-    class Meta:
-        model = get_user_model()
-        fields = ['email','nickname','password']
+    # class Meta:
+    #     model = get_user_model()
+    #     fields = ['email','nickname','password']
 
     # 회원가입 로직 유효성 검사
     def clean(self):

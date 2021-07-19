@@ -3,6 +3,6 @@ from news.views import NewsDetailView,NewsInforEditView
 
 app_name = 'news'
 urlpatterns = [
-    path('detail/', NewsDetailView.as_view() ,name='detail'),
+    path('detail<pk>/', NewsDetailView.as_view() ,name='detail'),
     path('infor/edit/', NewsInforEditView.as_view() ,name='infor-edit'),
 ]

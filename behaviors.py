@@ -18,7 +18,7 @@ class Deleteable(models.Model):
 
 
 class Countable(models.Model):
-  counted_at = models.IntegerField()
+  counted_at = models.IntegerField(blank=True)
 
   class Meta:
     abstract = True
