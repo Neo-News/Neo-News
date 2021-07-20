@@ -57,6 +57,12 @@
   </a>
   
   </li>
+  {% endfor %}
+</ul>
+
+{% else %}
+<ul class="news-ul">
+  {% for article in articles %}
   <li class="news-li">
     <div class="news-img"><img src="static/img/logo.png" alt="">
     </div>
@@ -103,6 +109,8 @@
   </li>
   
 </ul>
+{% endif %}
+
 {% endblock content %}
 
 {% block script %}
