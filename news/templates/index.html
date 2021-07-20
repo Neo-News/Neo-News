@@ -67,7 +67,6 @@
   {% endfor %}
   {% endif %}
   
-</ul>
 {% else %}
 <ul class="news-ul">
   {% for article in articles %}
@@ -159,7 +158,6 @@ fetch("{% url 'index' %}", {
     `;
   })
   
-
   return(data)
 }).catch((error) => {
   console.log('error', error);
