@@ -41,9 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_celery_beat',
     'news',
     'user',
-    'social'
+    'social',
+
 ]
 
 MIDDLEWARE = [
@@ -154,9 +156,14 @@ EMAIL_HOST_PASSWORD=env('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS=env('EMAIL_USE_TLS')
 
 # celery 환경설정
+from celery.schedules import crontab
+
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
-# CELERY_ROUTES = {'pworker.tasks.import_feed':{'queue':'feeds'}}
-
-# 라이브러리
+CELERY_BEAT_SCHEDULE = {
+    'task-number-one': {
+        'task': 'user.tasks.task_scrappy', # 실행함수
+        'schedule': crontab()
+    },
+}

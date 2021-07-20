@@ -10,7 +10,7 @@ def context_infor(**kwargs):
 
 # comment 시간 나타내기
 def get_time_passed(object):
-    time_passed = int(float(time.time()) - float(object.date))
+    time_passed = int(float(time.time()) - float(object))
     if time_passed == 0:
         return '1초 전'
     if time_passed < 60:

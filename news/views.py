@@ -1,16 +1,21 @@
+from django.http.response import JsonResponse
 from utils import context_infor
 from user.models import Category, Keyword
-from news.models import Article
+from news.models import Article, Press,Potal
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView,View
 from user.models import User
 from utils import get_time_passed
+from django.core.serializers import serialize
+from django.db.models import Q
+
 import re
+import json
 #  Create your views here.
 
 
 # templateview로 변경가능 할 것 같음 일단은 detailview -> view로 변경함 
-class IndexDetailView(View):
+class IndexView(View):
   """
   참고하셨으면 지우셔도 됩니당 :-)
   다음 스크래핑하면서 데이터를 index에 띄어보느라 코드 작성해 놓았습니다. 
@@ -22,9 +27,25 @@ class IndexDetailView(View):
   def get(self, request, **kwargs):
     categories = Category.objects.filter(users__pk=request.user.pk).all()
     keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
-    articles = Article.objects.all()
+    articles = Article.objects.all()[:20]
     context = context_infor(categories=categories, keywords=keywords, articles=articles)    
     return render(request, 'index.html',context)
+
+  def post(self, request, **kwargs):
+    if request.is_ajax():
+      data = json.loads(request.body)
+      articles = Article.objects.filter(category__pk=data['category_pk']).all()[:20]
+      article_list = [{
+        'pk' : article.id,
+        'title' : article.title,
+        'content' : article.content,
+        'potal' : Potal.objects.filter(name=article.potal).first().name,
+        'press' : Press.objects.filter(name=article.press).first().name,
+        'preview_img' : article.preview_img,
+        'date' : get_time_passed(article.date),
+      } for article in Article.objects.filter(category__pk=data['category_pk']).all()[:15]]
+      
+      return JsonResponse({'article_list': article_list})
 
 
 class NewsDetailView(DetailView):
@@ -47,3 +68,30 @@ class NewsDetailView(DetailView):
 class NewsInforEditView(View):
     def get(self, request, **kwargs):
       return render(request, 'infor-edit.html')
+
+
+
+class CategoryIndexView(View):
+  def get(self, request, **kwargs):
+    category_name =Category.objects.filter(pk=kwargs['pk']).first().name
+    print(category_name)
+    categories = Category.objects.filter(users__pk=request.user.pk).all()
+    articles = Article.objects.filter(category__name=category_name).all()[:20]
+    keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
+    context = context_infor(articles=articles, categories=categories, keywords=keywords)
+    return render(request,'index.html', context)
+
+
+class KeywordIndexView(View):
+  def get(self, request, **kwargs):
+    is_none = False
+    msg = ''
+    keyword_name =Keyword.objects.filter(pk=kwargs['pk']).first().name
+    keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
+    articles = Article.objects.filter(Q(title__contains=keyword_name) | Q(content__contains=keyword_name)).all()[:20]
+    categories = Category.objects.filter(users__pk=request.user.pk).all()
+    if not articles:
+      is_none = True
+      msg = '선택하신 키워드에 관련된 기사가 아직 없어요 -!'
+    context = context_infor(articles=articles, categories=categories, keywords=keywords, is_none = is_none, msg=msg)
+    return render(request,'index.html', context)

@@ -53,9 +53,9 @@ class Article(TimeStampable, Countable):
       time_passed = float(current_date)-int(float(self.date))
     #   print(time_passed)
       if time_passed == 0:
-          return '1초 전'
+          return '1분 전'
       if time_passed < 60:
-          return str(time_passed) + '초 전'
+          return str(time_passed) + '분 전'
       if time_passed//60 < 60:
           return str(int(time_passed//60)) + '분 전'
       if time_passed//(60*60) < 24:

@@ -33,13 +33,12 @@ category_list = ['society', 'politics']
 def parse_daum():
     data = {}
     i = 0
-    for cat in category_list:
-        category = cat
+    for category in category_list:
         for num in range(1,2):
             time.sleep(5)
-            print(f'{cat} - {num} 페이지 스크래핑 시작 -!')
+            print(f'{category} - {num} 페이지 스크래핑 시작 -!')
             date = datetime.today().strftime("%Y%m%d")
-            response = requests.get(f'https://news.daum.net/breakingnews/{cat}?page={num}&regDate={date}')
+            response = requests.get(f'https://news.daum.net/breakingnews/{category}?page={num}&regDate={date}')
             soup = BeautifulSoup(response.text, 'html.parser')
     #         category = bg.select_one('#kakaoGnb > div > ul > li.on > a > span.ir_wa')
             ul = soup.select_one('#mArticle > div.box_etc > ul')
@@ -56,8 +55,7 @@ def parse_daum():
                     preview_img = li.select_one('a > img')['src']
                     news_url = requests.get(ref)
                     news_url_html = BeautifulSoup(news_url.text, 'html.parser')
-                    category = cat
-    #                 print(category)
+                    category_word = news_url_html.select_one(f'#kakaoGnb > div > ul >li.{category} > a > span.ir_wa').text
                     date = news_url_html.select_one('#cSub > div > span > span > span').text
                     date = date.strip()
                     date_list = date.replace(' ','.').split('.')
@@ -73,38 +71,37 @@ def parse_daum():
                     print('error')
                     pass
                 # print(insight_news_info)
-                insight_news_info = dict_infor( press=press,news_code=code, news_category=category, date=timestamp, preview_img=preview_img, title=title, content=content,ref=ref)
+                insight_news_info = dict_infor( press=press,news_code=code, news_category=category_word, date=timestamp, preview_img=preview_img, title=title, content=content,ref=ref)
                 print(insight_news_info) 
                 i += 1
                 data[i] = insight_news_info
     return data
 
-if __name__=='__main__':
+# if __name__=='__main__':
 
-    news_dict = parse_daum()
-    cnt = 0
-    # try:
-    for v in news_dict.values():
-        if not v['preview_img']:
-            v['preview_img'] = 'default.img'
-        cnt += 1
-        if Press.objects.filter(name=v['press']).first() is None:
-            Press.objects.create(name = v['press'])
-        print('여기까지는 성고오오오오오옹')
-        if not Article.objects.filter(title = v['title']):
-            Article.objects.create(
-                press=Press.objects.filter(name=v['press']).first(),
-                potal = Potal.objects.filter(name='다음').first(),
-                category=Category.objects.filter(name=v['news_category']).first(),
-                code=v['news_code'],
-                date=v['date'],
-                preview_img=v['preview_img'],
-                title=v['title'],
-                content=v['content'],
-                ref=v['ref'],
-                counted_at = 0,
-                created_at = time.time()
-                    )
+#     news_dict = parse_daum()
+# #     cnt = 0
+# #     # try:
+#     for v in news_dict.values():
+#         if not v['preview_img']:
+#             v['preview_img'] = 'default.img'
+#         if Press.objects.filter(name=v['press']).first() is None:
+#             Press.objects.create(name = v['press'])
+#         print('여기까지는 성고오오오오오옹')
+#         if not Article.objects.filter(title = v['title']):
+#             Article.objects.create(
+#                 press=Press.objects.filter(name=v['press']).first(),
+#                 potal = Potal.objects.filter(name='다음').first(),
+#                 category=Category.objects.filter(name=v['news_category']).first(),
+#                 code=v['news_code'],
+#                 date=v['date'],
+#                 preview_img=v['preview_img'],
+#                 title=v['title'],
+#                 content=v['content'],
+#                 ref=v['ref'],
+#                 counted_at = 0,
+#                 created_at = time.time()
+#                     )
               
-    # except:
-    #     pass
+#     # except:
+#     #     pass

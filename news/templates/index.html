@@ -13,16 +13,20 @@
     <div class="category-scroll">
       <i class="fas fa-times category-close" onclick="categoryClose()"></i>
     <li class="category-li">
-      <a class="active" href="">전체보기</a>
+      <a class="active category-all" href="{% url 'index' %}">전체보기</a>
     </li>
     {% for category in categories %}
     <li class="category-li">
-      <a href="">{{category.name}}</a>
+      <a href="{% url 'news:category' category.pk %}">{{category.name}}</a>
+      <!-- <form action="" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="{{category.name}}" onclick="categoryBtn('{{category.pk}}')">
+      </form> -->
     </li>
     {% endfor %}
     {% for keyword in keywords %}
     <li class="category-li">
-      <a href="">{{keyword.name}}</a>
+      <a href="{% url 'news:keyword' keyword.pk %}">{{keyword.name}}</a>
     </li>
     {% endfor %}
     </div>
@@ -36,6 +40,9 @@
 
 {% if user.is_authenticated %}
 <ul class="news-ul">
+  {% if is_none %}
+  <li class="news-none-msg">{{msg}}</li>
+  {% else %}
   {% for article in articles %}
   <li class="news-li">
     <div class="news-img"><img src="{{article.preview_img}}" alt="">
@@ -56,13 +63,12 @@
       </div>
     </div>
   </a>
-  
   </li>
   {% endfor %}
+  {% endif %}
+  
 </ul>
 {% else %}
-{% endif %}
-
 <ul class="news-ul">
   {% for article in articles %}
   <li class="news-li">
@@ -84,10 +90,11 @@
       </div>
     </div>
   </a>
-  
   </li>
   {% endfor %}
 </ul>
+{% endif %}
+
 {% endblock content %}
 
 {% block script %}
@@ -100,6 +107,73 @@ function categoryClose(){
 function categoryOpen(){
   document.querySelector('.category-ul').classList.add('category-open-ani')
   document.querySelector('.category-ul').classList.remove('category-close-ani')
+}
+
+// 버튼 누른대로 기사 보여주기
+
+function categoryBtn(pk){
+  event.preventDefault();
+
+let CsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+let param = {
+  'category_pk':pk,
+}
+fetch("{% url 'index' %}", {
+  method: 'POST',
+  headers: {
+    "X-CSRFToken": CsrfValue,
+    "X-Requested-With": "XMLHttpRequest"
+  },
+  body: JSON.stringify(param),
+}).then(function (response) {
+  console.log('readdss', response)
+  return response.json()
+}).then(function (data) {
+  document.querySelector('.news-ul').innerHTML =``; 
+  console.log(data)
+  data['article_list'].forEach(function(item, index){
+    console.log(item,index)
+    document.querySelector('.news-ul').innerHTML += `
+    <li class="news-li">
+    <div class="news-img"><img src="${item['preview_img']}" alt="">
+    </div>
+    <a href="news/detail${item['pk']}/"><div class="news-contents">
+      <div class="news-title">${item['title']}</div>
+      <div class="news-content"></div>
+      <div class="news-social">
+        <div class="news-infor">
+        <span class="news-portal">${item['potal']} · </span>
+        <span class="news-press">${item['press']} · </span>
+        <span class="news-date">${item['date']}</span>
+      </div>
+      <div class="news-social-infor">
+        <span class="news-social-comment"><i class="fas fa-comment-alt"> </i> 12</span>
+        <span class="news-social-like"><i class="fas fa-heart"> </i> 2</span>
+      </div>
+      </div>
+    </div>
+  </a>
+  
+  </li>
+    
+    `;
+  })
+  
+
+  return(data)
+}).catch((error) => {
+  console.log('error', error);
+})
+
+}
+
+window.onload = () => {
+  pk = window.location.href
+  
+}
+
+function categoryClick(pk){
+  console.log(pk)
 }
 
 </script>
