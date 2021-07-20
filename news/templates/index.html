@@ -13,7 +13,7 @@
     <div class="category-scroll">
       <i class="fas fa-times category-close" onclick="categoryClose()"></i>
     <li class="category-li">
-      <a class="active category-all" href="{% url 'index' %}">전체보기</a>
+      <a class="category-all" href="{% url 'index' %}">전체보기</a>
     </li>
     {% for category in categories %}
     <li class="category-li">
@@ -167,14 +167,20 @@ fetch("{% url 'index' %}", {
 
 }
 
-window.onload = () => {
-  pk = window.location.href
-  
-}
+let url = window.location.href;
+console.log(url)
+a_list  = document.querySelectorAll('.category-li > a')
+// a_list.forEach(a => console.log(a['href']))
+// console.log(lis['href'])  
+a_list.forEach(function(a){
+  if(url == a['href']){
+    href = url
+    a.parentNode.classList.add('active');
+  }
+})
+// this.toggleClass('active',this.attr('href')==url);
 
-function categoryClick(pk){
-  console.log(pk)
-}
+// document.querySelector('.category-li > a')[href]
 
 </script>
 {% endblock script %}
