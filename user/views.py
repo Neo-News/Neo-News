@@ -1,4 +1,5 @@
 
+from news.models import Press, UserPress
 import os
 import boto3
 import requests
@@ -320,7 +321,24 @@ class UserInforAddView(View):
         User.objects.filter(pk=request.user.pk).update(
           is_detailed = True
         )
+        print('아아아아아아앙')
+        print(request.user.pk)
+        # 유저 상세페이지에서 유저만의 언론사 테이블 생성함
+        presses = Press.objects.all()
+        userpress = UserPress.objects.filter(user__pk = request.user.pk)
+        if userpress is None:
+          userpress = UserPress.objects.create(
+          user = User.objects.filter(pk=request.user.pk).first()
+          )
+          print('성공 !')
+          for press in presses:
+            print(press)
+            userpress.press.add(press.name)
+        
         return JsonResponse({
           'success':True,
           'url': 'http://127.0.0.1:8000/'
           })
+      
+      
+

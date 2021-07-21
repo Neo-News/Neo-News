@@ -1,16 +1,21 @@
 from django.db import models
 from user.models import User
-from behaviors import TimeStampable, Countable
-from user.models import Category, Keyword
+from behaviors import TimeStampable, Countable, Deleteable
+from user.models import User,Category, Keyword
 import time
 import datetime
 
 
-class Press(models.Model):
+class Press(Deleteable):
     name = models.CharField(max_length=32)
-
     def __str__(self):
       return self.name
+
+
+class UserPress(Deleteable):
+    user = models.OneToOneField(User,on_delete=models.CASCADE, related_name='user')
+    press = models.ManyToManyField(Press,blank=True, related_name='user_press')
+    is_checked = models.BooleanField(default=True)
 
 
 class Potal(models.Model):
@@ -35,7 +40,7 @@ class Article(TimeStampable, Countable):
       ordering = ['-created_at','-date']
 
     def __str__(self):
-      return f'{self.category}- {self.created_at}'
+      return f'{self.category}- {self.potal.name}'
 
     @property
     def created_string(self):

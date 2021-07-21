@@ -7,6 +7,7 @@ from django.views.generic import DetailView,View
 from utils import get_time_passed
 from django.db.models import Q
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.views.generic import ListView
 
 import json
 #  Create your views here.
@@ -25,10 +26,21 @@ class IndexView(View):
   def get(self, request, **kwargs):
     categories = Category.objects.filter(users__pk=request.user.pk).all()
     keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
+    article_lists = []
     # articles = Article.objects.all()[:20]
     page = request.GET.get('page','1')
-    article_list = Article.objects.all()
-    paginator = Paginator(article_list, 20)
+    article_lists = Article.objects.all()
+    if request.user.is_authenticated :
+        # article_lists = []
+        print('로그인한 유저꺼')
+        article_lists = []
+        article_lists = Article.objects.all()
+        # for li in press_list:
+            # a = Article.objects.filter(press__name = li.name).first()
+            # if a is not None:
+                # article_lists.append(a)
+        print(article_lists)
+    paginator = Paginator(article_lists, 20)
     try:
         article_obj = paginator.page(page)
     except PageNotAnInteger:
@@ -45,8 +57,8 @@ class IndexView(View):
     end_index = start_index + page_size
     if end_index >= max_index:
         end_index = max_index
-    page_range = paginator.page_range[start_index:end_index]
 
+    page_range = paginator.page_range[start_index:end_index]
     context = context_infor(categories=categories, keywords=keywords, articles=article_obj,page_range=page_range)    
     return render(request, 'index.html',context)
 
@@ -71,10 +83,29 @@ class NewsDetailView(DetailView):
 
 
 # 카테고리나, 키워드 수정하는 페이지
-class NewsInforEditView(View):
-    def get(self, request, **kwargs):
-        
-      return render(request, 'infor-edit.html')
+class NewsInforEditView(ListView):
+  def get(self, request, **kwargs):
+    press_list = Press.objects.all().order_by('name')
+    page = request.GET.get('page','1')
+    paginator = Paginator(press_list, 10)
+    press_obj = paginator.page(page)
+
+#  페이징 번호 5개씩 보이기 로직
+    index = press_obj.number
+    max_index = len(paginator.page_range)
+    page_size = 5
+    current_page = int(index) if index else 1
+    start_index = int((current_page - 1) / page_size) * page_size
+    end_index = start_index + page_size
+    if end_index >= max_index:
+        end_index = max_index
+    page_range = paginator.page_range[start_index:end_index]
+
+    context = context_infor(press_list=press_obj, page_range=page_range)    
+    return render(request, 'infor-edit.html',context)
+
+  def post(self, request, **kwargs):
+    pass
 
 
 
@@ -89,12 +120,17 @@ class CategoryIndexView(View):
     """
     def get(self, request, **kwargs):
         category_name =Category.objects.filter(pk=kwargs['pk']).first().name
-        print(category_name)
         categories = Category.objects.filter(users__pk=request.user.pk).all()
-        # articles = Article.objects.filter(category__name=category_name).all()
         keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
         page = request.GET.get('page','1')
-        article_list = Article.objects.filter(category__name=category_name).all()
+        article_list = []
+        press_list = Press.objects.exclude(users = request.user).all()
+        for li in press_list:
+            a = Article.objects.filter(category__name=category_name, press__name = li.name).first()
+            if a is not None:
+                article_list.append(a)
+
+        # article_list = Article.objects.filter(category__name=category_name).all()
         paginator = Paginator(article_list, 20)
         article_obj = paginator.page(page)
         #  페이징 번호 5개씩 보이기 로직
@@ -109,6 +145,7 @@ class CategoryIndexView(View):
         page_range = paginator.page_range[start_index:end_index]
         
         context = context_infor(articles=article_obj, categories=categories, keywords=keywords, page_range=page_range)
+
         return render(request,'index.html', context)
 
 
@@ -134,7 +171,17 @@ class KeywordIndexView(View):
             msg = '선택하신 키워드에 관련된 기사가 아직 없어요 -!'
         
         page = request.GET.get('page','1')
-        article_list = articles
+
+        article_list = []
+        press_list = Press.objects.exclude(users = request.user).all()
+        for li in press_list:
+            # a = Article.objects.filter( press__name = li.name).first()
+            
+            a = Article.objects.filter(Q(title__contains=keyword_name) | Q(content__contains=keyword_name),press__name = li.name).first()
+            if a is not None:
+                article_list.append(a)
+        
+        # article_list = articles
         paginator = Paginator(article_list, 20)
         article_obj = paginator.page(page)
          #  페이징 번호 5개씩 보이기 로직

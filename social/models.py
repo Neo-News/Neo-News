@@ -7,7 +7,7 @@ from behaviors import Countable, TimeStampable, Deleteable
 class Like(Countable):
     users = models.ManyToManyField(User, blank=True, related_name='like')
     article = models.OneToOneField(Article, on_delete=models.CASCADE, related_name='like')
-
+    is_liked = models.BooleanField(default=False)
 
     def __str__(self):
         return self.article.title

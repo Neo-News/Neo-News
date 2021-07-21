@@ -17,8 +17,8 @@
   </div>
   <div class="news-infor-description">
     <p class="news-infor-edit-title">언론사 선택하기</p>
-    <p class="news-infor-edit-content">언론사 선택해제시 해당 언론사에 관한 기사들은 제외되요 :-) 
-      받고싶지 않은 언론사가 있다면 선택을 해제해주세요.
+    <p class="news-infor-edit-content">현재 기사를 받고 있는 언론사들이에요 ! 언론사 선택 해제시 해당 언론사에 관한 기사들은 제외돼요 :-) 
+      보고싶지 않은 언론사가 있다면 선택을 해제해주세요.
     </p>
   </div>
   </div>
@@ -35,7 +35,7 @@ function pressInfor(e){
   document.querySelector('.press-btn').classList.add('clicked');
   document.querySelector('.keyword-btn').classList.remove('clicked');
   document.querySelector('.news-infor-edit-title').innerText = '언론사 선택하기'
-  document.querySelector('.news-infor-edit-content').innerText="언론사 선택해제시 해당 언론사에 관한 기사들은 제외되요 :-) 받고싶지 않은 언론사가 있다면 선택을 해제해주세요."
+  document.querySelector('.news-infor-edit-content').innerText="현재 기사를 받고 있는 언론사들이에요 ! 언론사 선택 해제시 해당 언론사에 관한 기사들은 제외돼요 :-) 보고싶지 않은 언론사가 있다면 선택을 해제해주세요."
   document.querySelector('.news-infor-contents').innerHTML =`{% include 'infor-press.html' %}`
 }
 
@@ -46,5 +46,40 @@ function keywordInfor(e){
   document.querySelector('.news-infor-edit-content').innerText="키워드 삭제 시 키워드가 카테고리에서 사라져요 :-) 새롭게 추가할 키워드가 있다면 입력해주세요."
   document.querySelector('.news-infor-contents').innerHTML =`{% include 'infor-keyword.html' %}`
 }
+
+// infor-press 언론사 선택 ajax 통신
+function PressChked(press_pk){
+  event.preventDefault();
+  
+  let CsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+  let param = {
+    'press_pk': press_pk,
+  }
+  fetch("{% url 'social:press' %}", {
+    method: 'POST',
+    headers: {
+      "X-CSRFToken": CsrfValue,
+      "X-Requested-With": "XMLHttpRequest"
+    },
+    body: JSON.stringify(param),
+  }).then(function (response) {
+    console.log('readdss', response)
+    return response.json()
+  }).then(function (data) {
+    console.log(data['is_deleted'])
+    if(data['is_deleted'] == true){
+      document.querySelector(`.press-check-btn${press_pk}`).classList.add('non-press-check-btn')
+      document.querySelector(`.press-check-btn${press_pk}`).classList.remove('press-check-btn')
+    }
+    else{
+      document.querySelector(`.press-check-btn${press_pk}`).classList.remove('non-press-check-btn')
+      document.querySelector(`.press-check-btn${press_pk}`).classList.add('press-check-btn')
+    }
+
+  }).catch((error) => {
+    console.log('error', error);
+  })
+}
+
 </script>
 {% endblock script %}

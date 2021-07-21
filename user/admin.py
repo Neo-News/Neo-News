@@ -1,7 +1,7 @@
 from django.contrib import admin
 from user.models import User,LoginLog, Category, Keyword, ProfileImage
 from social.models import Like, Comment, ReComment
-from news.models import Article, Potal, Press, ArticleShare
+from news.models import Article, Potal, Press, ArticleShare,UserPress
 
 
 admin.site.register(User)
@@ -16,3 +16,4 @@ admin.site.register(ArticleShare)
 admin.site.register(Like)
 admin.site.register(Comment)
 admin.site.register(ReComment)
+admin.site.register(UserPress)

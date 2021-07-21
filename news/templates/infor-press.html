@@ -1,16 +1,60 @@
 <ul class="infor-press-ul">
-  <li class="infor-press-li">
+  {% for press in press_list %}
+  <li class="infor-press-li infor-press-li{{press.pk}}">
     <div class="infor-press">
-    <img src="" alt=""><i class="fas fa-atom"></i>
-    <span>인사이트</span>
+      <img src="" alt=""><i class="fas fa-newspaper"></i>
+      <span>{{press.name}}</span>
     </div>
-    <span><i class="far fa-check-square"></i></span>
+    <form action="" method='POST'>
+      {% csrf_token %}
+      <span>
+      {% if press.deleted_at %}
+      <i class="press-check-btn{{press.pk}} non-press-check-btn far fa-check-square" onclick="PressChked('{{press.pk}}')"></i>
+      {% else %}
+      <i class="press-check-btn{{press.pk}} press-check-btn far fa-check-square" onclick="PressChked('{{press.pk}}')"></i>
+      {% endif %}
+    </span>
+    </form>
   </li>
-  <li class="infor-press-li">
-    <div class="infor-press">
-    <img src="" alt=""><i class="fas fa-atom"></i>
-    <span>인사이트</span>
-    </div>
-    <span><i class="far fa-check-square"></i></span>
-  </li>
+  {% endfor %}
 </ul>
+
+<!-- 페이징 처리 -->
+<ul class="page-ul">
+  {% if press_list.has_previous %}
+  <li class="page-li">
+    <a class="page-link" href="?page={{ press_list.previous_page_number}}"><i
+        class="page-icon fas fa-chevron-left"></i>이전</a>
+  </li>
+  {% else %}
+  <li class="page-li disabled">
+    <a class="page-link" tabindex="-1" aria-disabled="true" href="#"><i class="page-icon fas fa-chevron-left"></i>이전</a>
+  </li>
+  {% endif %}
+  <!-- 페이지리스트 -->
+  {% for page_number in page_range %}
+  {% if page_number == question_list.number %}
+  <li class="page-li active" aria-current="page">
+    <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+  </li>
+  {% else %}
+  <li class="page-li">
+    <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+  </li>
+  {% endif %}
+  {% endfor %}
+  <!-- 다음페이지 -->
+  {% if press_list.has_next %}
+  <li class="page-li">
+    <a class="page-link" href="?page={{ press_list.next_page_number }}">다음<i
+        class="page-icon fas fa-chevron-right"></i></a>
+  </li>
+  {% else %}
+  <li class="page-li disabled">
+    <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음<i
+        class="page-icon fas fa-chevron-right"></i></a>
+  </li>
+  {% endif %}
+</ul>
+<!-- 페이징처리 끝 -->
+

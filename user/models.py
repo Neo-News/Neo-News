@@ -40,7 +40,6 @@ class User(AbstractBaseUser, PermissionsMixin, TimeStampable, Deleteable):
     is_staff = models.BooleanField(verbose_name=('Is staff'), default=False)
     is_agreed = models.BooleanField(verbose_name=('Is agreed'), default=False)
     is_detailed = models.BooleanField(verbose_name=('Is detailed'), default=False)
-
     objects = UserManager()
     
     USERNAME_FIELD = 'email'

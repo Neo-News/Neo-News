@@ -27,8 +27,8 @@ def dict_infor(**kwargs):
         context[k] = v
     return context
 
-
-category_list = ['society', 'politics', 'economic', 'foreign', 'culture', 'digital', 'entertain', 'sports']
+# , 'politics', 'economic', 'foreign', 'culture', 'digital', 'entertain', 'sports'
+category_list = ['economic', 'foreign']
 
 def parse_daum():
     data = {}
@@ -58,7 +58,7 @@ def parse_daum():
                     detail_ul = soup.select_one('#mArticle > ul')
                     detail_li = detail_ul.select_one('#mArticle > ul > li.on > a').text.replace('선택됨','').replace('\n','')
 
-                    print(detail_li)
+                    # print(detail_li)
                     # category_word = news_url_html.select_one('#mArticle > ul > li.on > a > span').text
                     # print(category_word)
                     date = news_url_html.select_one('#cSub > div > span > span > span').text
@@ -67,6 +67,7 @@ def parse_daum():
                     date_list = ' '.join(date_list).split()
                     date_list = date_list[0]+'-'+date_list[1]+'-'+date_list[2]+' '+date_list[3]
                     date_code = datetime.strptime(date_list,'%Y-%m-%d %H:%M')
+                    print(date_code)
                     timestamp = time.mktime(date_code.timetuple())
                     timestamp = str(timestamp)
     #                 print(timestamp)
@@ -82,31 +83,31 @@ def parse_daum():
                 data[i] = insight_news_info
     return data
 
-# if __name__=='__main__':
+if __name__=='__main__':
 
-#     news_dict = parse_daum()
-# #     cnt = 0
-# #     # try:
-#     for v in news_dict.values():
-#         if not v['preview_img']:
-#             v['preview_img'] = 'default.img'
-#         if Press.objects.filter(name=v['press']).first() is None:
-#             Press.objects.create(name = v['press'])
-#         print('여기까지는 성고오오오오오옹')
-#         if not Article.objects.filter(title = v['title']):
-#             Article.objects.create(
-#                 press=Press.objects.filter(name=v['press']).first(),
-#                 potal = Potal.objects.filter(name='다음').first(),
-#                 category=Category.objects.filter(name=v['news_category']).first(),
-#                 code=v['news_code'],
-#                 date=v['date'],
-#                 preview_img=v['preview_img'],
-#                 title=v['title'],
-#                 content=v['content'],
-#                 ref=v['ref'],
-#                 counted_at = 0,
-#                 created_at = time.time()
-#                     )
+    news_dict = parse_daum()
+#     cnt = 0
+#     # try:
+    for v in news_dict.values():
+        if not v['preview_img']:
+            v['preview_img'] = 'default.img'
+        if Press.objects.filter(name=v['press']).first() is None:
+            Press.objects.create(name = v['press'])
+        print('여기까지는 성고오오오오오옹')
+        if not Article.objects.filter(title = v['title']):
+            Article.objects.create(
+                press=Press.objects.filter(name=v['press']).first(),
+                potal = Potal.objects.filter(name='다음').first(),
+                category=Category.objects.filter(name=v['news_category']).first(),
+                code=v['news_code'],
+                date=v['date'],
+                preview_img=v['preview_img'],
+                title=v['title'],
+                content=v['content'],
+                ref=v['ref'],
+                counted_at = 0,
+                created_at = time.time()
+                    )
               
-#     # except:
-    #     pass
+    # except:
+        pass
