@@ -41,6 +41,6 @@ def task_scrappy():
                 content=v['content'],
                 ref=v['ref'],
                 counted_at = 0,
-                created_at = time.time()
+                created_at = v['created_at']
                     )            
     return None

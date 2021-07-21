@@ -32,10 +32,10 @@ class Article(TimeStampable, Countable):
     ref = models.URLField()
 
     class Meta:
-      ordering = ['-date', '-created_at']
+      ordering = ['-created_at','-date']
 
     def __str__(self):
-      return f'{self.category}- {self.date}'
+      return f'{self.category}- {self.created_at}'
 
     @property
     def created_string(self):
@@ -50,7 +50,7 @@ class Article(TimeStampable, Countable):
       datetime_format = now.strftime('%Y-%m-%d %H:%M:00')
       current_date = time.mktime(time.strptime(datetime_format,'%Y-%m-%d %H:%M:%S'))
 
-      time_passed = float(current_date)-int(float(self.date))
+      time_passed = float(current_date)-int(float(self.created_at))
     #   print(time_passed)
       if time_passed == 0:
           return '1분 전'

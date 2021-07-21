@@ -28,7 +28,7 @@ def dict_infor(**kwargs):
     return context
 
 
-category_list = ['society', 'politics']
+category_list = ['society', 'politics', 'economic', 'foreign', 'culture', 'digital', 'entertain', 'sports']
 
 def parse_daum():
     data = {}
@@ -55,7 +55,12 @@ def parse_daum():
                     preview_img = li.select_one('a > img')['src']
                     news_url = requests.get(ref)
                     news_url_html = BeautifulSoup(news_url.text, 'html.parser')
-                    category_word = news_url_html.select_one(f'#kakaoGnb > div > ul >li.{category} > a > span.ir_wa').text
+                    detail_ul = soup.select_one('#mArticle > ul')
+                    detail_li = detail_ul.select_one('#mArticle > ul > li.on > a').text.replace('선택됨','').replace('\n','')
+
+                    print(detail_li)
+                    # category_word = news_url_html.select_one('#mArticle > ul > li.on > a > span').text
+                    # print(category_word)
                     date = news_url_html.select_one('#cSub > div > span > span > span').text
                     date = date.strip()
                     date_list = date.replace(' ','.').split('.')
@@ -71,8 +76,8 @@ def parse_daum():
                     print('error')
                     pass
                 # print(insight_news_info)
-                insight_news_info = dict_infor( press=press,news_code=code, news_category=category_word, date=timestamp, preview_img=preview_img, title=title, content=content,ref=ref)
-                print(insight_news_info) 
+                insight_news_info = dict_infor( press=press,news_code=code, news_category=detail_li, date=date_code, preview_img=preview_img, title=title, content=content,ref=ref, created_at = timestamp)
+                # print(insight_news_info) 
                 i += 1
                 data[i] = insight_news_info
     return data
@@ -104,4 +109,4 @@ def parse_daum():
 #                     )
               
 #     # except:
-#     #     pass
+    #     pass

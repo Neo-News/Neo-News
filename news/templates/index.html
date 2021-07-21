@@ -95,6 +95,7 @@
 </ul>
 {% endif %}
 
+{% include 'pagination.html' %}
 {% endblock content %}
 
 {% block script %}
@@ -109,78 +110,28 @@ function categoryOpen(){
   document.querySelector('.category-ul').classList.remove('category-close-ani')
 }
 
-// 버튼 누른대로 기사 보여주기
-
-function categoryBtn(pk){
-  event.preventDefault();
-
-let CsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
-let param = {
-  'category_pk':pk,
-}
-fetch("{% url 'index' %}", {
-  method: 'POST',
-  headers: {
-    "X-CSRFToken": CsrfValue,
-    "X-Requested-With": "XMLHttpRequest"
-  },
-  body: JSON.stringify(param),
-}).then(function (response) {
-  console.log('readdss', response)
-  return response.json()
-}).then(function (data) {
-  document.querySelector('.news-ul').innerHTML =``; 
-  console.log(data)
-  data['article_list'].forEach(function(item, index){
-    console.log(item,index)
-    document.querySelector('.news-ul').innerHTML += `
-    <li class="news-li">
-    <div class="news-img"><img src="${item['preview_img']}" alt="">
-    </div>
-    <a href="news/detail${item['pk']}/"><div class="news-contents">
-      <div class="news-title">${item['title']}</div>
-      <div class="news-content"></div>
-      <div class="news-social">
-        <div class="news-infor">
-        <span class="news-portal">${item['potal']} · </span>
-        <span class="news-press">${item['press']} · </span>
-        <span class="news-date">${item['date']}</span>
-      </div>
-      <div class="news-social-infor">
-        <span class="news-social-comment"><i class="fas fa-comment-alt"> </i> 12</span>
-        <span class="news-social-like"><i class="fas fa-heart"> </i> 2</span>
-      </div>
-      </div>
-    </div>
-  </a>
-  
-  </li>
-    
-    `;
-  })
-  
-
-  return(data)
-}).catch((error) => {
-  console.log('error', error);
-})
-
-}
-
-let url = window.location.href;
-console.log(url)
+// 페이징 처리한 기사 링크와 비교해서 카테고리 색상 포커스 주기
+let url = window.location.pathname;
 a_list  = document.querySelectorAll('.category-li > a')
-// a_list.forEach(a => console.log(a['href']))
-// console.log(lis['href'])  
+url = `http://127.0.0.1:8000${url}` 
+
 a_list.forEach(function(a){
   if(url == a['href']){
+    // console.log('a링크',a['href'])
     href = url
     a.parentNode.classList.add('active');
   }
 })
-// this.toggleClass('active',this.attr('href')==url);
 
-// document.querySelector('.category-li > a')[href]
+// 페이징 번호 선택한 버튼에 색상 포커스 주기
 
+let page_url = window.location.href
+page_lis = document.querySelectorAll('.page-li > a')
+page_lis.forEach(function(a){
+  if(page_url == a['href']){
+    console.log('haha')
+    a.classList.add('page-active')
+  }
+})
 </script>
 {% endblock script %}
