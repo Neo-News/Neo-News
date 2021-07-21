@@ -123,12 +123,15 @@ class CategoryIndexView(View):
         categories = Category.objects.filter(users__pk=request.user.pk).all()
         keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
         page = request.GET.get('page','1')
-        article_list = []
-        press_list = Press.objects.exclude(users = request.user).all()
-        for li in press_list:
-            a = Article.objects.filter(category__name=category_name, press__name = li.name).first()
-            if a is not None:
-                article_list.append(a)
+        article_list = Article.objects.filter(category__name=category_name).all()
+         
+         #유저가 제거한 언론사 제거하고 Article 보여 주기 위한 로직이였음
+        # article_list = []
+        # press_list = Press.objects.exclude(users = request.user).all()
+        # for li in press_list:
+        #     a = Article.objects.filter(category__name=category_name, press__name = li.name).first()
+        #     if a is not None:
+        #         article_list.append(a)
 
         # article_list = Article.objects.filter(category__name=category_name).all()
         paginator = Paginator(article_list, 20)
@@ -172,14 +175,16 @@ class KeywordIndexView(View):
         
         page = request.GET.get('page','1')
 
-        article_list = []
-        press_list = Press.objects.exclude(users = request.user).all()
-        for li in press_list:
-            # a = Article.objects.filter( press__name = li.name).first()
+        # 유저가 제거한 언론사 제거하고 Article 보여 주기 위한 로직이였음
+        # article_list = []
+        # press_list = Press.objects.exclude(users = request.user).all()
+        # for li in press_list:
+        #     # a = Article.objects.filter( press__name = li.name).first()
             
-            a = Article.objects.filter(Q(title__contains=keyword_name) | Q(content__contains=keyword_name),press__name = li.name).first()
-            if a is not None:
-                article_list.append(a)
+        #     a = Article.objects.filter(Q(title__contains=keyword_name) | Q(content__contains=keyword_name),press__name = li.name).first()
+        #     if a is not None:
+        #         article_list.append(a)
+        article_list = articles
         
         # article_list = articles
         paginator = Paginator(article_list, 20)
