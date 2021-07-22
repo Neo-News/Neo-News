@@ -42,7 +42,7 @@ class Article(TimeStampable, Countable):
       ordering = ['-created_at','-date']
 
     def __str__(self):
-      return f'{self.category}- {self.potal.name}'
+      return f'{self.category}- {self.potal.name}-{self.title}'
 
     @property
     def created_string(self):
