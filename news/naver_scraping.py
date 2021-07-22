@@ -8,6 +8,7 @@ import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)) + '/app')))
 import django
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
 
@@ -46,10 +47,10 @@ def convert_datetime_to_timestamp(date_list):
 naver_news_code = {
     '100' : [265],
     '101' : [259],
-    '102' : [249],
-    '103' : [239],
-    '104' : [231],
-    '105' : [226],
+    # '102' : [249],
+    # '103' : [239],
+    # '104' : [231],
+    # '105' : [226],
 }
 
 category_list = [key for key in naver_news_code.keys()]
@@ -114,12 +115,12 @@ if __name__=='__main__':
     news_list = parse_naver()
     print(len(news_list))
     print("스크래핑 성공")
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
+    
     try:
         for news in news_list:
             date_list = news['date'].replace(".", " ").replace(":", " ").split(" ")
             time_obj = convert_datetime_to_timestamp(date_list)
-            category = ''
+            category = Category.objects.filter(name=news['category']).first()
             press = Press.objects.filter(name=news['press']).first()
             if not press:
                 press = Press.objects.create(name=news['press'])
