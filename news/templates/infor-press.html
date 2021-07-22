@@ -1,5 +1,6 @@
 <ul class="infor-press-ul">
   {% for press in press_list %}
+
   <li class="infor-press-li infor-press-li{{press.pk}}">
     <div class="infor-press">
       <img src="" alt=""><i class="fas fa-newspaper"></i>
@@ -8,16 +9,23 @@
     <form action="" method='POST'>
       {% csrf_token %}
       <span>
-      {% if press.deleted_at %}
-      <i class="press-check-btn{{press.pk}} non-press-check-btn far fa-check-square" onclick="PressChked('{{press.pk}}')"></i>
-      {% else %}
-      <i class="press-check-btn{{press.pk}} press-check-btn far fa-check-square" onclick="PressChked('{{press.pk}}')"></i>
-      {% endif %}
+        {% for i in non_press.all %}
+  {% if press.name in i.name %}
+  <i class="press-check-btn{{press.pk}} non-press-check-btn far fa-check-square" onclick="PressChked('{{press.pk}}')"></i>
+  {% endif %}
+  {% endfor %}
+
+  {% for i in in_press.all %}
+  {% if press.name in i.name %}
+  <i class="press-check-btn{{press.pk}} press-check-btn far fa-check-square" onclick="PressChked('{{press.pk}}')"></i>
+  {% endif %}
+  {% endfor %}
     </span>
     </form>
   </li>
   {% endfor %}
 </ul>
+
 
 <!-- 페이징 처리 -->
 <ul class="page-ul">
@@ -56,5 +64,6 @@
   </li>
   {% endif %}
 </ul>
+
 <!-- 페이징처리 끝 -->
 

@@ -1,7 +1,7 @@
 from django.http.response import JsonResponse
 from utils import context_infor
-from user.models import Category, Keyword
-from news.models import Article, Press,Potal
+from user.models import Category, Keyword, User
+from news.models import Article, Press,Potal,UserPress
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView,View
 from utils import get_time_passed
@@ -26,21 +26,22 @@ class IndexView(View):
   def get(self, request, **kwargs):
     categories = Category.objects.filter(users__pk=request.user.pk).all()
     keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
-    article_lists = []
+    # article_lists = []
     # articles = Article.objects.all()[:20]
     page = request.GET.get('page','1')
-    article_lists = Article.objects.all()
+    article_list = Article.objects.all()
     if request.user.is_authenticated :
         # article_lists = []
         print('로그인한 유저꺼')
-        article_lists = []
-        article_lists = Article.objects.all()
-        # for li in press_list:
-            # a = Article.objects.filter(press__name = li.name).first()
-            # if a is not None:
-                # article_lists.append(a)
-        print(article_lists)
-    paginator = Paginator(article_lists, 20)
+        userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
+        article_list = []
+        if userpress is not None:
+            for press in userpress.press.all():
+                articles = Article.objects.filter(press__name=press.name).all()
+                for article in articles:
+                    article_list.append(article)
+        print(article_list)
+    paginator = Paginator(article_list, 20)
     try:
         article_obj = paginator.page(page)
     except PageNotAnInteger:
@@ -84,28 +85,46 @@ class NewsDetailView(DetailView):
 
 # 카테고리나, 키워드 수정하는 페이지
 class NewsInforEditView(ListView):
-  def get(self, request, **kwargs):
-    press_list = Press.objects.all().order_by('name')
-    page = request.GET.get('page','1')
-    paginator = Paginator(press_list, 10)
-    press_obj = paginator.page(page)
+    """
+    author: son hee jung
+    date: 0722
+    description:
+    설정 페이지에서 언론사 선택에 관련한 로직 설명입니다. 해당 유저의 userpress 필드를 가져온뒤
+    유저가 선택한 press와 선택을 해제한 press가 담긴 non_pres를 all()을 통해 가져옵니다.
+    이후 전체 press와 각각의 press들의 정보를 context에 담아 템플릿에 보내줍니다.
+    해당 템플릿에서 for문으로 전체 press와 하나씩 비교하여 유/무에 따라 체크박스 설정을 달리 해줍니다
+    """
+    def get(self, request, **kwargs):
+        press_list = Press.objects.all().order_by('name')
+        userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
+        non_press = userpress.non_press.all()
+        press = userpress.press.all()
 
-#  페이징 번호 5개씩 보이기 로직
-    index = press_obj.number
-    max_index = len(paginator.page_range)
-    page_size = 5
-    current_page = int(index) if index else 1
-    start_index = int((current_page - 1) / page_size) * page_size
-    end_index = start_index + page_size
-    if end_index >= max_index:
-        end_index = max_index
-    page_range = paginator.page_range[start_index:end_index]
+        if non_press is not None:
+          non_press = userpress.non_press.all()
+          press = userpress.press.all()
+        if press is not None:
+            press = userpress.press.all()
 
-    context = context_infor(press_list=press_obj, page_range=page_range)    
-    return render(request, 'infor-edit.html',context)
+        page = request.GET.get('page','1')
+        paginator = Paginator(press_list, 10)
+        press_obj = paginator.page(page)
+    #  페이징 번호 5개씩 보이기 로직
+        index = press_obj.number
+        max_index = len(paginator.page_range)
+        page_size = 5
+        current_page = int(index) if index else 1
+        start_index = int((current_page - 1) / page_size) * page_size
+        end_index = start_index + page_size
+        if end_index >= max_index:
+            end_index = max_index
+        page_range = paginator.page_range[start_index:end_index]
 
-  def post(self, request, **kwargs):
-    pass
+        context = context_infor(press_list=press_obj, page_range=page_range,in_press=press,non_press=non_press)    
+        return render(request, 'infor-edit.html',context)
+
+    def post(self, request, **kwargs):
+        pass
 
 
 
@@ -124,7 +143,14 @@ class CategoryIndexView(View):
         keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
         page = request.GET.get('page','1')
         article_list = Article.objects.filter(category__name=category_name).all()
-         
+        article_list = []
+        userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
+        for press in userpress.press.all():
+            articles = Article.objects.filter(press__name=press).all()
+            for article in articles:
+                article_list.append(article)
+                print(article.press)
+            
          #유저가 제거한 언론사 제거하고 Article 보여 주기 위한 로직이였음
         # article_list = []
         # press_list = Press.objects.exclude(users = request.user).all()

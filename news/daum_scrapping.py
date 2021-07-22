@@ -6,7 +6,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 import django
 django.setup()
-from news.models import Article, Potal,Press,Category
+from user.models import User
+from news.models import Article, Potal,Press,Category, UserPress
 from datetime import datetime
 import time
 
@@ -28,7 +29,7 @@ def dict_infor(**kwargs):
     return context
 
 # , 'politics', 'economic', 'foreign', 'culture', 'digital', 'entertain', 'sports'
-category_list = ['economic', 'foreign']
+category_list = ['economic']
 
 def parse_daum():
     data = {}
@@ -108,6 +109,13 @@ if __name__=='__main__':
                 counted_at = 0,
                 created_at = time.time()
                     )
+        # press userpress에 없을경우 추가해준다 
+        press_obj = Press.objects.filter(name = v['press']).first()
+        userpress_list = UserPress.objects.all()
+        for userpress in userpress_list:
+            if press_obj not in userpress.press.all():
+                userpress.press.add(press_obj)
+
               
     # except:
         pass

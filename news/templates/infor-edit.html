@@ -47,6 +47,7 @@ function keywordInfor(e){
   document.querySelector('.news-infor-contents').innerHTML =`{% include 'infor-keyword.html' %}`
 }
 
+
 // infor-press 언론사 선택 ajax 통신
 function PressChked(press_pk){
   event.preventDefault();
@@ -67,7 +68,9 @@ function PressChked(press_pk){
     return response.json()
   }).then(function (data) {
     console.log(data['is_deleted'])
-    if(data['is_deleted'] == true){
+    console.log(data['press_pk'])
+    if(data['is_deleted'] == false){
+     
       document.querySelector(`.press-check-btn${press_pk}`).classList.add('non-press-check-btn')
       document.querySelector(`.press-check-btn${press_pk}`).classList.remove('press-check-btn')
     }

@@ -54,16 +54,16 @@ class UserLoginView(FormView):
             print('로그인 성공')
         return super().form_valid(form)
 
-# class UserLoginView(LoginView):
-#     """
-#     author: Oh Ji Yun
-#     date: 0715
-#     description:
-#     FormView 상속받아서 로그인 기능 구현
-#     Form은 authenticate가 있는 authentication form 사용 
-#     """
-#     template_name = 'login.html'
-    
+class UserLoginView(LoginView):
+    """
+    author: Oh Ji Yun
+    date: 0715
+    description:
+    FormView 상속받아서 로그인 기능 구현
+    Form은 authenticate가 있는 authentication form 사용 
+    """
+    template_name = 'login.html'
+
 
 # 카카오 로그인 뷰
 def kakao_login(request):
@@ -325,7 +325,8 @@ class UserInforAddView(View):
         print(request.user.pk)
         # 유저 상세페이지에서 유저만의 언론사 테이블 생성함
         presses = Press.objects.all()
-        userpress = UserPress.objects.filter(user__pk = request.user.pk)
+        userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
+        print(userpress)
         if userpress is None:
           userpress = UserPress.objects.create(
           user = User.objects.filter(pk=request.user.pk).first()
@@ -333,7 +334,7 @@ class UserInforAddView(View):
           print('성공 !')
           for press in presses:
             print(press)
-            userpress.press.add(press.name)
+            userpress.press.add(press)
         
         return JsonResponse({
           'success':True,
