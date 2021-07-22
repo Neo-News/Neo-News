@@ -8,6 +8,7 @@ import datetime
 
 class Press(Deleteable):
     name = models.CharField(max_length=32)
+    is_checked = models.BooleanField(default=True)
     def __str__(self):
       return self.name
 
@@ -15,6 +16,7 @@ class Press(Deleteable):
 class UserPress(Deleteable):
     user = models.OneToOneField(User,on_delete=models.CASCADE, related_name='user')
     press = models.ManyToManyField(Press,blank=True, related_name='user_press')
+    non_press = models.ManyToManyField(Press, blank=True, related_name='non_press')
     is_checked = models.BooleanField(default=True)
 
 
@@ -76,6 +78,7 @@ class Article(TimeStampable, Countable):
 class ArticleShare(models.Model):
     article = models.OneToOneField(Article, on_delete=models.CASCADE, related_name='article_share')
     users = models.ManyToManyField(User, blank=True, related_name='article_share')
+  
 
     def total_likes(self):
       return self.users.count()
