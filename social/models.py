@@ -2,6 +2,7 @@ from django.db import models
 from user.models import User
 from news.models import Article
 from behaviors import Countable, TimeStampable, Deleteable
+from utils import get_time_passed
 
 
 class Like(Countable):
@@ -24,11 +25,21 @@ class Comment(TimeStampable,Deleteable):
     def __str__(self):
         return self.content
 
+    @property
+    def created_string(self):
+      created_time = get_time_passed(self.created_at)
+      return created_time
 
-class ReComment(TimeStampable):
+
+class ReComment(TimeStampable, Deleteable):
     content = models.CharField(max_length=255)
     writer = models.ForeignKey(User, on_delete=models.CASCADE, related_name='re_comment')
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='re_comment',blank=True)
 
     def __str__(self):
         return self.content
+
+    @property
+    def created_string(self):
+      created_time = get_time_passed(self.created_at)
+      return created_time
