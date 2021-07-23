@@ -561,7 +561,7 @@ transform: translate(-50%,-50%);
 .detail-comment{
   width: 70%;
   margin: 0 auto;
-  padding:40px 0 ;
+  padding:30px 0 ;
 }
 .detail-comment-input{
   padding: 14px 10px;
@@ -587,25 +587,31 @@ transform: translate(-50%,-50%);
 }
 .detail-comment-list{
   position: relative;
-  padding-bottom: 20px;
+  padding: 10px 0;
   border-bottom: 1px solid rgb(230, 225, 225);
 }
+
 
 .comment-user-infor{
   display: flex;
   justify-content: space-between;
+  position: relative;
 }
 .user-nickname{
   font-size: .9rem;
   font-weight: bold;
+  margin-right: 5px;
 }
 .user-date{
   font-size: .7rem;
 }
 .fa-ellipsis-v{
+  position: absolute;
   cursor: pointer;
-  margin-right: 10px;
+  top: 5px;
+  right: 13px;
   font-size: .9rem;
+  color: grey;
 }
 .comment-edit-div{
   width: 100px;
@@ -621,6 +627,7 @@ transform: translate(-50%,-50%);
 }
 .comment-content{
   margin-top: 3px;
+  line-height: 2;
   font-size: .8rem;
 }
 .comment-edit,
@@ -640,6 +647,23 @@ transform: translate(-50%,-50%);
 .non-clicked{
   display: none;
 }
+/* recomment */
+.detail-recomment-input{
+  padding: 14px 10px;
+  border: none;
+  border: 1px solid rgb(197, 194, 194);
+  border-radius: 5px;
+  width: 87%;
+}
+.detail-recomment-submit{
+  padding: 12px 10px;
+  border-radius: 5px;
+  border: none;
+  color: #fff;
+  background-color:rgb(248, 161, 104);
+  cursor: pointer; 
+}
+
 
 /* news infor edit page */
 .news-infor-edit{
