@@ -75,6 +75,7 @@ function editChangePwd(event){
 function changePwd(e){
   e.preventDefault()
   document.querySelector('.delete-popup-section').style.display = 'flex';
+  document.querySelector('.delete-password').focus();
 }
 
 function popupClose(e){
@@ -83,7 +84,57 @@ function popupClose(e){
 function deleteCancel(e){
   e.preventDefault();
   document.querySelector('.delete-popup-section').style.display = 'none';
+  document.querySelector('.delete-msg').innerText ='';
+  document.querySelector('.delete-password').value = '';
+  console.log('d')
 }
   
+// 탈퇴 popup ajax 
+deleteForm = document.querySelector('.delete-form');
+deleteForm.addEventListener('submit', DeleteUserSubmit);
+
+function DeleteUserSubmit(){
+  event.preventDefault();
+  
+  $password = document.querySelector('.delete-password').value;
+
+  let CsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+  
+  let param = {
+    'password':$password,
+  }
+
+  fetch("{% url 'user:delete' %}", {
+    method: 'POST',
+    headers: {
+      "X-CSRFToken": CsrfValue,
+      "X-Requested-With": "XMLHttpRequest"
+    },
+    body: JSON.stringify(param),
+  }).then(function (response) {
+    return response.json()
+  }).then(function (data) {
+    console.log(data)
+    if(data['error'] == true){
+      document.querySelector('.delete-msg').innerText = `${data['msg']}`
+      document.querySelector('.delete-password').value='';
+      
+    }
+    else{
+      document.querySelector('.delete-popup-section').style.backdropFilter="blur(8px)";
+      document.querySelector('.delete-popup').style.display='none';
+      setTimeout(function(){window.alert('회원 탈퇴에 성공하셨습니다');window.location.href=data['url'];},500);
+    console.log('dd')
+    }
+
+    return data
+  }).catch((error) => {
+    console.log('error', error);
+  })
+}
+
+
+
+
 </script>
 {% endblock script %}

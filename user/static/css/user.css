@@ -484,15 +484,21 @@ margin-bottom: 180px;
 }
 .delete-popup-infor{
   position: absolute;
+  width: 100%;
   bottom: 35%;
 }
 .delete-popup-infor input{
   margin-bottom: 10px;
   padding: 10px 8px;
-  width: 70%;
+  width: 80%;
   border: none;
 }
-
+.delete-msg{
+  padding: 10px 0px;
+  font-size: .8rem;
+  color: red;
+  font-weight: bold;
+}
 .fa-user-check{
   font-size: 1.1rem;
   margin-right: 6px;
@@ -503,6 +509,7 @@ margin-bottom: 180px;
   font-size: .7rem;
   top: 35%;
   left: 50%;
+  width: 80%;
 transform: translate(-50%,-50%);
 /* background-color: blue; */
 }
@@ -668,6 +675,7 @@ transform: translate(-50%,-50%);
 .edit-profile-img{
   text-align: center;
 }
+
 }
 
 @media screen and (max-width:450px){

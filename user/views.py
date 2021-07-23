@@ -16,7 +16,7 @@ from .exception import SocialLoginException, KakaoException
 from datetime import datetime
 from .models import Category, Keyword, ProfileImage
 from utils import context_infor
-from user.forms import SignupForm, LoginForm
+from user.forms import SignupForm, LoginForm, UserDeleteForm
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_text
@@ -28,6 +28,8 @@ from .dto import SignupDto
 from django.contrib.auth import authenticate, login as auth_login
 from user.models import User
 from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth.hashers import check_password
+from django.contrib.auth import logout 
 
 import jwt
 import json
@@ -322,7 +324,6 @@ class UserInforAddView(View):
         User.objects.filter(pk=request.user.pk).update(
           is_detailed = True
         )
-        print('아아아아아아앙')
         print(request.user.pk)
         # 유저 상세페이지에서 유저만의 언론사 테이블 생성함
         presses = Press.objects.all()
@@ -332,7 +333,6 @@ class UserInforAddView(View):
           userpress = UserPress.objects.create(
           user = User.objects.filter(pk=request.user.pk).first()
           )
-          print('성공 !')
           for press in presses:
             print(press)
             userpress.press.add(press)
@@ -350,3 +350,52 @@ class ChangePasswordView(View):
 
   def get(self, request, **kwargs):
     return render(request, 'change-password.html')
+
+
+class DeletePasswordView(View):
+  # def get(self, request, **kwargs):
+  #   pwd_forms = UserDeleteForm()
+  #   context = context_infor(pwd_forms=pwd_forms)
+  #   print(pwd_forms)
+  #   return render(request, 'user-infor.html',context)
+
+  def post(self, request, **kwargs):
+    # pwd_form = UserDeleteForm(request.user, request.POST)
+    if request.is_ajax():
+      data = json.loads(request.body)
+
+      password = data.get('password')
+      password_chk = request.user.password
+
+    if not password:
+        error = True
+        msg = '비밀번호를 입력해주세요 !'
+        context = context_infor(error=error, msg=msg)
+        return JsonResponse(context)
+
+    if not check_password(password, password_chk):
+        error = True
+        msg = '비밀번호를 틀렸어요 !'
+        context = context_infor(error=error, msg=msg)
+        return JsonResponse(context)
+
+    User.objects.filter(pk=request.user.pk).update(
+        is_active = False
+      )
+    logout(request)
+    messages.success(request, '회원탈퇴 완료 !')
+    error = False
+    url = 'http://127.0.0.1:8000/'
+    context = context_infor(error=error,url=url)
+    return JsonResponse(context)
+
+
+    print(password)
+
+    # if pwd_form.is_valid():
+      # User.objects.filter(pk=request.user.pk).update(
+        # is_active = False
+      # )
+      # messages.success(request, '회원탈퇴완료 !')
+      # context = context_infor(pwd_form = pwd_form)
+    return render(request, 'index.html' )

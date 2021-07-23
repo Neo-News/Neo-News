@@ -13,7 +13,7 @@
         {% endif %}
 
         <div class="edit-nickname">
-            <input type="text"class="infor-user-nickname" name="infor-user-nickname" placeholder="변경할 닉네임을 입력해주세요">
+            <input type="text" class="infor-user-nickname" name="infor-user-nickname" placeholder="변경할 닉네임을 입력해주세요">
             <button class="user-nickname-btn" submit="type">변경하기</button>
         </div>
     </form>
@@ -21,47 +21,57 @@
 
 <div class="edit-profile-pwd">
     <p class="edit-personal-infor"><i class="personal-icon fas fa-caret-right"></i>비밀번호 설정</p>
-    <form class="profile-password-form" action="{% url 'user:image-upload' %}" method="POST" enctype="multipart/form-data">
+    <form class="profile-password-form" action="{% url 'user:image-upload' %}" method="POST"
+        enctype="multipart/form-data">
         {% csrf_token %}
-        
+
         <div class="edit-password">
             <button class="user-password-btn" onclick="editChangePwd(event)">비밀번호 변경</button>
             <div class="edit-password-infor non-clicked">
-            <input type="text" class="infor-user-password" name="infor-user-password" placeholder="인증받으실 이메일을 입력해주세요">
-            <input class="resend-pwd" type="submit" value="보내기">
-        </div>
+                <input type="text" class="infor-user-password" name="infor-user-password"
+                    placeholder="인증받으실 이메일을 입력해주세요">
+                <input class="resend-pwd" type="submit" value="보내기">
+            </div>
         </div>
     </form>
 </div>
 
 
 <div class="edit-profile-pwd">
-    <p class="edit-personal-infor"><i class="personal-icon fas fa-caret-right"></i>탈퇴</p>
-    <form class="profile-password-form" action="{% url 'user:image-upload' %}" method="POST" enctype="multipart/form-data">
+    <p class="edit-personal-infor"><i class="personal-icon fas fa-caret-right"></i>일반회원 탈퇴</p>
+    <form class="profile-password-form" action="{% url 'user:image-upload' %}" method="POST"
+        enctype="multipart/form-data">
         {% csrf_token %}
-        
+
         <div class="edit-password">
             <button class="user-password-btn" onclick="changePwd(event)">탈퇴하기</button>
-            <div class="edit-password-infor non-clicked">
-            <input type="text" class="infor-user-password" name="infor-user-password" placeholder="인증받으실 이메일을 입력해주세요">
-            <input class="resend-pwd" type="submit" value="보내기">
-        </div>
+            <!-- <div class="edit-password-infor non-clicked">
+                <input type="text" class="infor-user-password" name="infor-user-password"
+                    placeholder="인증받으실 이메일을 입력해주세요">
+                <input class="resend-pwd" type="submit" value="보내기">
+            </div> -->
         </div>
     </form>
 </div>
 
 <section class="delete-popup-section">
     <div class="delete-popup">
-      <div class="delete-email-popup">
-        <span class="delete-email-popup-close"><i class="delete-popup-close" onclick="popupClose(event)"></i></span>
-        <p class="delete-popup-title"><i class="fas fa-user-check"></i> 탈퇴하시겠어요 ?</p>
-        <p class="delete-popup-content2">정말 탈퇴하시겠어요 ? 탈퇴하시면 너뉴스의 서비스가 종료됩니다. 아래 정보를 입력해주세요</p>
-        <div class="delete-popup-infor">
-            <input type="email" placeholder="이메일 입력">
-            <input type="password" placeholder="비밀번호 입력">
+        <div class="delete-email-popup">
+            <span class="delete-email-popup-close"><i class="delete-popup-close" onclick="popupClose(event)"></i></span>
+            <p class="delete-popup-title"><i class="fas fa-user-check"></i>회원 탈퇴</p>
+            <p class="delete-popup-content2">정말 탈퇴하시겠어요 ? 탈퇴하시면 너뉴스의 서비스가 종료됩니다. 아래 정보를 입력해주세요</p>
+            <form class="delete-form" action="" method="POST">
+                {% csrf_token %}
+                {% for pwd_form in pwd_forms %}
+                {{pwd_form_as.p}}
+                {% endfor %}
+                <div class="delete-popup-infor">
+                    <p class="delete-msg" ></p>
+                    <input class="delete-password" name="password" type="password" placeholder="비밀번호 확인">
+                </div>
+                <input type="submit" class="delete-ok" value="탈퇴하기">
+            </form>
+            <input type="submit" class="delete-cancel" onclick="deleteCancel(event)" value="취소하기">
         </div>
-        <input type="submit" class="delete-ok" value="탈퇴하기">
-        <input type="submit" class="delete-cancel" onclick="deleteCancel(event)" value="취소하기">
-      </div>
     </div>
-  </section>
+</section>

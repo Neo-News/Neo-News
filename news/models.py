@@ -26,7 +26,7 @@ class Potal(models.Model):
     
     def __str__(self):
       return self.name
-
+ 
 
 class Article(TimeStampable, Countable):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='article')

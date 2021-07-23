@@ -4,7 +4,8 @@ from django.urls import path
 from django.contrib.auth.views import LogoutView
 from user.views import (
     UserLoginView, UserSignupView, SignupDeatilView, UserInforEditView, ImageUpload,
-    Activate, UserInforAddView, kakao_login, kakao_login_callback, ChangePasswordView)
+    Activate, UserInforAddView, kakao_login, kakao_login_callback, ChangePasswordView,
+    DeletePasswordView)
 
 
 
@@ -23,5 +24,5 @@ urlpatterns = [
     path('infor/edit/', UserInforEditView.as_view() ,name='infor-edit'),
     path('password/', ChangePasswordView.as_view(), name='change_password'),
     path('infor/image/', ImageUpload, name='image-upload'),
-
+    path('delete/', DeletePasswordView.as_view(), name='delete'),
 ]

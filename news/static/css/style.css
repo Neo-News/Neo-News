@@ -86,6 +86,7 @@ body.pc{
   position: relative;
 }
 .banner-all{
+  text-align: left;
   display: flex;
   flex-direction: column;
   position: absolute;
@@ -95,7 +96,7 @@ body.pc{
 }
 .banner-deco{
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items:center
 }
 .banner-deco-word{
@@ -914,7 +915,7 @@ width: 100%;
   }
   .banner-word1,
   .banner-word2{
-    font-size: 1.3rem;
+    font-size: 1.6rem;
   }
   .banner-word3{
     font-size: 1.6rem;
@@ -1183,8 +1184,10 @@ body > div > section.detail-section > section > div{
   width: 90%;
   font-size: 1.1rem;
 }
-
-
+._article_body_contents{
+width: 90%;
+font-size: 1.1rem;
+}
 }
 
 @media screen and (max-width:370px){

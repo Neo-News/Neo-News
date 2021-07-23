@@ -7,7 +7,7 @@ from django import forms
 from django.forms.fields import EmailField
 from . import models
 from django.contrib.auth import get_user_model
-
+from django.contrib.auth.hashers import check_password
 
 class UserCreationForm(forms.ModelForm):
     """
@@ -204,5 +204,24 @@ class SignupForm(forms.Form):
         self.password_chk = password_chk
 
 
+class UserDeleteForm(forms.Form):
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'user-password'}))
+
+    def __init__(self, user, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+
+    def clean(self):
+        cleaned_data = super.clean()
+        password = cleaned_data.get('user_password')
+        password_chk = self.user.password
+
+        if password:
+            if not check_password(password, password_chk):
+                raise forms.ValidationError('비밀번호가 일치하지 않아요')
+
+
+
 class VerifyEmailForm(forms.Form):
     pass
+
