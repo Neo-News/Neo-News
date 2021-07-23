@@ -27,6 +27,7 @@ from user.services import UserService
 from .dto import SignupDto
 from django.contrib.auth import authenticate, login as auth_login
 from user.models import User
+from django.contrib.auth.forms import UserChangeForm
 
 import jwt
 import json
@@ -342,4 +343,10 @@ class UserInforAddView(View):
           })
       
       
+class ChangePasswordView(View):
+  
+  def post(self, request, **kwargs):
+    pass
 
+  def get(self, request, **kwargs):
+    return render(request, 'change-password.html')

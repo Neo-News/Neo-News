@@ -1,7 +1,10 @@
+from os import name
 from django.urls import path
 
 from django.contrib.auth.views import LogoutView
-from user.views import UserLoginView, UserSignupView, SignupDeatilView, UserInforEditView, ImageUpload, Activate, UserInforAddView, kakao_login, kakao_login_callback
+from user.views import (
+    UserLoginView, UserSignupView, SignupDeatilView, UserInforEditView, ImageUpload,
+    Activate, UserInforAddView, kakao_login, kakao_login_callback, ChangePasswordView)
 
 
 
@@ -18,6 +21,7 @@ urlpatterns = [
     path('signup/detail/', SignupDeatilView.as_view() ,name='signup_detail'),
     path('infor/', UserInforAddView.as_view(), name='infor'),
     path('infor/edit/', UserInforEditView.as_view() ,name='infor-edit'),
+    path('password/', ChangePasswordView.as_view(), name='change_password'),
     path('infor/image/', ImageUpload, name='image-upload'),
 
 ]
