@@ -6,12 +6,10 @@ import time, datetime
 
 import os
 import sys
+import django
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)) + '/app')))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-import django
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
-
 
 from user.models import Category
 from news.models import Potal, Press, Article
@@ -47,13 +45,9 @@ def convert_datetime_to_timestamp(date_list):
 # }
 naver_news_code = {
     '100' : [265],
-<<<<<<< HEAD
-    # '101' : [259],
-=======
     '101' : [259],
->>>>>>> 092815fd9d653f8e6d2b0857bd112b6966719144
-    # '102' : [249],
-    # '103' : [239],
+    '102' : [249],
+    '103' : [239],
     # '104' : [231],
     # '105' : [226],
 }
@@ -123,7 +117,7 @@ if __name__=='__main__':
     print("스크래핑 성공")
 
     
-    # try:
+try:
     for news in news_list:
         date_list = news['date'].replace(".", " ").replace(":", " ").split(" ")
         time_obj = convert_datetime_to_timestamp(date_list)
@@ -156,9 +150,9 @@ if __name__=='__main__':
         )
         print("DB 넣기 성공")
 
-    # except:
-    #     print("DB 넣기 실패")
-    #     pass
+except:
+    print("DB 넣기 실패")
+    pass
 
 
 
