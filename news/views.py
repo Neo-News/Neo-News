@@ -143,23 +143,7 @@ class CategoryIndexView(View):
         keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
         page = request.GET.get('page','1')
         article_list = Article.objects.filter(category__name=category_name).all()
-        article_list = []
-        userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
-        for press in userpress.press.all():
-            articles = Article.objects.filter(press__name=press).all()
-            for article in articles:
-                article_list.append(article)
-                print(article.press)
-            
-         #유저가 제거한 언론사 제거하고 Article 보여 주기 위한 로직이였음
-        # article_list = []
-        # press_list = Press.objects.exclude(users = request.user).all()
-        # for li in press_list:
-        #     a = Article.objects.filter(category__name=category_name, press__name = li.name).first()
-        #     if a is not None:
-        #         article_list.append(a)
 
-        # article_list = Article.objects.filter(category__name=category_name).all()
         paginator = Paginator(article_list, 20)
         article_obj = paginator.page(page)
         #  페이징 번호 5개씩 보이기 로직

@@ -7,6 +7,7 @@ import time, datetime
 import os
 import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)) + '/app')))
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 import django
 django.setup()
 
@@ -45,11 +46,11 @@ def convert_datetime_to_timestamp(date_list):
 # }
 naver_news_code = {
     '100' : [265],
-    '101' : [259],
-    '102' : [249],
-    '103' : [239],
-    '104' : [231],
-    '105' : [226],
+    # '101' : [259],
+    # '102' : [249],
+    # '103' : [239],
+    # '104' : [231],
+    # '105' : [226],
 }
 
 category_list = [key for key in naver_news_code.keys()]
@@ -72,6 +73,7 @@ def parse_naver():
                 # non_headline = soup.select("#main_content > div.list_body.newsflash_body > ul.type06 > li")
 
                 news_uls = [headline]  # 총 20개의 기사 스크래핑 가능
+                
 
                 for news_ul in news_uls:
                     for news_li in news_ul:
@@ -86,7 +88,7 @@ def parse_naver():
                             # 기사 코드, 상세내용, 날짜 스크래핑
                             article_res = requests.get(ref, headers=headers)
                             article_soup = BeautifulSoup(article_res.text, 'html.parser')
-
+                            print(title)
                             code = ref.split("aid=")[1]
                             content = article_soup.select_one("#articleBodyContents")  # 태그 타입임, str(content) 해줘야 함
                             date_str = article_soup.select_one("#main_content > div.article_header > div.article_info > div > span.t11").text
@@ -114,46 +116,45 @@ if __name__=='__main__':
     news_list = parse_naver()
     print(len(news_list))
     print("스크래핑 성공")
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
-    try:
-        for news in news_list:
-            date_list = news['date'].replace(".", " ").replace(":", " ").split(" ")
-            time_obj = convert_datetime_to_timestamp(date_list)
-            category = ''
-            press = Press.objects.filter(name=news['press']).first()
-            if not press:
-                press = Press.objects.create(name=news['press'])
+    # try:
+    for news in news_list:
+        date_list = news['date'].replace(".", " ").replace(":", " ").split(" ")
+        time_obj = convert_datetime_to_timestamp(date_list)
+        category = Category.objects.filter(name=news['category']).first()
+        press = Press.objects.filter(name=news['press']).first()
+        if not press:
+            press = Press.objects.create(name=news['press'])
+        
+        article = Article.objects.filter(title=news['title']).first()
+        if not article:
             
-            article = Article.objects.filter(title=news['title']).first()
-            if not article:
+            if news['category'] == "생활/문화":
+                category = Category.objects.filter(name='문화').first()
+            
+            if news['category'] == "IT/과학":
+                category = Category.objects.filter(name='IT').first()
+            
+            if news['category'] == "세계":
+                category = Category.objects.filter(name='국제').first()
 
-                if news['category'] == "생활/문화":
-                    category = Category.objects.filter(name='문화').first()
-                
-                if news['category'] == "IT/과학":
-                    category = Category.objects.filter(name='IT').first()
-                
-                if news['category'] == "세계":
-                    category = Category.objects.filter(name='국제').first()
+            Article.objects.create(
+                category=category,
+                press=press,
+                potal=Potal.objects.filter(name="네이버").first(),
+                code=news['code'],
+                preview_img=news['preview_img'],
+                title=news['title'],
+                content=news['content'],
+                date=news['date'],
+                ref=news['ref'],
+                counted_at = 0,
+                created_at=time_obj,
+            )
+            print("DB 넣기 성공")
 
-                Article.objects.create(
-                    category=category,
-                    press=press,
-                    potal=Potal.objects.filter(name="네이버").first(),
-                    code=news['code'],
-                    preview_img=news['preview_img'],
-                    title=news['title'],
-                    content=news['content'],
-                    date=news['date'],
-                    ref=news['ref'],
-                    counted_at = 0,
-                    created_at=time_obj,
-                )
-                print("DB 넣기 성공")
-
-    except:
-        print("DB 넣기 실패")
-        pass
+    # except:
+    #     print("DB 넣기 실패")
+    #     pass
 
 
 

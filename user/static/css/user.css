@@ -155,8 +155,6 @@
   position: absolute;
   left: 24%;
   top: 5%;
-  /* top: 50%; */
-  /* transform: translateY(-50%); */
 }
 .kakao-span{
   font-weight: 600;
@@ -180,11 +178,7 @@
 .kakao-btn i{
   font-size: 1.2rem;
 }
-/* .kakao-btn > a> img {
-  width: 267px;
-  height: 35px;
-  margin: 5px 0;
-} */
+
 .naver-btn > a > img {
   width: 267px;
   height: 35px;
@@ -199,45 +193,100 @@
 
 
 /* user infor edit page */
+.edit-personal-infor{
+  /* background-color: red; */
+  margin-bottom: 20px;
+  font-size: .9rem;
+  text-align: left;
+  color: #56595c;
+}
+.personal-icon{
+  margin-right: 8px;
+  font-size: 1.0rem;
+  margin-bottom: 50px;
+}
 .user-infor-edit{
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   background-color: rgb(249, 247, 244);
   padding-top: 150px;
-  height: 800px;
+  min-height: 100vh;
+  /* min-height: 100vh; */
 }
 .user-infor-contents{
-  height: 300px;
+  /* min-height: 100%; */
   text-align: center;
-  width: 60%;
+  width: 50%;
+  padding-left: 50px;
   border-radius: 5px;
-  box-shadow: 0px 0px 2px 2px #eee;
-  background-color: rgb(253, 253, 253);
-  padding-top: 20px;
-  /* text-align: center; */
-}
-.edit-nickname{
   position: relative;
-  top: 25%;
-  transform: translateY(-50%);
+}
+/* 유저 내계정 레이아웃 */
+
+.edit-nickname{
+  position: absolute;
+  width: 100%;
+  padding-bottom: 50px;
+  border-bottom: 1px solid #eee;
+}
+.edit-password{
+text-align: left;
+}
+.edit-password-infor{
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.resend-pwd{
+margin-left: 30px;
+padding: 12px;
+border: none;
+border-radius: 5px;
+
 }
 .user-infor-contents h2{
   font-size: 1.2rem;
   margin-top: 30px;
   margin-bottom: 60px;
 }
-.user-infor-contents input{
+.infor-user-nickname{
   border: none;
-  width: 50%;
-  padding: 10px 10px;
+  width: 60%;
+  /* margin: 20px auto; */
+  margin: 20px 0px;
+  padding: 15px 10px;
   border-radius: 5px;
   background-color: rgb(235, 233, 233);
+  display: block;
 }
-.user-infor-contents  button{
-  margin-left: 15px;
+.infor-user-password{
+  border: none;
+  width: 50%;
+  /* margin: 20px auto; */
+  padding: 15px 10px;
+  border-radius: 5px;
+  background-color: rgb(235, 233, 233);
+  display: block;
+}
+.non-clicked{
+  display: none;
+}
+.user-nickname-btn{
+  position: relative;
   padding: 8px 10px;
   border: none;
   border-radius: 5px;
+}
+.user-password-btn{
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  left: 5%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #fff;
+  border: 1px solid rgb(168, 167, 167);
 }
 .user-infor-edit-title{
   margin: 10px 0 20px 0;
@@ -295,10 +344,69 @@
   background-color:rgb(248, 161, 104);
 }
 .edit-profile-img{
-  position: relative;
-  top: 55%;
-  transform: translateY(-50%);
+  text-align: left;
+margin-bottom: 180px;
 }
+.edit-profile-pwd{
+  margin-bottom: 100px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  border-bottom: 1px solid #eee;
+}
+/* 이미지,닉네임 변경 레이아웃 */
+.profile-edit{
+  text-align: center;
+}
+.profile-upload-img{
+  background-color: #eee;
+  overflow: hidden;
+  box-shadow: 0px 0px 7px 2px rgb(209, 207, 207);
+  /* margin: 0 auto; */
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.profile-image-file{
+  position: relative;
+  top: 70px;
+  left: 40px;
+  width: 0px;
+}
+.fa-image{
+  font-size: 5.5em;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  color: #495057;
+}
+.profile-upload-preview-img{
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  width: 250px;
+  height: 270px;
+}
+
+.upload-img-div{
+  text-overflow: ellipsis;
+  position: absolute;
+  top: 0;
+
+
+}
+.upload-user-img{
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  text-overflow: ellipsis;
+  top: 0;
+  left: 0;
+}
+
   
 /* user my page - comment,like page */
 .user-comment-li,
@@ -318,21 +426,149 @@
   cursor: pointer;
 }
 
+/* 마이페이지 탈퇴 popup창 */
+.delete-popup-section{
+  background-color:rgba(0,0,0,.3); 
+  justify-content:center; 
+  align-items:center;     
+  position:fixed;         
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;               
+  /* display:flex; */
+  display:none; 
+  padding:15px; 
+  backdrop-filter: blur(3px)
+}
+/* signup detail popup창 */
+.delete-popup{
+  width:100%;               
+  max-width:350px;   
+  height: 450px;       
+  border-radius:10px;     
+  position: relative;  
+  overflow:hidden;          
+  background-color:#eee; 
+  box-shadow: 5px 10px 10px 1px rgba(0,0,0,.3); 
+  /* background-color: red; */
+}
+.delete-email-popup{
+  text-align: center;
+  /* position: relative; */
+  height: 200px;
+}
+.delete-popup-close{
+  text-align: right;
+  font-size: 1.2rem;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  /* right:20px; */
+  cursor: pointer;
+  width: 100%;
+  height: 60px;
+  background-color: rgb(248, 161, 104);
+  padding-bottom: 30px; 
+}
+.delete-popup-title{
+  font-weight: bold;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  font-size: .9rem;
+  transform: translate(-50%,-50%);
+  background-color: rgb(248, 161, 104);
+  width: 100%;
+  height: 20px;
+}
+.delete-popup-infor{
+  position: absolute;
+  bottom: 35%;
+}
+.delete-popup-infor input{
+  margin-bottom: 10px;
+  padding: 10px 8px;
+  width: 70%;
+  border: none;
+}
+
+.fa-user-check{
+  font-size: 1.1rem;
+  margin-right: 6px;
+}
+
+.delete-popup-content2{
+  position: absolute;
+  font-size: .7rem;
+  top: 35%;
+  left: 50%;
+transform: translate(-50%,-50%);
+/* background-color: blue; */
+}
+
+.delete-ok{
+  position: absolute;
+  bottom:10px;
+  right: 30%;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: rgb(212, 209, 209);
+}
+.delete-cancel{
+  cursor: pointer;
+  position: absolute;
+  bottom: 10px;
+  left: 30%;
+  padding: 5px;
+  border-radius: 5px;
+  border: none; 
+  background-color: rgb(212, 209, 209);
+}
+
 /* user responsive */
 @media screen and (max-width:576px){
   .user-infor-edit{
     flex-direction: column;
     text-align: center;
     padding: 20px;
+    padding-top: 100px;
+    justify-content:flex-start;
+    min-height: 100vh;
   }
  
   .user-infor-contents{
     margin: 0 auto;
     width: 90%;
+    margin-top: 50px;
+    padding-left: 0px;
+  }
+  .profile-image-form{
+    text-align: center;
+  }
+  .infor-user-nickname{
+    width: 90%;
+    display: inline-block;
+  }
+  .profile-upload-img{
+    margin: 20px auto;
+  }
+  .edit-password{
+    text-align: center;
+  }
+  .infor-user-password{
+    width: 90%;
+    margin: 20px auto;
   }
   .registration-signup{
     margin-top: -100px;
   }
+.edit-profile-img{
+  text-align: center;
+}
 }
 
 @media screen and (max-width:450px){
