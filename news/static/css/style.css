@@ -206,17 +206,19 @@ body.pc{
   width: 130px;
   height: 130px;
 }
+
 .news-contents{
   margin-left: 20px;
 }
 .news-title{
   font-size: 1.3rem;
-  margin-bottom: 70px;
+  margin-bottom: 30px;
 }
 .news-content{
   line-height: 1.2;
-  font-size: 1.2rem;
+  font-size: 1.0rem;
   margin-bottom: 20px;
+  color: rgb(54, 53, 53);
 }
 .news-social{
   color: rgb(97, 94, 94);

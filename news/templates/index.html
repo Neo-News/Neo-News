@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% block head %}
 {% load static %}
+{% load article_hangul %}
 {% endblock head %}
 
 {% block content %}
@@ -49,7 +50,7 @@
       </div>
       <a href="{% url 'news:detail' article.pk %}"><div class="news-contents">
         <div class="news-title">{{article.title}}</div>
-        <div class="news-content">{{article.preview_content |truncatechars:150}}</div>
+        <div class="news-content">{{article.content|get_hangul |truncatechars:160| slice:"65:"}}</div>
         <div class="news-social">
           <div class="news-infor">
           <span class="news-portal">{{article.potal.name}} · </span>
@@ -76,7 +77,7 @@
     </div>
     <a href="{% url 'news:detail' article.pk %}"><div class="news-contents">
       <div class="news-title">{{article.title}}</div>
-      <div class="news-content">{{article.preview_content |truncatechars:150}}</div>
+      <div class="news-content">{{article.content|get_hangul |truncatechars:160| slice:"65:"}}</div>
       <div class="news-social">
         <div class="news-infor">
         <span class="news-portal">{{article.potal.name}} · </span>

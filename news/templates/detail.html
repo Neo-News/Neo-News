@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 {% block head %}
 {% load static %}
+{% load article_hangul %}
+
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
+<!-- 카카오톡 공유 api -->
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 {% endblock head %}
 
 {% block content %}
@@ -14,7 +18,6 @@
     </div>
   </div>
 
-  <!-- <div class="detail-image"><img src= "{% static 'img/짱구.jpg' %}" alt=""></div> -->
   <p class="detail-content">
     {% autoescape off %}
     {{ article.content}}
@@ -25,8 +28,11 @@
     <p class="detail-press">{{article.press.name}}</p>
   </div>
   <div class="detail-social">
-    <span class="social-heart-span"><a href=""><i class="social-heart fas fa-heart"></i> 이 기사 찜하기</a></span>
-    <span class="social-share-span"><a href=""><i class="social-share fas fa-share-alt"></i> 카카오톡으로 공유하기</a></span>
+    <span class="social-heart-span"><a href=''><i class="social-heart fas fa-heart"></i> 이 기사 찜하기</a></span>
+    <span class="social-share-span"><a href="javascript:sendLinkKakao()"><i class="social-share fas fa-share-alt"></i> 카카오톡으로 공유하기</a></span>
+    <span class="sociallink ml-1">
+
+  </span>
   </div>
 
   <div class="detail-comment">
@@ -84,8 +90,32 @@
     }
   }
 
-
-
+// 공유하기 스크립트
+Kakao.init('32cbd11246656adc34f9add26b2a772b');
+function sendLinkKakao(){
+    Kakao.Link.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: '{{ article.title|get_hangul }}',
+        description: '{{ article.content|get_hangul_num|slice:"65:"}}',
+        // 컨텐츠 이미지 가져오는거 필요해보임
+        imageUrl: 'https://imgnews.pstatic.net/image/001/2021/07/23/PYH2021072208710001300_P4_20210723011708733.jpg?type=w647',
+        link: {
+          mobileWebUrl: '{{ request.build_absolute_uri }}',
+          webUrl: '{{ request.build_absolute_uri }}'
+        }
+      },
+      buttons: [       
+        {
+          title: '링크 열기',
+          link: {
+            mobileWebUrl: '{{ request.build_absolute_uri }}',
+            webUrl: '{{ request.build_absolute_uri }}'
+          }
+        }
+      ]
+    }); 
+}
 </script>
 
 {% endblock script %}
