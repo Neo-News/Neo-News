@@ -9,6 +9,7 @@ import sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)) + '/app')))
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 import django
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
 
@@ -46,7 +47,11 @@ def convert_datetime_to_timestamp(date_list):
 # }
 naver_news_code = {
     '100' : [265],
+<<<<<<< HEAD
     # '101' : [259],
+=======
+    '101' : [259],
+>>>>>>> 092815fd9d653f8e6d2b0857bd112b6966719144
     # '102' : [249],
     # '103' : [239],
     # '104' : [231],
@@ -116,6 +121,8 @@ if __name__=='__main__':
     news_list = parse_naver()
     print(len(news_list))
     print("스크래핑 성공")
+
+    
     # try:
     for news in news_list:
         date_list = news['date'].replace(".", " ").replace(":", " ").split(" ")
@@ -125,32 +132,29 @@ if __name__=='__main__':
         if not press:
             press = Press.objects.create(name=news['press'])
         
-        article = Article.objects.filter(title=news['title']).first()
-        if not article:
-            
-            if news['category'] == "생활/문화":
-                category = Category.objects.filter(name='문화').first()
-            
-            if news['category'] == "IT/과학":
-                category = Category.objects.filter(name='IT').first()
-            
-            if news['category'] == "세계":
-                category = Category.objects.filter(name='국제').first()
+        if news['category'] == "생활/문화":
+            category = Category.objects.filter(name='문화').first()
+        
+        if news['category'] == "IT/과학":
+            category = Category.objects.filter(name='IT').first()
+        
+        if news['category'] == "세계":
+            category = Category.objects.filter(name='국제').first()
 
-            Article.objects.create(
-                category=category,
-                press=press,
-                potal=Potal.objects.filter(name="네이버").first(),
-                code=news['code'],
-                preview_img=news['preview_img'],
-                title=news['title'],
-                content=news['content'],
-                date=news['date'],
-                ref=news['ref'],
-                counted_at = 0,
-                created_at=time_obj,
-            )
-            print("DB 넣기 성공")
+        Article.objects.create(
+            category=category,
+            press=press,
+            potal=Potal.objects.filter(name="네이버").first(),
+            code=news['code'],
+            preview_img=news['preview_img'],
+            title=news['title'],
+            content=news['content'],
+            date=news['date'],
+            ref=news['ref'],
+            counted_at = 0,
+            created_at=time_obj,
+        )
+        print("DB 넣기 성공")
 
     # except:
     #     print("DB 넣기 실패")
