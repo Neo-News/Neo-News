@@ -18,8 +18,8 @@ class Like(Countable):
 
 
 class Comment(TimeStampable,Deleteable):
-    article = models.ForeignKey(Article,  on_delete=models.CASCADE, related_name='article') 
-    writer = models.ForeignKey(User,  on_delete=models.CASCADE, related_name='my_writer')
+    article = models.ForeignKey(Article,  on_delete=models.CASCADE, related_name='comment') 
+    writer = models.ForeignKey(User,  on_delete=models.CASCADE, related_name='comment')
     content = models.TextField()
 
     def __str__(self):

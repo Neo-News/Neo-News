@@ -34,33 +34,44 @@
 
   </span>
   </div>
-
+  {% if user.is_authenticated %}
   <div class="detail-comment">
-    <form action="" method='POST'>
+    <form class="comment-form" action="" method='POST'>
       {% csrf_token %}
       <input type="text" class="detail-comment-input" placeholder="댓글을 입력해주세요.">
       <button class="detail-comment-submit">등록</button>
     </form>
   </div>
+  {% else %}
+  <p class="category-non-login"><i class="quote fas fa-quote-left"> </i> 로그인 하시면 댓글 작성이 가능합니다 <i class="quote fas fa-quote-right"> </i></p>
+  {% endif %}
   <ul class="detail-comments-ul">
+    {% for comment in comments %}
     <li class="detail-comment-list">
       <div class="comment-user-infor">
         <div class="comment-user">
-          <span class="user-nickname">뚜바 </span>
-          <span class="user-date"> 2시간전</span>
+          <span class="user-image"><img src="{{comment.writer.image}}" alt=""></span>
+          <span class="user-nickname">{{comment.writer}}</span>
+          <span class="user-date">{{comment.created_string}}</span>
         </div>
         <div><i class=" ellipsis fas fa-ellipsis-v"></i>
           <div class="comment-edit-div non-clicked">
             <button class="comment-edit">수정하기</button>
             <button class="comment-delete">삭제하기</button>
-
           </div>
         </div>
       </div>
       <div class="comment-content">
-        <p>아 dd dd ff ff 엥 이게 멉니가 우무우무우우우ㅇㄴㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹㄹ dddddddddddddddddddddddd</p>
+        <p>{{comment.content}}</p>
+        <button class="recomment">답글</button>
+        <form class="recomment-form non-clicked" action="" method='POST'>
+          {% csrf_token %}
+          <input type="text" class="detail-recomment-input" placeholder="댓글을 입력해주세요.">
+          <button class="detail-recomment-submit">등록</button>
+        </form>
       </div>
     </li>
+    {% endfor %}
   </ul>
 </section>
 
@@ -116,6 +127,89 @@ function sendLinkKakao(){
       ]
     }); 
 }
+</script>
+
+<!-- 댓글기능 스크립트 -->
+<script>
+  function createComment(content) {
+    console.log("Posting Comment");
+    let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    let param = {
+      'article_pk' : '{{article.pk}}',
+      'content' : content,
+    } 
+    fetch("{% url 'social:comment' %}", {
+      method : "POST",
+        headers : {
+          "X-CSRFToken" : csrfValue,
+          "X-Requested-With" : "XMLHttpRequest"
+        },
+        body : JSON.stringify(param)
+    }).then(function(response) {
+      return response.json();
+    }).then(function(data) {
+      let writer = data['writer'];
+      let writer_img = data['writer_img'];
+      let content = data['content'];
+      let created_time = data['created_time'];
+      let commentList = document.querySelector(".detail-comments-ul");
+      commentList.innerHTML += `
+      <li class="detail-comment-list">
+        <div class="comment-user-infor">
+          <div class="comment-user">
+            <span class="user-image"><img src="${writer_img}" alt=""></span>
+            <span class="user-nickname">${writer}</span>
+            <span class="user-date">${created_time}</span>
+          </div>
+          <div><i class=" ellipsis fas fa-ellipsis-v"></i>
+            <div class="comment-edit-div non-clicked">
+              <button class="comment-edit">수정하기</button>
+              <button class="comment-delete">삭제하기</button>
+            </div>
+          </div>
+        </div>
+        <div class="comment-content">
+          <p>${content}</p>
+          <button class="recomment">답글</button>
+          <form class="recomment-form non-clicked" action="" method='POST'>
+            {% csrf_token %}
+          <input type="text" class="detail-recomment-input" placeholder="댓글을 입력해주세요.">
+          <button class="detail-recomment-submit">등록</button>
+          </form>
+        </div>
+      </li>
+      `;
+    }).catch(error => {
+      console.log("Error", error);
+    })
+  }
+
+  function submitComment(e) {
+    e.preventDefault();
+    let content = document.querySelector(".detail-comment-input").value;
+    if (content) {
+      createComment(content);
+    }else {
+      console.log("You cannot submit an empty form")
+    }
+  }
+
+  let commentForm = document.querySelector(".comment-form");
+  commentForm.addEventListener("submit", submitComment);
+</script>
+
+<!-- 대댓글 폼 보여주기 -->
+<script>
+  function showRecommentForm(e) {
+    e.preventDefault();
+    let recommentForm = document.querySelector(".recomment-form");
+    recommentForm.classList.toggle("non-clicked");
+
+
+  }
+
+  let recommentBtn = document.querySelector(".recomment");
+  recommentBtn.addEventListener("click", showRecommentForm);
 </script>
 
 {% endblock script %}

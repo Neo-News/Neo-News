@@ -1,17 +1,16 @@
+import json
+import re
 from django.http.response import JsonResponse
-from utils import context_infor
-from user.models import Category, Keyword, User
-from news.models import Article, Press,Potal,UserPress
 from django.shortcuts import redirect, render
 from django.views.generic import DetailView,View
-from utils import get_time_passed
 from django.db.models import Q
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.views.generic import ListView
+from utils import context_infor, get_time_passed
 
-import json
-import re
-#  Create your views here.
+from user.models import Category, Keyword, User
+from social.models import Comment, ReComment, Like
+from .models import Article, Press,Potal,UserPress
 
 
 # templateview로 변경가능 할 것 같음 일단은 detailview -> view로 변경함 
@@ -77,7 +76,8 @@ class NewsDetailView(DetailView):
     """
     def get(self, request, **kwargs):
         article_list = Article.objects.filter(pk=kwargs['pk']).first()
-        context = context_infor(article=article_list)
+        comments = Comment.objects.filter(article__pk=kwargs['pk'])
+        context = context_infor(article=article_list, comments=comments)
         return render(request,'detail.html',context)
 
     # def post(self, request, **kwargs):
