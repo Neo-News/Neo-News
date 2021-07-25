@@ -54,6 +54,7 @@ class CommentCreateView(View):
             comment = CommentService.create(comment_dto)
             print("댓글 인스턴스 생성")
             context = {
+                'comment_pk' : comment.pk,
                 'writer' : comment.writer.nickname,
                 'writer_img' : comment.writer.image,
                 'content' : comment.content,
