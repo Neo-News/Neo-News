@@ -7,8 +7,8 @@ import json
 
 from news.models import Press, UserPress, Article
 from .models import Comment, ReComment, Like
-from .dto import CommentCreateDto
-from .services import CommentService
+from .dto import CommentCreateDto, ReCommentCreateDto
+from .services import CommentService, ReCommentService
 
 
 class PressEditView(View):
@@ -73,5 +73,37 @@ class CommentCreateView(View):
             writer=request.user,
             content=data.get('content'),
             pk=article_pk,
+        )
+
+        
+class ReCommentCreateView(View):
+    def post(self, request, *args, **kwargs):
+        if self.request.is_ajax():
+            print("ajax 요청 받기 성공")
+            data = json.loads(request.body)
+
+            recomment_dto = self._build_recomment_dto(request, data)
+            recomment = ReCommentService.create(recomment_dto)
+            print("대댓글 인스턴스 생성")
+            context = {
+                'comment_pk' : recomment.pk,
+                'writer' : recomment.writer.nickname,
+                'writer_img' : recomment.writer.image,
+                'content' : recomment.content,
+                'created_time' : recomment.created_string
+            }
+            return JsonResponse(context, status=200)
+        else:
+            return JsonResponse({"error" : "Error occured during request"}, status=400)
+
+    @staticmethod
+    def _build_recomment_dto(request, data):
+        comment_pk = data.get('comment_pk')
+        comment = Comment.objects.filter(pk=comment_pk).first()
+        return ReCommentCreateDto(
+            comment=comment,
+            writer=request.user,
+            content=data.get('content'),
+            pk=comment_pk,
         )
 

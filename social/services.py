@@ -1,6 +1,6 @@
 from news.models import Article
 from .models import Comment, ReComment, Like
-from .dto import CommentCreateDto
+from .dto import CommentCreateDto, ReCommentCreateDto
 
 class CommentService():
 
@@ -13,4 +13,16 @@ class CommentService():
                 content=dto.content
             )
         return comment
+
+class ReCommentService():
+
+    @staticmethod
+    def create(dto:ReCommentCreateDto):
+        if dto.content:
+            recomment = ReComment.objects.create(
+                comment=dto.comment,
+                writer=dto.writer,
+                content=dto.content
+            )
+        return recomment
 

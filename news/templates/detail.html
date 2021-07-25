@@ -64,12 +64,34 @@
       <div class="comment-content">
         <p>{{comment.content}}</p>
         <button class="recomment recomment-{{comment.pk}}" onclick="showRecommentForm(event)">답글</button>
-        <form class="non-clicked form-recomment-{{comment.pk}}" action="" method='POST'>
+        <form class="non-clicked form-recomment-{{comment.pk}}" onsubmit="submitReComment(event)" action="" method='POST'>
           {% csrf_token %}
           <input type="text" class="detail-recomment-input" placeholder="댓글을 입력해주세요.">
           <button class="detail-recomment-submit">등록</button>
         </form>
       </div>
+      <ul class="detail-recomments-ul">
+        <!-- {% for recomment in recomments %}
+        <li class="detail-recomment-list">
+          <div class="comment-user-infor">
+            <div class="comment-user">
+              <span class="user-image"><img src="{{recomment.writer.image}}" alt=""></span>
+              <span class="user-nickname">{{recomment.writer.nickname}}</span>
+              <span class="user-date">{{recomment.created_string}}</span>
+            </div>
+            <div><i class=" ellipsis-{{recomment.pk}} fas fa-ellipsis-v" onclick="clickEditDeleteBtn(event)"></i>
+              <div class="comment-edit-div btn-ellipsis-{{recomment.pk}} non-clicked">
+                <button class="comment-edit">수정하기</button>
+                <button class="comment-delete">삭제하기</button>
+              </div>
+            </div>
+          </div>
+          <div class="comment-content">
+            <p>{{recomment.content}}</p>
+          </div>
+        </li>
+        {% endfor %} -->
+      </ul>
     </li>
     {% endfor %}
   </ul>
@@ -218,6 +240,48 @@ function sendLinkKakao(){
   // let recommentBtn = document.querySelector(".recomment");
   // console.log(recommentBtn)
   // recommentBtn.addEventListener("click", showRecommentForm);
+</script>
+
+<!-- 대댓글 스크립트 -->
+<script>
+  function createReComment(content, e) {
+    console.log("Posting ReComment");
+    let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    let commentPk = e.target.classList[0].split("-")[2]
+    console.log(commentPk)
+    let param = {
+      'comment_pk' : `${commentPk}`,
+      'content' : content,
+    } 
+    console.log(param)
+    fetch("{% url 'social:recomment' %}", {
+      method : "POST",
+        headers : {
+          "X-CSRFToken" : csrfValue,
+          "X-Requested-With" : "XMLHttpRequest"
+        },
+        body : JSON.stringify(param)
+    }).then(function(response) {
+      return response.json();
+    }).then(function(data) {
+      // ajax를 위한 대댓글 innerHTML 필요
+    }).catch(error => {
+      console.log("Error", error);
+    })
+  }
+
+
+  function submitReComment(e) {
+    e.preventDefault();
+    let content = document.querySelector(".detail-recomment-input").value;
+    if (content) {
+      // console.log(e);
+      createReComment(content,e);
+    }else {
+      console.log("You cannot submit an empty form")
+    }
+  }
+
 </script>
 
 {% endblock script %}
