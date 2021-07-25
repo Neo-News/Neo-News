@@ -55,7 +55,7 @@
           <span class="user-date">{{comment.created_string}}</span>
         </div>
         <div><i class=" ellipsis-{{comment.pk}} fas fa-ellipsis-v" onclick="clickEditDeleteBtn(event)"></i>
-          <div class="comment-edit-div-ellipsis-{{comment.pk}} non-clicked">
+          <div class="comment-edit-div btn-ellipsis-{{comment.pk}} non-clicked">
             <button class="comment-edit">수정하기</button>
             <button class="comment-delete">삭제하기</button>
           </div>
@@ -83,11 +83,7 @@
   function clickEditDeleteBtn(e) {
     console.log(e)
     let btnNum = e.target.classList[0];
-    let fas = e.target.classList[1];
-    let faEllipsisV = e.target.classList[2];
-    console.log(faEllipsisV)
-    let btnEditDelete = document.querySelector(`.comment-edit-div-${btnNum}`);
-    console.log(btnEditDelete)
+    let btnEditDelete = document.querySelector(`.btn-${btnNum}`);
     btnEditDelete.classList.toggle("non-clicked");
   }
   // $commentEditDiv = document.querySelector('.ellipsis');
@@ -173,7 +169,7 @@ function sendLinkKakao(){
             <span class="user-date">${createdTime}</span>
           </div>
           <div><i class=" ellipsis-${commentPk} fas fa-ellipsis-v" onclick="clickEditDeleteBtn(event)"></i>
-            <div class="comment-edit-div-ellipsis-${commentPk} non-clicked">
+            <div class="comment-edit-div btn-ellipsis-${commentPk} non-clicked">
               <button class="comment-edit">수정하기</button>
               <button class="comment-delete">삭제하기</button>
             </div>
@@ -213,7 +209,6 @@ function sendLinkKakao(){
 <script>
   function showRecommentForm(e) {
     e.preventDefault();
-    console.log("버튼눌리나")
     // console.log(e.target.classList[1]);
     formRecommentNum = e.target.classList[1];
     let recommentForm = document.querySelector(`.form-${formRecommentNum}`);
