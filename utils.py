@@ -23,7 +23,7 @@ def get_time_passed(created_at):
     if time_passed == 0:
         return '1분 전'
     if time_passed < 60:
-        return str(time_passed) + '분 전'
+        return str(int(time_passed)) + '분 전'
     if time_passed//60 < 60:
         return str(int(time_passed//60)) + '분 전'
     if time_passed//(60*60) < 24:

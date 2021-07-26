@@ -41,5 +41,7 @@ class ReComment(TimeStampable, Deleteable):
 
     @property
     def created_string(self):
-      created_time = get_time_passed(self.created_at)
+      created_time = get_time_passed_comment(self.created_at)
       return created_time
+
+    
