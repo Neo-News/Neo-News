@@ -675,7 +675,18 @@ transform: translate(-50%,-50%);
   background-color:rgb(248, 161, 104);
   cursor: pointer; 
 }
-
+.detail-recomments-ul{
+  /* width: 92%; */
+  margin: 0 auto;
+  /* padding: 0px 35px 50px 35px; */
+  box-sizing: border-box;
+  text-align: left;
+}
+.detail-recomment-list {
+  /* border-bottom: 1px solid rgb(230, 225, 225); */
+  position: relative;
+  padding-left: 40px;
+}
 
 /* news infor edit page */
 .news-infor-edit{

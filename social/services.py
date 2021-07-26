@@ -1,7 +1,9 @@
-from news.models import Article
-from .models import Comment, ReComment, Like
-from .dto import CommentCreateDto
+from .models import Comment, ReComment
+from .dto import CommentCreateDto, ReCommentCreateDto
+
 import time
+
+
 class CommentService():
 
     @staticmethod
@@ -14,4 +16,17 @@ class CommentService():
                 created_at = time.time()
             )
         return comment
+
+
+class ReCommentService():
+
+    @staticmethod
+    def create(dto:ReCommentCreateDto):
+        if dto.content:
+            recomment = ReComment.objects.create(
+                comment=dto.comment,
+                writer=dto.writer,
+                content=dto.content
+            )
+        return recomment
 
