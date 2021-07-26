@@ -79,16 +79,20 @@ class ReCommentCreateView(View):
         if self.request.is_ajax():
             print("ajax 요청 받기 성공")
             data = json.loads(request.body)
+            comment_pk = data.get('comment_pk')
 
             recomment_dto = self._build_recomment_dto(request, data)
             recomment = ReCommentService.create(recomment_dto)
+            recomments = ReComment.objects.filter(comment__pk=comment_pk)
+            total_recomments = [recomment for recomment in recomments]
             print("대댓글 인스턴스 생성")
             context = {
-                'comment_pk' : recomment.pk,
+                'recomment_pk' : recomment.pk,
                 'writer' : recomment.writer.nickname,
                 'writer_img' : recomment.writer.image,
                 'content' : recomment.content,
-                'created_time' : recomment.created_string
+                'created_time' : recomment.created_string,
+                'total_recomments' : len(total_recomments)
             }
             return JsonResponse(context, status=200)
         else:

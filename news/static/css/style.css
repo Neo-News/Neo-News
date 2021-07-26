@@ -569,7 +569,7 @@ transform: translate(-50%,-50%);
   border: none;
   border: 1px solid rgb(197, 194, 194);
   border-radius: 5px;
- width: 80%;
+  width: 80%;
 }
 .detail-comment-submit{
   padding: 12px 10px;
@@ -599,9 +599,7 @@ transform: translate(-50%,-50%);
 .comment-user {
   display: flex;
   /* justify-content: space-between; */
- 
 }
-
 .comment-user-infor{
   display: flex;
   justify-content: space-between;
@@ -659,13 +657,20 @@ transform: translate(-50%,-50%);
 .non-clicked{
   display: none;
 }
+
 /* recomment */
+.recomment {
+  padding: 0 2px;
+  margin-bottom: 5px;
+}
+
 .detail-recomment-input{
   padding: 14px 10px;
   border: none;
   border: 1px solid rgb(197, 194, 194);
   border-radius: 5px;
   width: 87%;
+  margin-bottom: 10px;
 }
 .detail-recomment-submit{
   padding: 12px 10px;

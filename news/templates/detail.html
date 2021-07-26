@@ -63,15 +63,15 @@
       </div>
       <div class="comment-content">
         <p>{{comment.content}}</p>
-        <button class="recomment recomment-{{comment.pk}}" onclick="showRecommentForm(event)">답글</button>
-        <form class="non-clicked form-recomment-{{comment.pk}}" onsubmit="submitReComment(event)" action="" method='POST'>
+        <button class="recomment recomment-{{comment.pk}}" onclick="showRecommentForm(event)">답글 {{comment.re_comment.all | length }} </button>
+        <form class="non-clicked form-recomment-{{comment.pk}}" onsubmit="submitReComment('{{comment.pk}}')" action="" method='POST'>
           {% csrf_token %}
-          <input type="text" class="detail-recomment-input" placeholder="댓글을 입력해주세요.">
+          <input type="text" class="detail-recomment-input detail-recomment-input-{{comment.pk}}" placeholder="댓글을 입력해주세요.">
           <button class="detail-recomment-submit">등록</button>
         </form>
       </div>
-      <ul class="detail-recomments-ul">
-        <!-- {% for recomment in recomments %}
+      <ul class="detail-recomments-ul detail-recomments-ul-{{comment.pk}} non-clicked">
+        {% for recomment in comment.re_comment.all %}
         <li class="detail-recomment-list">
           <div class="comment-user-infor">
             <div class="comment-user">
@@ -90,7 +90,7 @@
             <p>{{recomment.content}}</p>
           </div>
         </li>
-        {% endfor %} -->
+        {% endfor %}
       </ul>
     </li>
     {% endfor %}
@@ -181,6 +181,7 @@ function sendLinkKakao(){
       let writerImg = data['writer_img'];
       let content = data['content'];
       let createdTime = data['created_time'];
+      let totalRecomments = data['total_recomments'];
       let commentList = document.querySelector(".detail-comments-ul");
       commentList.innerHTML += `
       <li class="detail-comment-list">
@@ -199,7 +200,7 @@ function sendLinkKakao(){
         </div>
         <div class="comment-content">
           <p>${content}</p>
-          <button class="recomment recomment-${commentPk}" onclick="showRecommentForm(event)">답글</button>
+          <button class="recomment recomment-${commentPk}" onclick="showRecommentForm(event)">답글 ${totalRecomments}</button>
           <form class="non-clicked form-recomment-${commentPk}" action="" method='POST'>
             {% csrf_token %}
           <input type="text" class="detail-recomment-input" placeholder="댓글을 입력해주세요.">
@@ -215,6 +216,7 @@ function sendLinkKakao(){
 
   function submitComment(e) {
     e.preventDefault();
+
     let content = document.querySelector(".detail-comment-input").value;
     if (content) {
       createComment(content);
@@ -227,14 +229,16 @@ function sendLinkKakao(){
   commentForm.addEventListener("submit", submitComment);
 </script>
 
-<!-- 대댓글 폼 보여주기 -->
+<!-- 대댓글 폼, 대댓글 리스트 보여주기 -->
 <script>
   function showRecommentForm(e) {
     e.preventDefault();
-    // console.log(e.target.classList[1]);
-    formRecommentNum = e.target.classList[1];
+    let commentPk = e.target.classList[1].split("-")[1];
+    let formRecommentNum = e.target.classList[1];
     let recommentForm = document.querySelector(`.form-${formRecommentNum}`);
+    let recommentList = document.querySelector(`.detail-recomments-ul-${commentPk}`)
     recommentForm.classList.toggle("non-clicked");
+    recommentList.classList.toggle("non-clicked");
   }
 
   // let recommentBtn = document.querySelector(".recomment");
@@ -264,19 +268,43 @@ function sendLinkKakao(){
     }).then(function(response) {
       return response.json();
     }).then(function(data) {
-      // ajax를 위한 대댓글 innerHTML 필요
+      let recommentPk = data['recomment_pk'];
+      let writer = data['writer'];
+      let writerImg = data['writer_img'];
+      let content = data['content'];
+      let createdTime = data['created_time'];
+      let recommentList = document.querySelector(`.detail-recomments-ul-${commentPk}`);
+      recommentList.innerHTML += `
+      <li class="detail-recomment-list">
+        <div class="comment-user-infor">
+          <div class="comment-user">
+            <span class="user-image"><img src="${writerImg}" alt=""></span>
+            <span class="user-nickname">${writer}</span>
+            <span class="user-date">${createdTime}</span>
+          </div>
+          <div><i class=" ellipsis-${recommentPk} fas fa-ellipsis-v" onclick="clickEditDeleteBtn(event)"></i>
+            <div class="comment-edit-div btn-ellipsis-${recommentPk} non-clicked">
+              <button class="comment-edit">수정하기</button>
+              <button class="comment-delete">삭제하기</button>
+            </div>
+          </div>
+        </div>
+        <div class="comment-content">
+          <p>${content}</p>
+        </div>
+      </li>
+      `;
     }).catch(error => {
       console.log("Error", error);
     })
   }
 
-
-  function submitReComment(e) {
-    e.preventDefault();
-    let content = document.querySelector(".detail-recomment-input").value;
+  function submitReComment(pk) {
+    event.preventDefault();
+    let content = document.querySelector(`.detail-recomment-input-${pk}`).value;
     if (content) {
       // console.log(e);
-      createReComment(content,e);
+      createReComment(content,event);
     }else {
       console.log("You cannot submit an empty form")
     }
