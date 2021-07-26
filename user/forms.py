@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm, ReadOnlyPasswordHashField
+from django.contrib.auth.forms import AuthenticationForm, ReadOnlyPasswordHashField, SetPasswordForm
 from django.forms.widgets import EmailInput
 from django.utils.translation import ugettext_lazy as _
 from user.models import User, UserManager
@@ -225,3 +225,34 @@ class UserDeleteForm(forms.Form):
 class VerifyEmailForm(forms.Form):
     pass
 
+
+class FindPwForm(forms.Form):
+    email = forms.CharField(
+      label='',
+      widget=forms.EmailInput(
+      attrs={
+        'class':'user-email',
+        'placeholder': '이메일 입력',
+        'name':'user-email',
+      }
+    ),
+    error_messages={'required': '이메일을 입력해주세요 !'}
+    )
+
+    def clean(self):
+        cleaned_data = super.clean()
+        email = cleaned_data.get('user-email')
+
+        if not email:
+           raise forms.ValidationError('이메일을 입력해주세요')
+
+
+class ChangeSetPwdForm(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super(ChangeSetPwdForm, self).__init__(*args, **kwargs)
+        self.fields['new_password1'].label = '새 비밀번호'
+        self.fields['new_password1'].widget.attrs.update({
+            'class':'password',
+        })
+        self.fields['new_password2'].label = '새 비밀번호 확인'
+        self.fields['new_password2'].widget.attrs.update({'class':'password_chk'})

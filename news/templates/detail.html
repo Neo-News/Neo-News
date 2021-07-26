@@ -108,7 +108,7 @@ function sendLinkKakao(){
       objectType: 'feed',
       content: {
         title: '{{ article.title|get_hangul }}',
-        description: '{{ article.content|get_hangul_num|slice:"65:"}}',
+        description: '{{ article.content|get_hangul|slice:"65:"}}',
         // 컨텐츠 이미지 가져오는거 필요해보임
         imageUrl: 'https://imgnews.pstatic.net/image/001/2021/07/23/PYH2021072208710001300_P4_20210723011708733.jpg?type=w647',
         link: {

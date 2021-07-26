@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/user.css' %}">
+{% endblock head %}
+{% block content %}
+<section class="find-password-section">
+  <div class="find-password-form">
+    <div class="find-password-level">
+      <span class="level01 level"><i class="find_clicked fas fa-circle"></i> 본인인증</span>
+      <span class="level02 level"><i class="fas fa-circle"></i>비밀번호 변경</span>
+      <span class="level03 level"><i class=" fas fa-circle"></i>변경성공</span>
+  </div>
+      <h1>비밀번호 찾기</h1>
+      <p class="find-password-msg">등록하신 이메일을 정확하게 입력해주세요. 해당 이메일로 인증메일이 발송됩니다 !</p>
+      <span class="find-password-error-msg"></span>
+      <form action="" method="POST">
+        {% csrf_token %}
+        {{form.as_p}}
+        <input class="find-pwd-btn" type="submit" value="인증메일 보내기" onclick="FindPwdBtn(event)">
+      </form>
+
+      <span class="find-password-success-msg"></span>
+      <form class="confirm-num non-clicked" action="" method="POST">
+        {% csrf_token %}
+        <input type="text" placeholder="인증번호를 입력해주세요." name="valid_num" class="valid-num-input">
+        <input class="valid-num-btn" type="submit" value="인증하기" onclick="ValidNumBtn(event)">
+      </form>
+
+  </div>
+</section>
+{% endblock content %}
+
+{% block script %}
+<script>
+  function FindPwdBtn(e) {
+    // 회원가입 ajax 통신
+    e.preventDefault();
+    // 회원가입 정보 서버로 전송/ 문제점 : password 평문으로 전송됨
+    $email = document.querySelector('.user-email').value;
+    console.log($email)
+
+    let signupCsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+
+    let param = {
+      'email': $email,
+    }
+
+    fetch("{% url 'user:password_check' %}", {
+      method: 'POST',
+      headers: {
+        "X-CSRFToken": signupCsrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param),
+    }).then(function (response) {
+      return response.json()
+    }).then(function (data) {
+      console.log(data)
+      if (data['error'] == true) {
+        document.querySelector('.find-password-error-msg').innerText = `${data['msg']}`
+      }
+      else if (data['error'] == false) {
+        document.querySelector('.find-password-error-msg').innerText = `${data['msg']}`
+        document.querySelector('.find-pwd-btn').style.display = 'none';
+        document.querySelector('.confirm-num').classList.remove('non-clicked');
+      }
+
+    }).catch((error) => {
+      console.log('error', error);
+    })
+  }
+
+
+  function ValidNumBtn(e) {
+    // 회원가입 ajax 통신
+    e.preventDefault();
+    // 회원가입 정보 서버로 전송/ 문제점 : password 평문으로 전송됨
+    $email = document.querySelector('.user-email').value;
+    $valid_num = document.querySelector('.valid-num-input').value;
+
+
+
+    let signupCsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+
+    let param = {
+      'email': $email,
+      'valid_num': $valid_num
+    }
+
+    fetch("{% url 'user:confirm_password' %}", {
+      method: 'POST',
+      headers: {
+        "X-CSRFToken": signupCsrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param),
+    }).then(function (response) {
+      return response.json()
+    }).then(function (data) {
+      console.log(data)
+
+      if (data['success'] == true) {
+        location.href = "{% url 'user:valid_change_pwd'%}"
+      }
+      else if(data['success'] == false){
+        document.querySelector('.find-password-success-msg').innerText=`${data['msg']}`
+      }
+
+    }).catch((error) => {
+      console.log('error', error);
+    })
+  }
+</script>
+{% endblock script %}

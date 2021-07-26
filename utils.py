@@ -35,3 +35,23 @@ def get_time_passed(created_at):
     else:
         return '오래 전'  
 
+
+def get_time_passed_comment(created_at):
+    current_date = time.time()
+    time_passed = float(current_date)-float(created_at)
+    
+#   print(time_passed)
+    if time_passed == 0:
+        return '1초 전'
+    if time_passed < 60:
+        return str(int(time_passed)) + '초 전'
+    if time_passed//60 < 60:
+        return str(int(time_passed//60)) + '분 전'
+    if time_passed//(60*60) < 24:
+        return str(int(time_passed//(60*60))) + '시간 전'
+    if time_passed//(60*60*24) < 30:
+        return str(int(time_passed//(60*60*24))) + '일 전'
+    if time_passed//(60*60*24*30) < 12:
+        return str(int(time_passed//(60*60*24*30))) + '달 전'
+    else:
+        return '오래 전'  

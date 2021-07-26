@@ -9,7 +9,7 @@ from news.models import Press, UserPress, Article
 from .models import Comment, ReComment, Like
 from .dto import CommentCreateDto
 from .services import CommentService
-
+from utils import get_time_passed_comment
 
 class PressEditView(View):
     def post(self, request, *args, **kwargs):
@@ -52,6 +52,8 @@ class CommentCreateView(View):
 
             comment_dto = self._build_comment_dto(request, data)
             comment = CommentService.create(comment_dto)
+            print(comment.created_at)
+            print(get_time_passed_comment(comment.created_at))
             print("댓글 인스턴스 생성")
             context = {
                 'writer' : comment.writer.nickname,

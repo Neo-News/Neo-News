@@ -1,4 +1,6 @@
 
+from django.views.generic.base import TemplateView
+from news.validate import email_valid_num
 from news.models import Press, UserPress
 import os
 import boto3
@@ -6,9 +8,7 @@ import requests
 from boto3.session import Session
 from datetime import datetime
 from django.http.response import JsonResponse
-from django.shortcuts import render, redirect, reverse
-from os import name
-from django.contrib.auth.views import LoginView
+from django.shortcuts import render, redirect
 from django.contrib import messages
 from config.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME, AWS_S3_REGION_NAME
 from .models import ProfileImage, User
@@ -16,7 +16,7 @@ from .exception import SocialLoginException, KakaoException
 from datetime import datetime
 from .models import Category, Keyword, ProfileImage
 from utils import context_infor
-from user.forms import SignupForm, LoginForm, UserDeleteForm
+from user.forms import FindPwForm, SignupForm, LoginForm, ChangeSetPwdForm
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_text
@@ -27,9 +27,10 @@ from user.services import UserService
 from .dto import SignupDto
 from django.contrib.auth import authenticate, login as auth_login
 from user.models import User
-from django.contrib.auth.forms import UserChangeForm
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import logout 
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
 import jwt
 import json
@@ -49,23 +50,25 @@ class UserLoginView(FormView):
     
     def form_valid(self, form):
         email = form.cleaned_data.get('username')
+        print(email)
         password = form.cleaned_data.get('password')
         user = authenticate(self.request, username=email, password=password)
         print(user)
         if user is not None:
             auth_login(self.request, user)
-            print('로그인 성공')
         return super().form_valid(form)
 
-class UserLoginView(LoginView):
-    """
-    author: Oh Ji Yun
-    date: 0715
-    description:
-    FormView 상속받아서 로그인 기능 구현
-    Form은 authenticate가 있는 authentication form 사용 
-    """
-    template_name = 'login.html'
+
+
+# class UserLoginView(LoginView):
+#     """
+#     author: Oh Ji Yun
+#     date: 0715
+#     description:
+#     FormView 상속받아서 로그인 기능 구현
+#     Form은 authenticate가 있는 authentication form 사용 
+#     """
+#     template_name = 'login.html'
 
 
 # 카카오 로그인 뷰
@@ -346,21 +349,25 @@ class UserInforAddView(View):
 class ChangePasswordView(View):
   
   def post(self, request, **kwargs):
-    pass
+    print(request.session['auth'])
+    print(User.objects.get(email=request.session['auth']))
+    session_user = request.session['auth']
+    current_user = User.objects.get(email=request.session['auth'])
+    auth_login(request, current_user)
+    return redirect('/')
 
   def get(self, request, **kwargs):
-    return render(request, 'change-password.html')
+    print('들어오긴함')
+    print(request.session['auth'])
+    print(User.objects.get(email=request.session['auth']))
+    # print(request.user.email,request.user.nickname)
+    # context = context_infor(name = request.user.nickname)
+    return render(request,'change-password.html')
+    # return render(request, 'change-password.html')
 
 
 class DeletePasswordView(View):
-  # def get(self, request, **kwargs):
-  #   pwd_forms = UserDeleteForm()
-  #   context = context_infor(pwd_forms=pwd_forms)
-  #   print(pwd_forms)
-  #   return render(request, 'user-infor.html',context)
-
   def post(self, request, **kwargs):
-    # pwd_form = UserDeleteForm(request.user, request.POST)
     if request.is_ajax():
       data = json.loads(request.body)
 
@@ -390,12 +397,114 @@ class DeletePasswordView(View):
     return JsonResponse(context)
 
 
-    print(password)
+class FindPwView(View):
+  """
+  비밀번호 찾기 페이지로 이동할때 사용되는 view
+  """
+  template_name = 'find_pw.html'
+  find_pw = FindPwForm
 
-    # if pwd_form.is_valid():
-      # User.objects.filter(pk=request.user.pk).update(
-        # is_active = False
-      # )
-      # messages.success(request, '회원탈퇴완료 !')
-      # context = context_infor(pwd_form = pwd_form)
-    return render(request, 'index.html' )
+  def get(self, request):
+    form = self.find_pw(None)
+    context = context_infor(form=form)
+    return render(request, self.template_name, context)
+
+
+class PasswordCheckView(View):
+    """
+    비밀번호 찾기를 누른 유저가 이메일입력해 자신의 이메일을 인증하는 클래스
+    """
+    def get(self, request, *args, **kwargs):
+        pass
+
+    def post(self, request, *args, **kwargs):
+        if request.is_ajax():
+            data = json.loads(request.body)
+            email=data.get('email')
+            user = User.objects.filter(email=email).first()
+            
+            if not email:
+                error = True
+                msg = '이메일을 입력해주세요'
+                context = context_infor(error=error, msg=msg)    
+                return JsonResponse(context)           
+            if not user:
+                error = True
+                msg = '존재하지 않는 이메일이에요'
+                context = context_infor(error=error, msg=msg)
+                return JsonResponse(context)
+            
+            auth_num = email_valid_num()
+            user.auth = auth_num
+            user.save()
+
+            mail_title, message_data, mail_to = UserService.verify_pwd_user(request, user.pk, email, auth_num)# 이메일 인증을 위한 데이터 변수들
+            send_email.delay(mail_title, message_data, mail_to) # 이메일 인증을 위한 데이터 tasks로 따로 빼둠, 로딩 시간을 줄이기 위해 , 비동기 처리 (celery-redis기능) 
+            context = context_infor(msg='이메일에 인증번호를 발송했습니다!', error=False, auth_num = auth_num)
+            return JsonResponse(context)
+
+
+class PasswordConfirmView(View):
+    """
+    이메일에서 받은 인증번호를 입력하여 정상적인 인증 번호를 입력했을때 처리되는 클래스
+    """
+    def get(self, request, *args, **kwargs):
+        context = context_infor(name = request.user.nickname)
+        return render(request,'change-password.html',context)
+
+    def post(self, request, *args, **kwargs):
+        if request.is_ajax():
+            data = json.loads(request.body)
+            email=data.get('email')
+            auth_num = data.get('valid_num')
+            user = User.objects.filter(email=email, auth=auth_num).first()
+            if not User.objects.filter(auth=auth_num).first():
+                msg = '인증번호가 올바르지 않습니다. 인증번호를 다시한번 확인해주세요 !'
+                context = context_infor(success=False,msg=msg) 
+                return JsonResponse(context)
+            if user:
+                user.auth = ''
+                user.save()
+                request.session['auth'] = user.email
+                
+                result = json.dumps({'result': user.email})
+                context = context_infor(result=result, success=True) 
+                return JsonResponse(context)
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ValidChangePassword(View):
+
+    def get(self, request, *args, **kwargs):
+        reset_pwd_form = ChangeSetPwdForm(None)
+        return render(request, 'valid-change-pwd.html', {'forms':reset_pwd_form})
+
+
+    def post(self, request, *args, **kwargs):
+        if request.is_ajax():
+            data = json.loads(request.body)
+            session_user = request.session.get('auth')
+            current_user = User.objects.get(email = session_user)
+            auth_login(request, current_user)
+            reset_pwd_form = ChangeSetPwdForm(request.user, data)
+            
+            if reset_pwd_form.is_valid():
+                new_password = reset_pwd_form.cleaned_data['new_password1']
+                current_user.set_password(new_password)
+                current_user.save()
+                logout(request)
+                context=context_infor(error=False, url='http://127.0.0.1:8000/user/login/callback/')
+                return JsonResponse(context)
+            else:
+                logout(request)
+                request.session['auth'] = session_user
+                context = context_infor(error=True, msg='비밀번호가 올바르지 않습니다 !')
+                return JsonResponse(context)
+
+
+class LoginCallBackView(TemplateView):
+    template_name = 'login_callback.html'
+
+    def get(self, request, *args, **kwargs):
+        context = {}
+        return self.render_to_response(context)

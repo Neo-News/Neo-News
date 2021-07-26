@@ -2,7 +2,7 @@ from django.db import models
 from user.models import User
 from news.models import Article
 from behaviors import Countable, TimeStampable, Deleteable
-from utils import get_time_passed
+from utils import get_time_passed, get_time_passed_comment
 
 
 class Like(Countable):
@@ -27,7 +27,7 @@ class Comment(TimeStampable,Deleteable):
 
     @property
     def created_string(self):
-      created_time = get_time_passed(self.created_at)
+      created_time = get_time_passed_comment(self.created_at)
       return created_time
 
 

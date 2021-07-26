@@ -3,7 +3,7 @@ from user.models import User
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from user.text import message
+from user.text import message, pwd_change_message
 
 import jwt
 
@@ -31,6 +31,21 @@ class UserService():
     uidb64 = urlsafe_base64_encode(force_bytes(pk))
     token = jwt.encode({'user_pk' : pk}, 'secretkey', algorithm = 'HS256').decode('utf-8')
     message_data = message(domain, uidb64, token)
+    mail_title = '이메일 인증을 완료해주세요'
+    data ={'email': email}  
+    mail_to = data['email']
+    return (mail_title, message_data, mail_to)
+
+  @staticmethod
+  def verify_pwd_user(request, pk, email, auth_num):
+    """
+    (비밀번호 변경)이메일 입력한 유저의 이메일 인증 데이터 리턴
+    """
+    current_site = get_current_site(request)
+    domain = current_site.domain
+    uidb64 = urlsafe_base64_encode(force_bytes(pk))
+    token = jwt.encode({'user_pk' : pk}, 'secretkey', algorithm = 'HS256').decode('utf-8')
+    message_data = pwd_change_message(domain, uidb64, token, auth_num)
     mail_title = '이메일 인증을 완료해주세요'
     data ={'email': email}  
     mail_to = data['email']

@@ -16,7 +16,7 @@
 
 .registration{
   min-height: 100vh;
-  /* margin-top: -50px; */
+  margin-top: -90px;
   background-color: rgb(249, 247, 244);
 }
 .registration-signup{
@@ -638,7 +638,127 @@ transform: translate(-50%,-50%);
   background-color: rgb(212, 209, 209);
 }
 
+/* 이메일 찾기 레이아웃 */
+.find-password-section{
+  background-color: rgb(249, 247, 244);
+  text-align: center;
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+}
+.find-password-form{
+  background-color: #fff;
+  box-shadow: 0px 0px 10px 0px rgb(226, 223, 223);
+  border-radius: 5px;
+  display: inline-block;
+  position: absolute;
+  width: 60%;
+  top: 35%;
+  left: 50%;
+  padding: 100px 0px;
+  transform: translate(-50%,-50%);
+}
+.find-password-form > h1{
+  font-size: 1.2rem;
+  margin-bottom: 50px;
+  margin-top: 15px;
+}
+.find-password-form .user-email{
+  padding: 10px;
+  width: 70%;
+  border: none;
+  margin-bottom: 50px;
+  background-color: rgb(229, 226, 226);
+}
+.find-pwd-btn{
+  padding:9px;
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(229, 226, 226);
+}
+.find-password-msg{
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 70px;
+  font-size: 0.75rem;
+  color:rgb(248, 161, 104);
+  font-weight: bold;
+}
+.find-password-level{
+  /* background-color: red; */
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px;
 
+}
+.level{
+  font-size: .9rem;
+  margin-right: 10px;
+}
+.level:after{
+  content:'-----';
+  width: 30px;
+  height: 10px;
+}
+.level:last-child:after {
+  content: '';
+}
+.fa-circle{
+  margin-right: 5px;
+  color: rgb(206, 201, 201);
+}
+.find_clicked{
+  color:rgb(248, 161, 104);
+}
+.find-password-error-msg,
+.find-password-success-msg{
+  font-size: 0.75rem;
+  width: 60%;
+  padding: 5px 10px;
+  display: inline-block;
+  color: tomato;
+  font-weight: bold;
+  text-align: left;
+}
+.return-home{
+  font-size: .8rem;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px 0px rgb(190, 189, 189);
+  background-color: rgb(248, 161, 104);
+  padding: 10px;
+}
+.valid-num-input{
+display: inline-block;
+width: 55%;
+margin: 0 auto;
+padding: 10px;
+border: none;
+background-color: rgb(230, 228, 228);
+}
+.valid-num-btn{
+width: 15%;
+border: none;
+padding: 8px;
+box-sizing: border-box;
+background-color: rgb(230, 228, 228);
+}
+.password,
+.password_chk{
+padding: 10px;
+display: block;
+width: 60%;
+margin: 0px auto;
+margin-bottom: 20px;
+border: none;
+background-color: rgb(230, 228, 228);
+
+}
+.find-pwd-btn{
+  margin-top: 10px;
+  width: 30%;
+  background-color: rgb(248, 161, 104);;
+}
 /* user responsive */
 @media screen and (max-width:576px){
   .user-infor-edit{
@@ -679,12 +799,43 @@ transform: translate(-50%,-50%);
 .edit-profile-img{
   text-align: center;
 }
-
+/* 비밀번호 찾기 레이아웃 - 모바일 */
+.find-password-section{
+  padding-top: 150px;
+}
+.find-password-form{
+  background-color: rgb(249, 247, 244);
+  width: 90%;
+  margin-top: 35px;
+  box-shadow: none;
+}
+.find-password-form > h1{
+  margin-bottom: 50px;
+}
+.find-password-form .user-email{
+  width: 70%;
+  margin-bottom: 50px;
+}
+.find-password-msg{
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 70px;
+}
+.find-password-level{
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+}
+.confirm-num{
+  width: 100%;
+}
+.valid-num-btn{
+width: auto;
+}
 }
 
 @media screen and (max-width:450px){
-  .main-section{
-  }
+
   .base{
     padding: 0;
   }
@@ -692,14 +843,18 @@ transform: translate(-50%,-50%);
      display: none;
 }
 .registration{
-  padding-top: 0px;
+  padding-top: 40px;
   margin-top: 0;
 }
 .registration-signup{
-  padding-top: 50px;
+  padding-top: 110px;
 }
 .category{
   padding: 0;
   margin: 0;
+}
+
+.level{
+  font-size: 0.75rem;
 }
 }
