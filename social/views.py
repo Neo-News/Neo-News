@@ -51,13 +51,18 @@ class CommentCreateView(View):
             print(comment.created_at)
             print(get_time_passed_comment(comment.created_at))
             print("댓글 인스턴스 생성")
+            recomments = ReComment.objects.filter(comment__pk=comment.pk)
+            total_recomments = [recomment for recomment in recomments]
+
             context = {
                 'comment_pk' : comment.pk,
                 'writer' : comment.writer.nickname,
                 'writer_img' : comment.writer.image,
                 'content' : comment.content,
-                'created_time' : comment.created_string
+                'created_time' : comment.created_string,
+                'total_recomments' : len(total_recomments)
             }
+
             return JsonResponse(context, status=200)
         else:
             return JsonResponse({"error" : "Error occured during request"}, status=400)
@@ -79,12 +84,12 @@ class ReCommentCreateView(View):
         if self.request.is_ajax():
             print("ajax 요청 받기 성공")
             data = json.loads(request.body)
-            comment_pk = data.get('comment_pk')
+            # comment_pk = data.get('comment_pk')
 
             recomment_dto = self._build_recomment_dto(request, data)
             recomment = ReCommentService.create(recomment_dto)
-            recomments = ReComment.objects.filter(comment__pk=comment_pk)
-            total_recomments = [recomment for recomment in recomments]
+            # recomments = ReComment.objects.filter(comment__pk=comment_pk)
+            # total_recomments = [recomment for recomment in recomments]
             print("대댓글 인스턴스 생성")
             context = {
                 'recomment_pk' : recomment.pk,
@@ -92,7 +97,7 @@ class ReCommentCreateView(View):
                 'writer_img' : recomment.writer.image,
                 'content' : recomment.content,
                 'created_time' : recomment.created_string,
-                'total_recomments' : len(total_recomments)
+                # 'total_recomments' : len(total_recomments)
             }
             return JsonResponse(context, status=200)
         else:
