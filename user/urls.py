@@ -5,7 +5,8 @@ from django.contrib.auth.views import LogoutView
 from user.views import (
     UserLoginView, UserSignupView, SignupDeatilView, UserInforEditView, ImageUpload,
     Activate, UserInforAddView, kakao_login, kakao_login_callback, ChangePasswordView,
-    DeletePasswordView, FindPwView,PasswordCheckView,PasswordConfirmView,ValidChangePassword,LoginCallBackView)
+    DeletePasswordView, FindPwView, PasswordCheckView, PasswordConfirmView,ValidChangePassword,
+    LoginCallBackView, ResendEmailView)
 
 
 
@@ -23,6 +24,7 @@ urlpatterns = [
     
     path('signup/', UserSignupView.as_view(), name='signup'),
     path('account/activate/<str:uidb64>/<str:token>/', Activate.as_view()),
+    path('signup/re/email/', ResendEmailView.as_view(), name='resend'),
     # path('password/activate/<str:uidb64>/<str:token>/', PwdActivate.as_view()),
     
     path('signup/detail/', SignupDeatilView.as_view() ,name='signup_detail'),

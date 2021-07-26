@@ -159,18 +159,6 @@ class SignupForm(forms.Form):
       }
     ),)
   
-    # 폼 input 순서 명시적으로 나열
-    # field_order = [
-    # 'email',
-    # 'nickname',
-    # 'password',
-    # 'password_chk'
-    # ]
-
-  
-    # class Meta:
-    #     model = get_user_model()
-    #     fields = ['email','nickname','password']
 
     # 회원가입 로직 유효성 검사
     def clean(self):
@@ -205,6 +193,12 @@ class SignupForm(forms.Form):
 
 
 class UserDeleteForm(forms.Form):
+    """
+    author: Son Hee Jung
+    date: 0723
+    description: 
+    회원 탈퇴 클래스 관련 Form
+    """
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'user-password'}))
 
     def __init__(self, user, *args, **kwargs):
@@ -221,12 +215,17 @@ class UserDeleteForm(forms.Form):
                 raise forms.ValidationError('비밀번호가 일치하지 않아요')
 
 
-
 class VerifyEmailForm(forms.Form):
     pass
 
 
 class FindPwForm(forms.Form):
+    """
+    author: Son Hee Jung
+    date: 0726
+    description: 
+    패스워드 찾기 관련 Form
+    """
     email = forms.CharField(
       label='',
       widget=forms.EmailInput(
@@ -242,17 +241,57 @@ class FindPwForm(forms.Form):
     def clean(self):
         cleaned_data = super.clean()
         email = cleaned_data.get('user-email')
+        print(email,'clean 패스워드 찾기 clean')
 
         if not email:
            raise forms.ValidationError('이메일을 입력해주세요')
 
 
 class ChangeSetPwdForm(SetPasswordForm):
+    """
+    author: Son Hee Jung
+    date: 0726
+    description: 
+    패스워드 변경 확인 폼
+    """
     def __init__(self, *args, **kwargs):
         super(ChangeSetPwdForm, self).__init__(*args, **kwargs)
         self.fields['new_password1'].label = '새 비밀번호'
-        self.fields['new_password1'].widget.attrs.update({
-            'class':'password',
-        })
+        self.fields['new_password1'].widget.attrs.update({'class':'password','placeholder': '비밀번호 입력'})
         self.fields['new_password2'].label = '새 비밀번호 확인'
-        self.fields['new_password2'].widget.attrs.update({'class':'password_chk'})
+        self.fields['new_password2'].widget.attrs.update({'class':'password_chk','placeholder': '비밀번호 확인'})
+
+
+class VerificationEmailForm(forms.Form):
+
+  email = forms.CharField(
+    label='',
+    required=True,
+    widget=forms.EmailInput(
+    attrs={
+      'class':'resend-input',
+      'placeholder': '이메일을 입력하세요'
+    }
+  ),)
+  
+
+#   class Meta:
+    # model = get_user_model()
+    # fields = ['email']
+
+  def clean(self):
+    cleaned_data = super().clean()
+    print(cleaned_data)
+    print('제발 엉엉')
+    email = cleaned_data.get('email')
+
+
+    if not email:
+        raise forms.ValidationError('이메일을 입력해주세요 !')
+
+    elif User.objects.filter(email=email, is_active=True).first():
+        raise forms.ValidationError('이미 가입되어 있는 이메일입니다. 다른 이메일을 입력해주세요 !')
+
+
+    self.email = email
+    print('유효성 검증 성공했어 너')

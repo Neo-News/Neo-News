@@ -16,7 +16,7 @@ from .exception import SocialLoginException, KakaoException
 from datetime import datetime
 from .models import Category, Keyword, ProfileImage
 from utils import context_infor
-from user.forms import FindPwForm, SignupForm, LoginForm, ChangeSetPwdForm
+from user.forms import FindPwForm, SignupForm, LoginForm, ChangeSetPwdForm,VerificationEmailForm
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 from django.utils.encoding import force_text
@@ -24,14 +24,14 @@ from django.views.generic import View, FormView
 from user.forms import SignupForm
 from user.tasks import send_email
 from user.services import UserService
-from .dto import SignupDto
+from .dto import SignupDto,ResendDto
 from django.contrib.auth import authenticate, login as auth_login
 from user.models import User
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import logout 
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-
+from user.mixin import VerifyEmailMixin
 import jwt
 import json
 
@@ -56,6 +56,12 @@ class UserLoginView(FormView):
         print(user)
         if user is not None:
             auth_login(self.request, user)
+        print(User.objects.filter(pk=self.request.user.pk).first().is_active)
+        if User.objects.filter(pk=self.request.user.pk).first().is_detailed == False:
+            categories = Category.objects.all()
+            context = context_infor(categories=categories)
+            return render(self.request,'signup_detail.html',context)
+
         return super().form_valid(form)
 
 
@@ -237,9 +243,9 @@ class Activate(View):
         auth_login(request, user)
         
         if result:
-            return redirect('user:signup_detail')
+            return redirect('user:login')
         else:
-            return redirect('user:signup_detail')
+            return redirect('user:login')
 
 
 class SignupDeatilView(View):
@@ -347,72 +353,78 @@ class UserInforAddView(View):
       
       
 class ChangePasswordView(View):
-  
-  def post(self, request, **kwargs):
-    print(request.session['auth'])
-    print(User.objects.get(email=request.session['auth']))
-    session_user = request.session['auth']
-    current_user = User.objects.get(email=request.session['auth'])
-    auth_login(request, current_user)
-    return redirect('/')
+    """
+    마이페이지의 비밀번호 수정 클래스
+    """
+    def get(self, request, **kwargs):
+        return render(request,'change-password.html')
 
-  def get(self, request, **kwargs):
-    print('들어오긴함')
-    print(request.session['auth'])
-    print(User.objects.get(email=request.session['auth']))
-    # print(request.user.email,request.user.nickname)
-    # context = context_infor(name = request.user.nickname)
-    return render(request,'change-password.html')
-    # return render(request, 'change-password.html')
+    def post(self, request, **kwargs):
+        session_user = request.session['auth']
+        current_user = User.objects.get(email=session_user)
+        auth_login(request, current_user)
+        return redirect('/')
 
 
 class DeletePasswordView(View):
-  def post(self, request, **kwargs):
-    if request.is_ajax():
-      data = json.loads(request.body)
+    """
+    author: Son Hee Jung
+    date: 0726
+    description: 
+    회원 탈퇴 클래스. ajax를 통해 비밀번호를 입력받아 유효성 검증 후 탈퇴가 진행된다
+    """
+    def post(self, request, **kwargs):
+        if request.is_ajax():
+            data = json.loads(request.body)
+            password = data.get('password')
+            password_chk = request.user.password
 
-      password = data.get('password')
-      password_chk = request.user.password
+        if not password:
+            error = True
+            msg = '비밀번호를 입력해주세요 !'
+            context = context_infor(error=error, msg=msg)
+            return JsonResponse(context)
 
-    if not password:
-        error = True
-        msg = '비밀번호를 입력해주세요 !'
-        context = context_infor(error=error, msg=msg)
+        if not check_password(password, password_chk):
+            error = True
+            msg = '비밀번호를 틀렸어요 !'
+            context = context_infor(error=error, msg=msg)
+            return JsonResponse(context)
+
+        User.objects.filter(pk=request.user.pk).update(
+            is_active = False
+            )
+        logout(request)
+        messages.success(request, '회원탈퇴 완료 !')
+        error = False
+        url = 'http://127.0.0.1:8000/'
+        context = context_infor(error=error,url=url)
         return JsonResponse(context)
-
-    if not check_password(password, password_chk):
-        error = True
-        msg = '비밀번호를 틀렸어요 !'
-        context = context_infor(error=error, msg=msg)
-        return JsonResponse(context)
-
-    User.objects.filter(pk=request.user.pk).update(
-        is_active = False
-      )
-    logout(request)
-    messages.success(request, '회원탈퇴 완료 !')
-    error = False
-    url = 'http://127.0.0.1:8000/'
-    context = context_infor(error=error,url=url)
-    return JsonResponse(context)
 
 
 class FindPwView(View):
-  """
-  비밀번호 찾기 페이지로 이동할때 사용되는 view
-  """
-  template_name = 'find_pw.html'
-  find_pw = FindPwForm
+    """
+    author: Son Hee Jung
+    date: 0726
+    description: 
+    비밀번호 찾기 클래스. 비밀번호 찾기 버튼을 누르면 해당 템플릿으로 이동된다
+    """
+    template_name = 'find_pw.html'
+    find_pw = FindPwForm
 
-  def get(self, request):
-    form = self.find_pw(None)
-    context = context_infor(form=form)
-    return render(request, self.template_name, context)
+    def get(self, request):
+        form = self.find_pw(None)
+        context = context_infor(form=form)
+        return render(request, self.template_name, context)
 
 
 class PasswordCheckView(View):
     """
-    비밀번호 찾기를 누른 유저가 이메일입력해 자신의 이메일을 인증하는 클래스
+    author: Son Hee Jung
+    date: 0726
+    description: 
+    비밀번호 찾기에서 이메일을 입력받아 해당 이메일에 대한 유효성 검증 후 인증번호를
+    해당 이메일로 전송한다(celery사용)
     """
     def get(self, request, *args, **kwargs):
         pass
@@ -437,7 +449,6 @@ class PasswordCheckView(View):
             auth_num = email_valid_num()
             user.auth = auth_num
             user.save()
-
             mail_title, message_data, mail_to = UserService.verify_pwd_user(request, user.pk, email, auth_num)# 이메일 인증을 위한 데이터 변수들
             send_email.delay(mail_title, message_data, mail_to) # 이메일 인증을 위한 데이터 tasks로 따로 빼둠, 로딩 시간을 줄이기 위해 , 비동기 처리 (celery-redis기능) 
             context = context_infor(msg='이메일에 인증번호를 발송했습니다!', error=False, auth_num = auth_num)
@@ -446,7 +457,11 @@ class PasswordCheckView(View):
 
 class PasswordConfirmView(View):
     """
-    이메일에서 받은 인증번호를 입력하여 정상적인 인증 번호를 입력했을때 처리되는 클래스
+    author: Son Hee Jung
+    date: 0726
+    description: 
+    정상적인 인증번호를 입력했는지에 대한 검증을 하는 클래스. ajax를 이용해 올바르지
+    않으면 에러 메시지를 띄어주고 인증된 경우 패스워드 변경 템플릿으로 이동시킨다
     """
     def get(self, request, *args, **kwargs):
         context = context_infor(name = request.user.nickname)
@@ -474,11 +489,16 @@ class PasswordConfirmView(View):
 
 @method_decorator(csrf_exempt, name='dispatch')
 class ValidChangePassword(View):
-
+    """
+    author: Son Hee Jung
+    date: 0726
+    description: 
+    비밀번호를 변경해주는 클래스. SetPasswordForm을 사용하여 비밀번호의 검증을 한 후 실제 유저의 패스워드를 변경한다
+    csrf_token관련 문제로 csrf_exempt 데코레이터 사용한 이슈 발생 
+    """
     def get(self, request, *args, **kwargs):
         reset_pwd_form = ChangeSetPwdForm(None)
         return render(request, 'valid-change-pwd.html', {'forms':reset_pwd_form})
-
 
     def post(self, request, *args, **kwargs):
         if request.is_ajax():
@@ -503,8 +523,41 @@ class ValidChangePassword(View):
 
 
 class LoginCallBackView(TemplateView):
+    """
+    author: Son Hee Jung
+    date: 0726
+    description: 
+    비밀번호 변경후 성공한 템플릿을 화면에 그려준다
+    """
     template_name = 'login_callback.html'
 
     def get(self, request, *args, **kwargs):
         context = {}
         return self.render_to_response(context)
+
+
+class ResendEmailView(VerifyEmailMixin, View):
+
+  def get(self, request, *args, **kwargs):
+    print('여기로 접근은 되니?')
+    forms = VerificationEmailForm()
+    forms = str(forms)
+    context = {'forms':forms}
+    print(context)
+    return JsonResponse(context)
+  
+  def post(self, request, *args, **kwargs):
+     if request.is_ajax():
+      data = json.loads(request.body)
+      resent_email = data['recent-email']
+      change_email = data['email']
+      forms = VerificationEmailForm(data)
+    #   recent_email = data.get('recent-email')
+      context = self.send_verification_email(request, forms ,resent_email = resent_email,change_email=change_email, email='again')
+      return JsonResponse(context)
+
+  @staticmethod
+  def _build_resend_dto(data):
+    return ResendDto(
+      email = data.email,
+    )

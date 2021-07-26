@@ -37,7 +37,16 @@
             <input class="signup-btn" type="submit" value="SIGN UP" onclick="signupBtn(event)">
           </div>
       </form>
-      <a class="resend-email" href="#">인증이메일 재발송</a>
+
+      <form action=""method="POST" class="resend-form ">
+        {% csrf_token %}
+        <span class="resend-email" href="#" onclick="resendEmail(event)">인증이메일 재발송</span>
+        
+        <div class="valid-error non-clicked">
+        </div>
+        <div class="resend-div non-clicked">
+        </div>
+        </form>
       <div class="social-signup">
         <span class="social-signup-text-icon"><i class="fas fa-quote-left"></i><span class="social-signup-text">소셜 계정으로도
             가입 가능합니다</span><i class="fas fa-quote-right"></i></span>
@@ -62,6 +71,7 @@
 <script>
 
   function signupBtn(e) {
+    document.querySelector('.resend-form ').classList.remove('non-clicked')
     // 회원가입 ajax 통신
     e.preventDefault();
     // 회원가입 정보 서버로 전송/ 문제점 : password 평문으로 전송됨
@@ -98,7 +108,6 @@
       }
       if (data['is_error'] == 0) {
         document.querySelector('.error').innerHTML = `<span class="error-word">${data['error']}</span>`
-        document.querySelector('.user-email').value = '';
         document.querySelector('.user-pwd').value = '';
         document.querySelector('.user-pwd-chk').value = '';
         document.querySelector('.user-nickname').value = '';
@@ -108,7 +117,86 @@
       console.log('error', error);
     })
   }
+  
+  //이메일 재인증하기 
+  function resendEmail(e){
+  console.log('움움우뭉')
+  e.preventDefault();
+  let resendCsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+
+
+  document.querySelector('.resend-div').classList.toggle('non-clicked');
+  document.querySelector('.valid-error').classList.toggle('non-clicked');
+
+
+  fetch("{% url 'user:resend' %}", {
+    method: 'GET',
+    headers: {
+      "X-CSRFToken": resendCsrfValue,
+      "X-Requested-With": "XMLHttpRequest"
+    },
+    // body: JSON.stringify(param),
+  }).then(function (response) {
+    console.log('sdafjalfja')
+    return response.json()
+  }).then(function (data) {
+    console.log(data['forms'])
+    document.querySelector('.resend-div').innerHTML =
+     `
+     ${data['forms']}
+     <input type="submit" class="resend-input-btn" value="보내기" onclick="resendBtn(event)">
+    ` 
+}).catch((error) => {
+    console.log('error', error);
+  })
+}
+
+function resendBtn(e){
+  console.log('hahahah')
+  e.preventDefault();
+  $email = document.querySelector('.resend-input').value;
+  $recent_email = document.querySelector('.user-email').value;
+  let resendCsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+  console.log($email)
+  console.log($recent_email)
+  let param = {
+    'email':$email,
+    'recent-email':$recent_email
+
+  }
+  // document.querySelector('.resend-form').style.display='none';
+
+  fetch("{% url 'user:resend' %}", {
+    method: 'POST',
+    headers: {
+      "X-CSRFToken": resendCsrfValue,
+      "X-Requested-With": "XMLHttpRequest"
+    },
+    body: JSON.stringify(param),
+  }).then(function (response) {
+    return response.json()
+  }).then(function (data) {
+    console.log(data['error'],data['msg'])
+    // 회원가입 유효성 검사시 발생하는 Error문 템플릿에 출력
+    if(data['error'] == true){
+      console.log(`${data['msg']}`)
+    document.querySelector('.valid-error').innerHTML = `${data['msg']}`
+
+    }
+    if(data['error'] == false){
+      console.log(`${data['msg'[0]]}`)
+      document.querySelector('.valid-error').innerText = `${data['msg']}`
+      // document.querySelector('.resend-email').classList.toggle('clicked');
+    }
+}).catch((error) => {
+    console.log('error', error);
+  })
+}
+
+
 
 </script>
+
+
 
 {% endblock script %}

@@ -26,13 +26,9 @@ class IndexView(View):
   def get(self, request, **kwargs):
     categories = Category.objects.filter(users__pk=request.user.pk).all()
     keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
-    # article_lists = []
-    # articles = Article.objects.all()[:20]
     page = request.GET.get('page','1')
     article_list = Article.objects.all()
     if request.user.is_authenticated :
-        # article_lists = []
-        print('로그인한 유저꺼')
         userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
         article_list = []
         if userpress is not None:
@@ -40,7 +36,6 @@ class IndexView(View):
                 articles = Article.objects.filter(press__name=press.name).all()
                 for article in articles:
                     article_list.append(article)
-        print(article_list)
     paginator = Paginator(article_list, 20)
     try:
         article_obj = paginator.page(page)
