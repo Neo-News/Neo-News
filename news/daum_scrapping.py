@@ -6,11 +6,11 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 import django
 django.setup()
+from django.db.models import Q 
 from user.models import User
 from news.models import Article, Potal,Press,Category, UserPress
 from datetime import datetime
 import time
-
 """
 author: son hee jung
 date: 0717
@@ -29,7 +29,7 @@ def dict_infor(**kwargs):
     return context
 
 # , 'politics', 'economic', 'foreign', 'culture', 'digital', 'entertain', 'sports'
-category_list = ['economic']
+category_list = ['economic','society','politics', 'economic', 'foreign', 'culture', 'digital', 'entertain', 'sports']
 
 def parse_daum():
     data = {}
@@ -58,8 +58,7 @@ def parse_daum():
                     news_url_html = BeautifulSoup(news_url.text, 'html.parser')
                     detail_ul = soup.select_one('#mArticle > ul')
                     detail_li = detail_ul.select_one('#mArticle > ul > li.on > a').text.replace('선택됨','').replace('\n','')
-
-                    # print(detail_li)
+                    print(detail_li)
                     # category_word = news_url_html.select_one('#mArticle > ul > li.on > a > span').text
                     # print(category_word)
                     date = news_url_html.select_one('#cSub > div > span > span > span').text
@@ -84,38 +83,36 @@ def parse_daum():
                 data[i] = insight_news_info
     return data
 
-if __name__=='__main__':
+# if __name__=='__main__':
+#     press_list = ['KBS','MBC','경향신문','MBN','SBS','국민일보','노컷뉴스','뉴시스','디스패치','동아일보','매일경제','머니투데이','서울경제','서울신문','세계일보','연합뉴스','이데일리','중앙일보','한국경제','머니S','스포츠조선','스포츠투데이','오마이뉴스','YTN','MK스포츠','MBC연예','SBS연예뉴스']
+#     news_dict = parse_daum()
 
-    news_dict = parse_daum()
-#     cnt = 0
-#     # try:
-    for v in news_dict.values():
-        if not v['preview_img']:
-            v['preview_img'] = 'default.img'
-        if Press.objects.filter(name=v['press']).first() is None:
-            Press.objects.create(name = v['press'])
-        print('여기까지는 성고오오오오오옹')
-        if not Article.objects.filter(title = v['title']):
-            Article.objects.create(
-                press=Press.objects.filter(name=v['press']).first(),
-                potal = Potal.objects.filter(name='다음').first(),
-                category=Category.objects.filter(name=v['news_category']).first(),
-                code=v['news_code'],
-                date=v['date'],
-                preview_img=v['preview_img'],
-                title=v['title'],
-                content=v['content'],
-                ref=v['ref'],
-                counted_at = 0,
-                created_at = time.time()
-                    )
-        # press userpress에 없을경우 추가해준다 
-        press_obj = Press.objects.filter(name = v['press']).first()
-        userpress_list = UserPress.objects.all()
-        for userpress in userpress_list:
-            if press_obj not in userpress.press.all():
-                userpress.press.add(press_obj)
+#     for v in news_dict.values():
+#         if Press.objects.filter(name=v['press']):
+#             print('27개 안에 들어감',v['press'])
+#             print('여기까지는 성고오오오오오옹')
+            
+#             if not Article.objects.filter(Q(title=v['title']) | Q(content=v['content'])):
+#                 Article.objects.create(
+#                     press=Press.objects.filter(name=v['press']).first(),
+#                     potal = Potal.objects.filter(name='다음').first(),
+#                     category=Category.objects.filter(name=v['news_category']).first(),
+#                     code=v['news_code'],
+#                     date=v['date'],
+#                     preview_img=v['preview_img'],
+#                     title=v['title'],
+#                     content=v['content'],
+#                     ref=v['ref'],
+#                     counted_at = 0,
+#                     created_at = v['created_at']
+#                         )
+            # press userpress에 없을경우 추가해준다 
+            # press_obj = Press.objects.filter(name = v['press']).first()
+            # userpress_list = UserPress.objects.all()
+            # for userpress in userpress_list:
+            #     if press_obj not in userpress.press.all():
+            #         userpress.press.add(press_obj)
 
               
     # except:
-        pass
+        # pass

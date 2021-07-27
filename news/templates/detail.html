@@ -28,6 +28,11 @@
     <p class="detail-press">{{article.press.name}}</p>
   </div>
   <div class="detail-social">
+
+    <span class="social-heart-span"><a href=''><i class="social-heart fas fa-heart"></i> 이 기사 찜하기</a></span>
+    <span class="social-share-span"><a href="javascript:sendLinkKakao()"><i class="social-share fas fa-share-alt"></i>
+        카카오톡으로 공유하기</a></span>
+
     {% if user.is_liked %}
     <form class="social-heart-form" action="" method="POST" onsubmit="toggleLike(event)"> 
       {% csrf_token %}
@@ -41,9 +46,10 @@
     {% endif %}
     <span class="social-heart-span"> 이 기사 좋아요</span>
     <span class="social-share-span"><a href="javascript:sendLinkKakao()"><i class="social-share fas fa-share-alt"></i> 카카오톡으로 공유하기</a></span>
+
     <span class="sociallink ml-1">
 
-  </span>
+    </span>
   </div>
   {% if user.is_authenticated %}
   <div class="detail-comment">
@@ -54,7 +60,8 @@
     </form>
   </div>
   {% else %}
-  <p class="category-non-login"><i class="quote fas fa-quote-left"> </i> 로그인 하시면 댓글 작성이 가능합니다 <i class="quote fas fa-quote-right"> </i></p>
+  <p class="category-non-login"><i class="quote fas fa-quote-left"> </i> 로그인 하시면 댓글 작성이 가능합니다 <i
+      class="quote fas fa-quote-right"> </i></p>
   {% endif %}
   <ul class="detail-comments-ul">
     {% for comment in comments %}
@@ -74,10 +81,13 @@
       </div>
       <div class="comment-content">
         <p>{{comment.content}}</p>
-        <button class="recomment recomment-{{comment.pk}}" onclick="showRecommentForm(event)">답글 {{comment.re_comment.all | length }} </button>
-        <form class="non-clicked form-recomment-{{comment.pk}}" onsubmit="submitReComment('{{comment.pk}}')" action="" method='POST'>
+        <button class="recomment recomment-{{comment.pk}}" onclick="showRecommentForm(event)">답글
+          {{comment.re_comment.all | length }} </button>
+        <form class="non-clicked form-recomment-{{comment.pk}} form-recomment" onsubmit="submitReComment('{{comment.pk}}')" action=""
+          method='POST'>
           {% csrf_token %}
-          <input type="text" class="detail-recomment-input detail-recomment-input-{{comment.pk}}" placeholder="댓글을 입력해주세요.">
+          <input type="text" class="detail-recomment-input detail-recomment-input-{{comment.pk}}"
+            placeholder="댓글을 입력해주세요.">
           <button class="detail-recomment-submit">등록</button>
         </form>
       </div>
@@ -140,53 +150,25 @@
   //   }
   // }
 
-// 공유하기 스크립트
-Kakao.init('32cbd11246656adc34f9add26b2a772b');
-function sendLinkKakao(){
-    Kakao.Link.sendDefault({
-      objectType: 'feed',
-      content: {
-        title: '{{ article.title|get_hangul }}',
-        description: '{{ article.content|get_hangul|slice:"65:"}}',
-        // 컨텐츠 이미지 가져오는거 필요해보임
-        imageUrl: 'https://imgnews.pstatic.net/image/001/2021/07/23/PYH2021072208710001300_P4_20210723011708733.jpg?type=w647',
-        link: {
-          mobileWebUrl: '{{ request.build_absolute_uri }}',
-          webUrl: '{{ request.build_absolute_uri }}'
-        }
-      },
-      buttons: [       
-        {
-          title: '링크 열기',
-          link: {
-            mobileWebUrl: '{{ request.build_absolute_uri }}',
-            webUrl: '{{ request.build_absolute_uri }}'
-          }
-        }
-      ]
-    }); 
-}
-</script>
 
-<!-- 댓글기능 스크립트 -->
-<script>
+  // 댓글기능 스크립트
   function createComment(content) {
     console.log("Posting Comment");
     let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
     let param = {
-      'article_pk' : '{{article.pk}}',
-      'content' : content,
-    } 
+      'article_pk': '{{article.pk}}',
+      'content': content,
+    }
     fetch("{% url 'social:comment' %}", {
-      method : "POST",
-        headers : {
-          "X-CSRFToken" : csrfValue,
-          "X-Requested-With" : "XMLHttpRequest"
-        },
-        body : JSON.stringify(param)
-    }).then(function(response) {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param)
+    }).then(function (response) {
       return response.json();
-    }).then(function(data) {
+    }).then(function (data) {
       let commentPk = data['comment_pk'];
       let writer = data['writer'];
       let writerImg = data['writer_img'];
@@ -212,12 +194,13 @@ function sendLinkKakao(){
         <div class="comment-content">
           <p>${content}</p>
           <button class="recomment recomment-${commentPk}" onclick="showRecommentForm(event)">답글 ${totalRecomments}</button>
-          <form class="non-clicked form-recomment-${commentPk}" action="" method='POST'>
+          <form class="non-clicked form-recomment-${commentPk}" onsubmit="submitReComment('${commentPk}')" action="" method='POST'>
             {% csrf_token %}
-          <input type="text" class="detail-recomment-input" placeholder="댓글을 입력해주세요.">
-          <button class="detail-recomment-submit">등록</button>
+          <input type="text" class="detail-recomment-input detail-recomment-input-${commentPk}" placeholder="댓글을 입력해주세요.">
+          <button type="submit" class="detail-recomment-submit">등록</button>
           </form>
         </div>
+        <ul class="detail-recomments-ul detail-recomments-ul-${commentPk} non-clicked"></ul>
       </li>
       `;
     }).catch(error => {
@@ -231,17 +214,15 @@ function sendLinkKakao(){
     let content = document.querySelector(".detail-comment-input").value;
     if (content) {
       createComment(content);
-    }else {
+    } else {
       console.log("You cannot submit an empty form")
     }
   }
 
   let commentForm = document.querySelector(".comment-form");
   commentForm.addEventListener("submit", submitComment);
-</script>
 
-<!-- 대댓글 폼, 대댓글 리스트 보여주기 -->
-<script>
+  // 대댓글 폼, 대댓글 리스트 보여주기
   function showRecommentForm(e) {
     e.preventDefault();
     let commentPk = e.target.classList[1].split("-")[1];
@@ -255,30 +236,29 @@ function sendLinkKakao(){
   // let recommentBtn = document.querySelector(".recomment");
   // console.log(recommentBtn)
   // recommentBtn.addEventListener("click", showRecommentForm);
-</script>
 
-<!-- 대댓글 스크립트 -->
-<script>
-  function createReComment(content, e) {
+  // 대댓글 스크립트 
+  function createReComment(content,e) {
+    event.preventDefault();
     console.log("Posting ReComment");
     let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
     let commentPk = e.target.classList[0].split("-")[2]
     console.log(commentPk)
     let param = {
-      'comment_pk' : `${commentPk}`,
-      'content' : content,
-    } 
+      'comment_pk': `${commentPk}`,
+      'content': content,
+    }
     console.log(param)
     fetch("{% url 'social:recomment' %}", {
-      method : "POST",
-        headers : {
-          "X-CSRFToken" : csrfValue,
-          "X-Requested-With" : "XMLHttpRequest"
-        },
-        body : JSON.stringify(param)
-    }).then(function(response) {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param)
+    }).then(function (response) {
       return response.json();
-    }).then(function(data) {
+    }).then(function (data) {
       let recommentPk = data['recomment_pk'];
       let writer = data['writer'];
       let writerImg = data['writer_img'];
@@ -315,12 +295,39 @@ function sendLinkKakao(){
     let content = document.querySelector(`.detail-recomment-input-${pk}`).value;
     if (content) {
       // console.log(e);
-      createReComment(content,event);
-    }else {
+      createReComment(content, event);
+    } else {
       console.log("You cannot submit an empty form")
     }
   }
 
+
+  // 공유하기 스크립트
+  Kakao.init('32cbd11246656adc34f9add26b2a772b');
+  function sendLinkKakao() {
+    Kakao.Link.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: '{{ article.title|get_hangul }}',
+        description: '{{ article.content|get_hangul|slice:"65:"}}',
+        // 컨텐츠 이미지 가져오는거 필요해보임
+        imageUrl: 'https://imgnews.pstatic.net/image/001/2021/07/23/PYH2021072208710001300_P4_20210723011708733.jpg?type=w647',
+        link: {
+          mobileWebUrl: '{{ request.build_absolute_uri }}',
+          webUrl: '{{ request.build_absolute_uri }}'
+        }
+      },
+      buttons: [
+        {
+          title: '링크 열기',
+          link: {
+            mobileWebUrl: '{{ request.build_absolute_uri }}',
+            webUrl: '{{ request.build_absolute_uri }}'
+          }
+        }
+      ]
+    });
+  }
 </script>
 
 <!-- 좋아요 스크립트 -->

@@ -6,7 +6,6 @@
 
 {% block content %}
 {% include 'banner.html' %}
-<!-- <div class="category-div"> -->
   <section class="category">
   {% if user.is_authenticated %}
     <i class="fas fa-bars category-open" onclick="categoryOpen()"></i>
@@ -19,10 +18,6 @@
     {% for category in categories %}
     <li class="category-li">
       <a href="{% url 'news:category' category.pk %}">{{category.name}}</a>
-      <!-- <form action="" method="POST">
-        {% csrf_token %}
-        <input type="submit" value="{{category.name}}" onclick="categoryBtn('{{category.pk}}')">
-      </form> -->
     </li>
     {% endfor %}
     {% for keyword in keywords %}
@@ -33,40 +28,34 @@
     </div>
   </ul>
   {% else %}
-
   <p class="category-non-login"><i class="quote fas fa-quote-left"> </i> 로그인 하시면 관심있는 이슈를 기사별로 선택해서 보실 수 있어요 <i class="quote fas fa-quote-right"> </i></p>
   {% endif %}
 </section>
-<!-- </div> -->
 
 {% if user.is_authenticated %}
 <ul class="news-ul">
-  {% if is_none %}
-  <li class="news-none-msg">{{msg}}</li>
-  {% else %}
-    {% for article in articles %}
-    <li class="news-li">
-      <div class="news-img"><img src="{{article.preview_img}}" alt="">
+  {% for article in articles %}
+  <li class="news-li">
+    <div class="news-img"><img src="{{article.preview_img}}" alt="">
+    </div>
+    <a href="{% url 'news:detail' article.pk %}"><div class="news-contents">
+      <div class="news-title">{{article.title}}</div>
+      <div class="news-content">{{article.content|get_hangul |truncatechars:160| slice:"65:"}}</div>
+      <div class="news-social">
+        <div class="news-infor">
+        <span class="news-portal">{{article.potal.name}} · </span>
+        <span class="news-press">{{article.press.name}} · </span>
+        <span class="news-date">{{article.created_string}}</span>
       </div>
-      <a href="{% url 'news:detail' article.pk %}"><div class="news-contents">
-        <div class="news-title">{{article.title}}</div>
-        <div class="news-content">{{article.content|get_hangul |truncatechars:160| slice:"65:"}}</div>
-        <div class="news-social">
-          <div class="news-infor">
-          <span class="news-portal">{{article.potal.name}} · </span>
-          <span class="news-press">{{article.press.name}} · </span>
-          <span class="news-date">{{article.created_string}}</span>
-        </div>
-        <div class="news-social-infor">
-          <span class="news-social-comment"><i class="fas fa-comment-alt"> </i> {{article.comment.all | length}}</span>
-          <span class="news-social-like"><i class="fas fa-heart"> </i> {{article.like.total_likes}}</span>
-        </div>
-        </div>
+      <div class="news-social-infor">
+        <span class="news-social-comment"><i class="fas fa-comment-alt"> </i> {{article.comment.all | length}}</span>
+        <span class="news-social-like"><i class="fas fa-heart"> </i> {{article.like.total_likes}}</span>
       </div>
-    </a>
-    </li>
+      </div>
+    </div>
+  </a>
+  </li>
   {% endfor %}
-  {% endif %}
 </ul>
  
 {% else %}

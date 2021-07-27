@@ -81,6 +81,8 @@ class CommentCreateView(View):
 
         
 class ReCommentCreateView(View):
+    def get(self, request, *args, **kwargs):
+        pass
     def post(self, request, *args, **kwargs):
         if self.request.is_ajax():
             print("ajax 요청 받기 성공")

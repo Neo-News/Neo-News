@@ -27,7 +27,7 @@ class IndexView(View):
     categories = Category.objects.filter(users__pk=request.user.pk).all()
     keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
     page = request.GET.get('page','1')
-    article_list = Article.objects.all()
+    article_list = Article.objects.all().order_by('-date')
     if request.user.is_authenticated :
         userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
         article_list = []
