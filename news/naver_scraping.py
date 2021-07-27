@@ -13,6 +13,7 @@ django.setup()
 
 from user.models import Category
 from news.models import Potal, Press, Article
+from social.models import Like
 
 """
 author: Oh Ji Yun
@@ -44,12 +45,12 @@ def convert_datetime_to_timestamp(date_list):
 #     '105' : [731, 226, 227, 230, 732],
 # }
 naver_news_code = {
-    '100' : [265],
-    '101' : [259],
-    '102' : [249],
-    '103' : [239],
+    # '100' : [265],
+    # '101' : [259],
+    # '102' : [249],
+    # '103' : [239],
     # '104' : [231],
-    # '105' : [226],
+    '105' : [226],
 }
 
 category_list = [key for key in naver_news_code.keys()]
@@ -87,7 +88,7 @@ def parse_naver():
                             # 기사 코드, 상세내용, 날짜 스크래핑
                             article_res = requests.get(ref, headers=headers)
                             article_soup = BeautifulSoup(article_res.text, 'html.parser')
-                            print(title)
+                            # print(title)
                             code = ref.split("aid=")[1]
                             content = article_soup.select_one("#articleBodyContents")  # 태그 타입임, str(content) 해줘야 함
                             date_str = article_soup.select_one("#main_content > div.article_header > div.article_info > div > span.t11").text
@@ -105,7 +106,10 @@ def parse_naver():
                             news_info.append(data)
 
                         except TypeError:
-                            print('error')
+                            print('TypeError')
+                            pass
+                        except AttributeError:
+                            print('AttributeError')
                             pass
 
     return news_info
@@ -134,8 +138,11 @@ try:
         
         if news['category'] == "세계":
             category = Category.objects.filter(name='국제').first()
+        
+        if Article.objects.filter(title=news['title']) or Article.objects.filter(title=news['content']):
+            pass 
 
-        Article.objects.create(
+        article = Article.objects.create(
             category=category,
             press=press,
             potal=Potal.objects.filter(name="네이버").first(),
@@ -148,7 +155,12 @@ try:
             counted_at = 0,
             created_at=time_obj,
         )
-        print("DB 넣기 성공")
+        print("기사 DB 넣기 성공")
+        Like.objects.create(
+            article=article
+        )
+        print("좋아요 인스턴스 생성")
+
 
 except:
     print("DB 넣기 실패")
