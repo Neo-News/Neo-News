@@ -1,20 +1,21 @@
 <!-- <h2>내 닉네임 수정하기</h2> -->
 <div class="edit-profile-img">
     <p class="edit-personal-infor"><i class="personal-icon fas fa-caret-right"></i>개인 정보</p>
-    <form class="profile-image-form" action="{% url 'user:image-upload' %}" method="POST" enctype="multipart/form-data">
+    <p class="edit-personal-infor-msg"><strong>닉네임</strong> 또는 <strong>프로필 사진</strong> 변경이 가능합니다.</p>
+    <form class="profile-image-form" onsubmit="submitPersonalInfor(event)" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
         <div onclick="UploadImg(event)" class="profile-upload-img">
-            <input class="profile-image-file profile-upload-img-input" type="file" name="image" width="50"><br>
+            <input class="profile-image-file profile-upload-img-input" type="file" name="img" width="50"><br>
             <i class="far fa-image"></i>
-            <img src="{{user.profile.image}}" alt="" class="profile-upload-preview-img">
+            <img src="{{user.image}}" alt="" class="profile-upload-preview-img">
         </div>
         {% if state %}
         <strong class="profile-errmsg">{{msg}}</strong>
         {% endif %}
 
         <div class="edit-nickname">
-            <input type="text" class="infor-user-nickname" name="infor-user-nickname" placeholder="변경할 닉네임을 입력해주세요">
-            <button class="user-nickname-btn" submit="type">변경하기</button>
+            <input type="text" class="infor-user-nickname" name="infor-user-nickname" value="{{user.nickname}}">
+            <button class="user-nickname-btn" type="submit" >변경하기</button>
         </div>
     </form>
 </div>

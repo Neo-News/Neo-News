@@ -55,6 +55,9 @@ let image = event.target.files[0]
   let reader = new FileReader();
   reader.onload = function (event) {
     $uploadPreviewImg.setAttribute('src', event.target.result);
+    let title = e.target.value.split("\\")[2].split(".")[0];
+    $uploadPreviewImg.setAttribute('title', title);
+    $uploadPreviewImg.setAttribute('alt', title);
   }
 
   reader.readAsDataURL(image);
@@ -65,6 +68,7 @@ let image = event.target.files[0]
 function UploadImg(event){
 $uploadImgInput.click();
 }
+
 function editChangePwd(event){
   event.preventDefault();
   console.log('d')
@@ -132,9 +136,76 @@ function DeleteUserSubmit(){
     console.log('error', error);
   })
 }
+</script>
+
+<!-- 닉네임 또는 프로필 사진 수정 -->
+<script>
+  function editNickname(userNickname) {
+    console.log("edit personal information");
+    let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    
+    let param = {
+      'nickname' : userNickname,
+    }
+    fetch("{% url 'user:infor-edit' %}", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param)
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      let nickname = data['nickname'];
+      console.log(data)
+      userNickname.innerText = `${nickname}`;
+    }).catch(error => {
+      console.log("Error", error);
+    })
+  }
+
+  function editUserImage(userImage, userImageTitle) {
+    console.log("edit profile image");
+    let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    
+    let param = {
+      'imageURL' : userImage,
+      'title' : userImageTitle
+    }
+    fetch("{% url 'user:image-upload' %}", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param)
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      console.log(data)
+    }).catch(error => {
+      console.log("Error", error);
+    })
+  }
+
+  function submitPersonalInfor(e) {
+    e.preventDefault();
+    let userNickname = document.querySelector(".infor-user-nickname").value;
+    // let userImage = document.querySelector(".profile-upload-img-input");
+    let userImage = document.querySelector(".profile-upload-preview-img")['src'];
+    let userImageTitle = document.querySelector(".profile-upload-preview-img")['title'];
+    if (userNickname) {
+      editNickname(userNickname);
+    }
+    if (userImage){
+      editUserImage(userImage, userImageTitle);
+
+    }else {
+      console.log("You cannot submit an empty form")
+    }
 
 
-
-
+  }
 </script>
 {% endblock script %}
