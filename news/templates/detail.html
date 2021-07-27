@@ -338,7 +338,6 @@
       'article_pk': '{{article.pk}}',
     }
     fetch("{% url 'social:like' %}", {
-<<<<<<< HEAD
       method: "POST",
       headers: {
         "X-CSRFToken": csrfValue,
@@ -363,21 +362,6 @@
 
       //  `;
 
-=======
-      method : "POST",
-        headers : {
-          "X-CSRFToken" : csrfValue,
-          "X-Requested-With" : "XMLHttpRequest"
-        },
-        body : JSON.stringify(param)
-    }).then(function(response) {
-       return response.json();
-     }).then(function(data) {
-       console.log(data)
-       let count = data['count']
-       let socialHeart = document.querySelector(".social-heart");
-       socialHeart.classList.toggle("change-color");
->>>>>>> 7efcf2713d3992f92041bfc34f2351e67cad2d56
     })
   }
 </script>
