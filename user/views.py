@@ -263,7 +263,8 @@ class UserInforEditView(View):
     def get(self, request, **kwargs):
         likes = Like.objects.all()
         articles = [like.article for like in likes if request.user in like.users.all()]
-        context = context_infor(articles=articles)
+        comments = Comment.objects.filter(writer__pk=request.user.pk)
+        context = context_infor(articles=articles, comments=comments)
         return render(request, 'user-infor-edit.html', context)
 
     def post(self, request, *args, **kwargs):
