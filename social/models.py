@@ -13,6 +13,7 @@ class Like(Countable):
     def __str__(self):
         return self.article.title
 
+    @property
     def total_likes(self):
         return self.users.count()
 

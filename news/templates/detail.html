@@ -28,7 +28,18 @@
     <p class="detail-press">{{article.press.name}}</p>
   </div>
   <div class="detail-social">
-    <span class="social-heart-span"><a href=''><i class="social-heart fas fa-heart"></i> 이 기사 찜하기</a></span>
+    {% if user.is_liked %}
+    <form class="social-heart-form" action="" method="POST" onsubmit="toggleLike(event)"> 
+      {% csrf_token %}
+      <button class="social-heart-btn"><i class="social-heart fas fa-heart change-color"></i>{{like.total_likes}}</button>
+    </form>
+    {% else %}
+    <form class="social-heart-form" action="" method="POST" onsubmit="toggleLike(event)"> 
+      {% csrf_token %}
+      <button class="social-heart-btn"><i class="social-heart fas fa-heart"></i>{{like.total_likes}}</button>
+    </form>
+    {% endif %}
+    <span class="social-heart-span"> 이 기사 좋아요</span>
     <span class="social-share-span"><a href="javascript:sendLinkKakao()"><i class="social-share fas fa-share-alt"></i> 카카오톡으로 공유하기</a></span>
     <span class="sociallink ml-1">
 
@@ -308,6 +319,39 @@ function sendLinkKakao(){
     }else {
       console.log("You cannot submit an empty form")
     }
+  }
+
+</script>
+
+<!-- 좋아요 스크립트 -->
+<script>
+  function toggleLike(e) {
+    e.preventDefault();
+    console.log("toggle like")
+    let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    let param = {
+      'article_pk' : '{{article.pk}}',
+    } 
+    fetch("{% url 'social:like' %}", {
+      method : "POST",
+        headers : {
+          "X-CSRFToken" : csrfValue,
+          "X-Requested-With" : "XMLHttpRequest"
+        },
+        body : JSON.stringify(param)
+    }).then(function(response) {
+       return response.json();
+     }).then(function(data) {
+       console.log(data)
+       let count = data['count']
+       let socialHeart = document.querySelector(".social-heart")
+       socialHeart.classList.toggle("change-color");
+       let socialHeartBtn = document.querySelector(".social-heart-btn")
+      //  socialHeartBtn.innerHTML += `${count}
+       
+      //  `;
+       
+    })
   }
 
 </script>

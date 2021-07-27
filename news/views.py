@@ -75,9 +75,11 @@ class NewsDetailView(DetailView):
     해당 기사의 Article 데이터를 filter해온뒤 템플릿에 context로 보냈습니다
     """
     def get(self, request, **kwargs):
-        article_list = Article.objects.filter(pk=kwargs['pk']).first()
-        comments = Comment.objects.filter(article__pk=kwargs['pk'])
-        context = context_infor(article=article_list, comments=comments)
+        article_pk = kwargs['pk']
+        article_list = Article.objects.filter(pk=article_pk).first()
+        comments = Comment.objects.filter(article__pk=article_pk)
+        like =Like.objects.filter(article__pk=article_pk).first()
+        context = context_infor(article=article_list, comments=comments, like=like)
         return render(request,'detail.html',context)
 
     # def post(self, request, **kwargs):
