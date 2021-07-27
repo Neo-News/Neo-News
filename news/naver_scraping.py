@@ -45,12 +45,12 @@ def convert_datetime_to_timestamp(date_list):
 #     '105' : [731, 226, 227, 230, 732],
 # }
 naver_news_code = {
-    '100' : [265],
-    '101' : [259],
-    '102' : [249],
+    # '100' : [265],
+    # '101' : [259],
+    # '102' : [249],
     # '103' : [239],
     # '104' : [231],
-    # '105' : [226],
+    '105' : [226],
 }
 
 category_list = [key for key in naver_news_code.keys()]
@@ -106,7 +106,10 @@ def parse_naver():
                             news_info.append(data)
 
                         except TypeError:
-                            print('error')
+                            print('TypeError')
+                            pass
+                        except AttributeError:
+                            print('AttributeError')
                             pass
 
     return news_info
@@ -135,6 +138,9 @@ try:
         
         if news['category'] == "세계":
             category = Category.objects.filter(name='국제').first()
+        
+        if Article.objects.filter(title=news['title']) or Article.objects.filter(title=news['content']):
+            pass 
 
         article = Article.objects.create(
             category=category,
