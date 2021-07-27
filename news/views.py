@@ -126,7 +126,10 @@ class NewsInforEditView(ListView):
             end_index = max_index
         page_range = paginator.page_range[start_index:end_index]
 
-        context = context_infor(press_list=press_obj, page_range=page_range,in_press=press,non_press=non_press)    
+        keywords = Keyword.objects.all().order_by('name');
+        my_keywords = [keyword.name for keyword in keywords if request.user in keyword.users.all()]
+
+        context = context_infor(press_list=press_obj, page_range=page_range,in_press=press,non_press=non_press, my_keywords=my_keywords)    
         return render(request, 'infor-edit.html',context)
 
     def post(self, request, **kwargs):

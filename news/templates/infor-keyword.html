@@ -3,14 +3,11 @@
   <a class="keyword-add" href="">추가</a>
 
   <ul class="infor-keyword-ul">
+    {% for keyword in my_keywords %}
     <li class="infor-keyword-list">
-      <span class="infor-keyword">BTS</span>
+      <span class="infor-keyword">{{keyword}}</span>
       <i class="fas fa-times"></i>
     </li>
-    <li class="infor-keyword-list">
-      <span class="infor-keyword">BTS</span>
-      <i class="fas fa-times"></i>
-    </li>
-
+    {% endfor %}
   </ul>
 </div><br>
