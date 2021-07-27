@@ -1,10 +1,14 @@
 <ul class="user-comment">
+  {% for comment in comments%}
   <li class="user-comment-li">
-    <span class="user-comment-title">이기사를 찜했음 타이틀</span>
-    <span class="user-comment-delete"><i class="fas fa-times"></i></span>
+    <span class="user-comment-title"><a href="{% url 'news:detail' comment.article.pk %}">{{comment.content}}</a></span>
+    <span class="user-comment-delete"><i class="fas fa-comment-alt"></i></span>
   </li>
+  {% for recomment in comment.re_comment.all %}
   <li class="user-comment-li">
-    <a href=""><span class="user-comment-title">이기사를 찜했음 타이틀</span></a>
-    <a href=""><span class="user-comment-delete"><i class="fas fa-times"></i></span></a>
+    <span class="user-comment-title"><a href="{% url 'news:detail' comment.article.pk %}">{{recomment.content}}</a></span>
+    <span class="user-comment-delete"><i class="fas fa-comment-alt"></i></span>
   </li>
+  {% endfor %}
+  {% endfor %}
 </ul>
