@@ -2,6 +2,7 @@
 {% block head %}
 {% load static %}
 {% load article_hangul %}
+{% load social_sum %}
 {% endblock head %}
 
 {% block content %}
@@ -48,8 +49,8 @@
         <span class="news-date">{{article.created_string}}</span>
       </div>
       <div class="news-social-infor">
-        <span class="news-social-comment"><i class="fas fa-comment-alt"> </i> 12</span>
-        <span class="news-social-like"><i class="fas fa-heart"> </i> 2</span>
+        <span class="news-social-comment"><i class="fas fa-comment-alt"> </i>{{article.comment.all | comment_sum}}</span>
+        <span class="news-social-like"><i class="fas fa-heart"> </i>{{article.like.total_likes}}</span>
       </div>
       </div>
     </div>
@@ -74,8 +75,8 @@
         <span class="news-date">{{article.created_string}}</span>
       </div>
       <div class="news-social-infor">
-        <span class="news-social-comment"><i class="fas fa-comment-alt"> </i> 12</span>
-        <span class="news-social-like"><i class="fas fa-heart"> </i> 2</span>
+        <span class="news-social-comment"><i class="fas fa-comment-alt"> </i>{{article.comment.all | comment_sum}}</span>
+        <span class="news-social-like"><i class="fas fa-heart"> </i>{{article.like.total_likes}}</span>
       </div>
       </div>
     </div>

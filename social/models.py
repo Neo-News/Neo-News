@@ -23,6 +23,7 @@ class Comment(TimeStampable,Deleteable):
     writer = models.ForeignKey(User,  on_delete=models.CASCADE, related_name='comment')
     content = models.TextField()
 
+
     def __str__(self):
         return self.content
 

@@ -52,6 +52,7 @@ class CommentCreateView(View):
             print(comment.created_at)
             print(get_time_passed_comment(comment.created_at))
             print("댓글 인스턴스 생성")
+            
             recomments = ReComment.objects.filter(comment__pk=comment.pk)
             total_recomments = [recomment for recomment in recomments]
 
@@ -121,24 +122,25 @@ class LikeToggleView(View):
 
     def post(self, request, *args, **kwargs):
         if self.request.is_ajax():
+            context = {}
             print("ajax 요청 받기 성공")
             data = json.loads(request.body)
             article_pk = data.get('article_pk')
-            # print(data)
             like = Like.objects.filter(article__pk=article_pk).first()
             user = User.objects.filter(pk=request.user.pk).first()
-            print(like.total_likes)
-
+            
             if request.user in like.users.all():
                 like.users.remove(request.user)
                 user.is_liked = False
                 user.save()
+                # context['is_liked'] = False
 
                 print("좋아요 인스턴스 변경")
                 context = {
                     'is_liked' : False,
                     'count' : like.total_likes,
                 }
+            
                 return JsonResponse(context, status=200)
 
             like.users.add(request.user)

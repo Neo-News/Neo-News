@@ -10,7 +10,12 @@ from django.db.models import Q
 from user.models import User
 from news.models import Article, Potal,Press,Category, UserPress
 from datetime import datetime
+from social.models import Like
+
 import time
+
+
+
 """
 author: son hee jung
 date: 0717
@@ -29,7 +34,7 @@ def dict_infor(**kwargs):
     return context
 
 # , 'politics', 'economic', 'foreign', 'culture', 'digital', 'entertain', 'sports'
-category_list = ['economic','society','politics', 'economic', 'foreign', 'culture', 'digital', 'entertain', 'sports']
+category_list = ['economic','society']
 
 def parse_daum():
     data = {}
@@ -83,29 +88,34 @@ def parse_daum():
                 data[i] = insight_news_info
     return data
 
-# if __name__=='__main__':
-#     press_list = ['KBS','MBC','경향신문','MBN','SBS','국민일보','노컷뉴스','뉴시스','디스패치','동아일보','매일경제','머니투데이','서울경제','서울신문','세계일보','연합뉴스','이데일리','중앙일보','한국경제','머니S','스포츠조선','스포츠투데이','오마이뉴스','YTN','MK스포츠','MBC연예','SBS연예뉴스']
-#     news_dict = parse_daum()
+if __name__=='__main__':
+    press_list = ['KBS','MBC','경향신문','MBN','SBS','국민일보','노컷뉴스','뉴시스','디스패치','동아일보','매일경제','머니투데이','서울경제','서울신문','세계일보','연합뉴스','이데일리','중앙일보','한국경제','머니S','스포츠조선','스포츠투데이','오마이뉴스','YTN','MK스포츠','MBC연예','SBS연예뉴스']
+    news_dict = parse_daum()
 
-#     for v in news_dict.values():
-#         if Press.objects.filter(name=v['press']):
-#             print('27개 안에 들어감',v['press'])
-#             print('여기까지는 성고오오오오오옹')
+    for v in news_dict.values():
+        if Press.objects.filter(name=v['press']):
+            print('27개 안에 들어감',v['press'])
+            print('여기까지는 성고오오오오오옹')
             
-#             if not Article.objects.filter(Q(title=v['title']) | Q(content=v['content'])):
-#                 Article.objects.create(
-#                     press=Press.objects.filter(name=v['press']).first(),
-#                     potal = Potal.objects.filter(name='다음').first(),
-#                     category=Category.objects.filter(name=v['news_category']).first(),
-#                     code=v['news_code'],
-#                     date=v['date'],
-#                     preview_img=v['preview_img'],
-#                     title=v['title'],
-#                     content=v['content'],
-#                     ref=v['ref'],
-#                     counted_at = 0,
-#                     created_at = v['created_at']
-#                         )
+            if not Article.objects.filter(Q(title=v['title']) | Q(content=v['content'])):
+                article = Article.objects.create(
+                    press=Press.objects.filter(name=v['press']).first(),
+                    potal = Potal.objects.filter(name='다음').first(),
+                    category=Category.objects.filter(name=v['news_category']).first(),
+                    code=v['news_code'],
+                    date=v['date'],
+                    preview_img=v['preview_img'],
+                    title=v['title'],
+                    content=v['content'],
+                    ref=v['ref'],
+                    counted_at = 0,
+                    created_at = v['created_at']
+                        )
+
+                if not Like.objects.filter(article = article):
+                    Like.objects.create(
+                    article=article
+                    )
             # press userpress에 없을경우 추가해준다 
             # press_obj = Press.objects.filter(name = v['press']).first()
             # userpress_list = UserPress.objects.all()

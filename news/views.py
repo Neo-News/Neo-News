@@ -27,7 +27,9 @@ class IndexView(View):
     categories = Category.objects.filter(users__pk=request.user.pk).all()
     keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
     page = request.GET.get('page','1')
-    article_list = Article.objects.all().order_by('-date')
+    article_list = Article.objects.all()
+    
+    
     if request.user.is_authenticated :
         userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
         article_list = []
@@ -74,7 +76,13 @@ class NewsDetailView(DetailView):
         article_list = Article.objects.filter(pk=article_pk).first()
         comments = Comment.objects.filter(article__pk=article_pk)
         like =Like.objects.filter(article__pk=article_pk).first()
-        context = context_infor(article=article_list, comments=comments, like=like)
+        is_liked = None
+        if like is not None:
+            if request.user in like.users.all(): 
+                is_liked = True
+            else:
+                is_liked = False
+        context = context_infor(article=article_list, comments=comments, like=like, is_liked=is_liked)
         return render(request,'detail.html',context)
 
     # def post(self, request, **kwargs):

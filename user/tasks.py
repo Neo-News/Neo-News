@@ -43,4 +43,5 @@ def task_scrappy():
                     counted_at = 0,
                     created_at = v['created_at']
                         )
+
     return None

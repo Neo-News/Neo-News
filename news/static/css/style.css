@@ -238,6 +238,11 @@ body.pc{
 .news-social-comment{
   color:rgb(143, 141, 141);
 }
+.news-social-comment > i,
+.news-social-like > i {
+  display: inline-block;
+  margin-right: 3px;
+}
 .detail-content > img{
   width: 70%;
   height: 400px;
@@ -246,7 +251,7 @@ body.pc{
   margin: 0 auto;
   font-size: 1.3rem;
   margin-top: 10px;
-  width: 90%;
+  width: 70%;
 }
 .comment-content p{
   font-size: 0.9rem;
@@ -260,6 +265,24 @@ body.pc{
   width: 60%;
   margin: 5px auto;
   margin-bottom: 15px;
+  font-size: .9rem;
+}
+.origin_fig{
+  margin: 0 auto;
+}
+body > div > section.detail-section > section > table > tbody > tr{
+  width: 70%;
+  margin: 0 auto;
+}
+
+body > div > section.detail-section > section > table{
+  margin: 0 auto;
+}
+.link_figure{
+  margin: 0px;
+}
+.social-like-cnt{
+  margin: 0;
   font-size: .9rem;
 }
 /* sigup detail page */
@@ -546,7 +569,8 @@ transform: translate(-50%,-50%);
   font-size: .9rem;
 }
 .detail-social span{
-  margin-left: 15px;
+  /* margin-right: 15px; */
+  margin-left: 5px;
   cursor: pointer;
 }
 .social-heart-form{
@@ -559,6 +583,9 @@ transform: translate(-50%,-50%);
 .social-heart-btn{
   border: none;
   background-color:transparent;
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
 }
 .social-heart{
   font-size: 1.2rem;
@@ -873,7 +900,7 @@ body > div > section.detail-section > section > p{
 }
 
 .detail-section img{
-  width: 100%;
+  /* width: 100%; */
 }
 
 body > div > section.detail-section > section > div{
@@ -1109,6 +1136,7 @@ width: 100%;
   .news-social-comment{
     margin-right: 5px;
   }
+
 /* news/detail responsive */
 .detail-title{
   font-size: 1.3rem;

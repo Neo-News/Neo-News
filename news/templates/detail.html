@@ -29,27 +29,20 @@
   </div>
   <div class="detail-social">
 
-    <span class="social-heart-span"><a href=''><i class="social-heart fas fa-heart"></i> 이 기사 찜하기</a></span>
+    <form class="social-heart-form" action="" method="POST" onsubmit="toggleLike(event)">
+      {% csrf_token %}
+      {% if is_liked %}
+      <button class="social-heart-btn"><i
+          class="social-heart fas fa-heart change-color"></i><span class="social-like-cnt">{{like.total_likes}}</span>명이 기사를 좋아해요</button>
+      {% else %}
+      <button class="social-heart-btn"><i
+        class="social-heart fas fa-heart "></i><span class="social-like-cnt">{{like.total_likes}}</span>명이 기사를 좋아해요</button>
+      {% endif %}
+    </form>
+    <!-- <span class="social-heart-span"> 명이 기사를 좋아해요</span> -->
     <span class="social-share-span"><a href="javascript:sendLinkKakao()"><i class="social-share fas fa-share-alt"></i>
         카카오톡으로 공유하기</a></span>
 
-    {% if user.is_liked %}
-    <form class="social-heart-form" action="" method="POST" onsubmit="toggleLike(event)"> 
-      {% csrf_token %}
-      <button class="social-heart-btn"><i class="social-heart fas fa-heart change-color"></i>{{like.total_likes}}</button>
-    </form>
-    {% else %}
-    <form class="social-heart-form" action="" method="POST" onsubmit="toggleLike(event)"> 
-      {% csrf_token %}
-      <button class="social-heart-btn"><i class="social-heart fas fa-heart"></i>{{like.total_likes}}</button>
-    </form>
-    {% endif %}
-    <span class="social-heart-span"> 이 기사 좋아요</span>
-    <span class="social-share-span"><a href="javascript:sendLinkKakao()"><i class="social-share fas fa-share-alt"></i> 카카오톡으로 공유하기</a></span>
-
-    <span class="sociallink ml-1">
-
-    </span>
   </div>
   {% if user.is_authenticated %}
   <div class="detail-comment">
@@ -83,8 +76,8 @@
         <p>{{comment.content}}</p>
         <button class="recomment recomment-{{comment.pk}}" onclick="showRecommentForm(event)">답글
           {{comment.re_comment.all | length }} </button>
-        <form class="non-clicked form-recomment-{{comment.pk}} form-recomment" onsubmit="submitReComment('{{comment.pk}}')" action=""
-          method='POST'>
+        <form class="non-clicked form-recomment-{{comment.pk}} form-recomment"
+          onsubmit="submitReComment('{{comment.pk}}')" action="" method='POST'>
           {% csrf_token %}
           <input type="text" class="detail-recomment-input detail-recomment-input-{{comment.pk}}"
             placeholder="댓글을 입력해주세요.">
@@ -203,6 +196,8 @@
         <ul class="detail-recomments-ul detail-recomments-ul-${commentPk} non-clicked"></ul>
       </li>
       `;
+      document.querySelector('.detail-comment-input').value = '';
+      document.querySelector('.detail-comment-input').foucs();
     }).catch(error => {
       console.log("Error", error);
     })
@@ -238,7 +233,7 @@
   // recommentBtn.addEventListener("click", showRecommentForm);
 
   // 대댓글 스크립트 
-  function createReComment(content,e) {
+  function createReComment(content, e) {
     event.preventDefault();
     console.log("Posting ReComment");
     let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
@@ -285,6 +280,9 @@
         </div>
       </li>
       `;
+      document.querySelector(`.detail-recomment-input-${commentPk}`).value = '';
+      document.querySelector(`.detail-recomment-input-${commentPk}`).focus();
+
     }).catch(error => {
       console.log("Error", error);
     })
@@ -328,36 +326,41 @@
       ]
     });
   }
-</script>
 
-<!-- 좋아요 스크립트 -->
-<script>
+// 좋아요 스크립트 
   function toggleLike(e) {
+
     e.preventDefault();
     console.log("toggle like")
     let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
     let param = {
-      'article_pk' : '{{article.pk}}',
-    } 
+      'article_pk': '{{article.pk}}',
+    }
     fetch("{% url 'social:like' %}", {
-      method : "POST",
-        headers : {
-          "X-CSRFToken" : csrfValue,
-          "X-Requested-With" : "XMLHttpRequest"
-        },
-        body : JSON.stringify(param)
-    }).then(function(response) {
-       return response.json();
-     }).then(function(data) {
-       console.log(data)
-       let count = data['count']
-       let socialHeart = document.querySelector(".social-heart")
-       socialHeart.classList.toggle("change-color");
-       let socialHeartBtn = document.querySelector(".social-heart-btn")
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param)
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      console.log(data)
+      let count = data['count']
+      console.log(count)
+      let socialHeart = document.querySelector(".social-heart")
+      let socialHeartBtn = document.querySelector(".social-like-cnt").innerText = `${count}`
+      if (data['is_liked'] == true){
+        socialHeart.classList.add("change-color");
+      }
+      else{
+        socialHeart.classList.remove("change-color");
+      }
       //  socialHeartBtn.innerHTML += `${count}
-       
+
       //  `;
-       
+
     })
   }
 
