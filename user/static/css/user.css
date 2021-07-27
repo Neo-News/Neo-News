@@ -10,13 +10,10 @@
   justify-content: center;
   align-items: center;
 }
-.panel-body{
-  margin-top: -50px;
-}
 
 .registration{
   min-height: 100vh;
-  margin-top: -90px;
+  margin-top: -150px;
   background-color: rgb(249, 247, 244);
 }
 .registration-signup{
@@ -114,22 +111,30 @@
   font-size: .8rem;
 }
 .social-non-login-text{
+  display: inline-block;
   margin: 0px 5px;
 }
 .social-strong{
   color: #F7B34F;
 }
 /* formview 레이아웃 */
-.error{
+.signup-form,
+.form-actions,.kakao-btn{
+  display: inline-block;
   text-align: center;
+}
+.error{
+  /* text-align: left; */
   margin: 20px 0 15px 0;
   color: #1cc02f;
   font-weight: bold;
   letter-spacing: 2px;
+  width: 70%;
+  margin: 10px auto;
 }
 .error-word{
   
-  font-size: .9rem;
+  font-size: .78rem;
   text-align: center;
 }
 
@@ -653,7 +658,7 @@ transform: translate(-50%,-50%);
   display: inline-block;
   position: absolute;
   width: 60%;
-  top: 35%;
+  top: 45%;
   left: 50%;
   padding: 100px 0px;
   transform: translate(-50%,-50%);
@@ -714,7 +719,7 @@ transform: translate(-50%,-50%);
 .find-password-error-msg,
 .find-password-success-msg{
   font-size: 0.75rem;
-  width: 70%;
+  width: 60%;
   padding: 5px 10px;
   display: inline-block;
   color: tomato;
@@ -762,7 +767,7 @@ background-color: rgb(230, 228, 228);
 }
 /* 이메일 재인증 레이아웃 */
 .resend-div{
-  width: 100%;
+  margin: 0 auto;
   /* display: flex; */
   justify-content: space-between;
   align-items: center;
@@ -830,7 +835,7 @@ background-color: rgb(230, 228, 228);
     margin: 20px auto;
   }
   .registration-signup{
-    margin-top: -50px;
+    /* margin-top: -50px; */
   }
 .edit-profile-img{
   text-align: center;
@@ -879,11 +884,12 @@ width: auto;
      display: none;
 }
 .registration{
-  padding-top: 40px;
-  margin-top: 0;
+  padding-top: 100px;
+  min-height: 100vh;
 }
 .registration-signup{
-  padding-top: 110px;
+  padding-top: 70px;
+
 }
 .category{
   padding: 0;
@@ -892,5 +898,8 @@ width: auto;
 
 .level{
   font-size: 0.75rem;
+}
+.resend-div{
+  width: 100%;
 }
 }

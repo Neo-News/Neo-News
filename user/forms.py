@@ -8,6 +8,7 @@ from django.forms.fields import EmailField
 from . import models
 from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
+from utils import pwd_regex, email_regex
 
 class UserCreationForm(forms.ModelForm):
     """
@@ -167,24 +168,30 @@ class SignupForm(forms.Form):
         nickname = cleaned_data.get('nickname')
         password = cleaned_data.get('password')
         password_chk = cleaned_data.get('password_chk')
+        email_type = email_regex(email)
+        pwd_type = pwd_regex(password)
 
         if not email or not nickname or not password_chk or not password:
             raise forms.ValidationError('모든 정보를 입력해주세요')
 
-        if '@' not in email or '.' not in email:
+        elif not email_type:
             raise forms.ValidationError('올바른 이메일 형식이 아니에요')
 
-        if User.objects.filter(email=email):
-            raise forms.ValidationError('이메일이 이미 존재해요')
+        elif User.objects.filter(email=email):
+            raise forms.ValidationError('이메일이 이미 존재해요. 해당 이메일 재인증을 받으시려면 아래 버튼을 눌러주세요')
 
-        if password != password_chk:
+        elif password != password_chk:
             raise forms.ValidationError('비밀번호가 달라요')
         
-        elif len(nickname) <= 2:
-            raise forms.ValidationError('닉네임을 3자리 이상 지어주세요')
+        elif not pwd_type:
+            raise forms.ValidationError('비밀번호는 최소 8자리 이상, 1개 이상의 숫자와 문자,특수문자가 들어가야 합니다')
+
+        elif len(nickname) <= 1:
+            raise forms.ValidationError('닉네임을 2자리 이상 지어주세요')
 
         elif User.objects.filter(nickname=nickname):
-            raise forms.ValidationError('닉네임이 이미존재해요')
+            raise forms.ValidationError('닉네임이 이미 존재해요')
+
 
         self.email = email
         self.nickname = nickname
@@ -260,6 +267,22 @@ class ChangeSetPwdForm(SetPasswordForm):
         self.fields['new_password1'].widget.attrs.update({'class':'password','placeholder': '비밀번호 입력'})
         self.fields['new_password2'].label = '새 비밀번호 확인'
         self.fields['new_password2'].widget.attrs.update({'class':'password_chk','placeholder': '비밀번호 확인'})
+
+    def clean(self):
+        cleaned_data = super().clean()
+        password_1 = cleaned_data.get('new_password1')
+        password_2 = cleaned_data.get('new_password2')
+        try:
+            pwd_type = pwd_regex(password_1)
+        except:
+            pwd_type = None
+            pass
+
+        if not pwd_type:
+            raise forms.ValidationError('비밀번호의 조건을 다시한번 확인해주세요')
+        if not password_1 or not password_2:
+            raise forms.ValidationError('값을 전부 입력해주세요')
+
 
 
 class VerificationEmailForm(forms.Form):

@@ -250,7 +250,7 @@ class Activate(View):
 
 class SignupDeatilView(View):
   def get(self,request, *args, **kwargs):
-    categories = Category.objects.all()
+    categories = Category.objects.exclude(name='속보').all()
     context = context_infor(categories=categories)
     return render(request, 'signup_detail.html', context)
 
@@ -259,7 +259,6 @@ class SignupDeatilView(View):
 
 
 class UserInforEditView(View):
-
     def get(self, request, **kwargs):
         img = ProfileImage.objects.filter(pk=4).first()
         return render(request, 'user-infor-edit.html', {'img' : img})
@@ -316,34 +315,31 @@ class UserInforAddView(View):
         data = json.loads(request.body)
         category = Category.objects.all()
         keyword_list = Keyword.objects.all()
-        # 카테고리/ 아직 설문 버튼이 보이기 때문에 user의 카테고리 설문 버튼 눌러서 수정될 수 있게 remove -> add 해줌
-        for lists in category:
-          category = Category.objects.filter(name=lists).first().users.remove(request.user)
+        # # 카테고리/ 아직 설문 버튼이 보이기 때문에 user의 카테고리 설문 버튼 눌러서 수정될 수 있게 remove -> add 해줌
+        # for lists in category:
+        #   category = Category.objects.filter(name=lists).first().users.remove(request.user)
         for category in data.get('category_list'):
           category = Category.objects.filter(name=category).first().users.add(request.user)
         
 
-        for keyword in keyword_list:
-          keyword = Keyword.objects.filter(name=keyword).first().users.remove(request.user)
+        # for keyword in keyword_list:
+        #   keyword = Keyword.objects.filter(name=keyword).first().users.remove(request.user)
         for keyword in data.get('todo_list'):
           Keyword.objects.create(
             name = keyword,
           )
-          Keyword.objects.filter(name=keyword).first().users.add(request.user)
+        Keyword.objects.filter(name=keyword).first().users.add(request.user)
         User.objects.filter(pk=request.user.pk).update(
           is_detailed = True
         )
-        print(request.user.pk)
         # 유저 상세페이지에서 유저만의 언론사 테이블 생성함
         presses = Press.objects.all()
-        userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
-        print(userpress)
-        if userpress is None:
-          userpress = UserPress.objects.create(
-          user = User.objects.filter(pk=request.user.pk).first()
-          )
-          for press in presses:
-            print(press)
+        # userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
+        # if userpress is None:
+        userpress = UserPress.objects.create(
+        user = User.objects.filter(pk=request.user.pk).first()
+        )
+        for press in presses:
             userpress.press.add(press)
         
         return JsonResponse({
@@ -518,7 +514,8 @@ class ValidChangePassword(View):
             else:
                 logout(request)
                 request.session['auth'] = session_user
-                context = context_infor(error=True, msg='비밀번호가 올바르지 않습니다 !')
+                error = reset_pwd_form.non_field_errors()
+                context = context_infor(msg=error, error=True)
                 return JsonResponse(context)
 
 

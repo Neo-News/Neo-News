@@ -246,7 +246,7 @@ body.pc{
   margin: 0 auto;
   font-size: 1.3rem;
   margin-top: 10px;
-  width: 70%;
+  width: 90%;
 }
 .comment-content p{
   font-size: 0.9rem;
@@ -316,8 +316,8 @@ body.pc{
   text-align: left;
   flex-wrap: wrap;
   margin-left: 25px;
-  /* width: 80%; */
-  justify-content: space-between;
+  width: 80%;
+  justify-content: center;
   margin: 0 auto;
 }
 .category-scroll{
@@ -662,6 +662,7 @@ transform: translate(-50%,-50%);
 .recomment {
   padding: 0 2px;
   margin-bottom: 5px;
+  cursor: pointer;
 }
 
 .detail-recomment-input{
@@ -669,7 +670,7 @@ transform: translate(-50%,-50%);
   border: none;
   border: 1px solid rgb(197, 194, 194);
   border-radius: 5px;
-  width: 87%;
+  width: 80%;
   margin-bottom: 10px;
 }
 .detail-recomment-submit{
@@ -942,6 +943,19 @@ width: 100%;
   margin-bottom: 10px;
   font-size: .9rem;
 }
+/* 디테일 답글 레이아웃 */
+.comment-content > p {
+  /* margin: 0 20px; */
+}
+.recomment{
+  border: none;
+  /* margin: 0 20px; */
+  padding: 5px;
+  box-sizing: border-box;
+  border-radius: 5px;
+  background-color: rgb(224, 222, 222);
+  font-size: .8rem;
+}
 
 /* responsive 반응형 layout */
 @media screen and (max-width:576px){
@@ -953,7 +967,7 @@ width: 100%;
     /* display: none; */
   }
   .main-section{
-    width: 90%;
+    /* width: 90%; */
     margin: 0 auto;
   }
   .category-non-login{
@@ -1213,9 +1227,9 @@ body.mobile{
   width: 100%;
 }
 .detail-section p{
-  margin:10px auto;
+  /* margin:10px auto; */
   font-size: 1.1rem;
-  width: 90%;
+  width: 86%;
 }
 .detail-comment-list  p {
   font-size: .9rem;
@@ -1238,6 +1252,13 @@ body > div > section.detail-section > section > div{
 ._article_body_contents{
 width: 90%;
 font-size: 1.1rem;
+}
+/* 디테일 댓글 레이아웃 */
+.form-recomment{
+  width: 100%;
+}
+.detail-recomment-input{
+  width: auto;
 }
 }
 

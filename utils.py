@@ -1,6 +1,6 @@
 import time
 import datetime
-
+import re
 
 def context_infor(**kwargs):
   a = {}
@@ -55,3 +55,13 @@ def get_time_passed_comment(created_at):
         return str(int(time_passed//(60*60*24*30))) + '달 전'
     else:
         return '오래 전'  
+
+
+def  pwd_regex(string):
+    pwd = re.compile("^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$")
+    return pwd.match(string)
+
+
+def email_regex(string):
+    email = re.compile("^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+    return email.match(string)
