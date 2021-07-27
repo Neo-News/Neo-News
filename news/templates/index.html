@@ -58,8 +58,8 @@
           <span class="news-date">{{article.created_string}}</span>
         </div>
         <div class="news-social-infor">
-          <span class="news-social-comment"><i class="fas fa-comment-alt"> </i> 12</span>
-          <span class="news-social-like"><i class="fas fa-heart"> </i> 2</span>
+          <span class="news-social-comment"><i class="fas fa-comment-alt"> </i> {{article.comment.all | length}}</span>
+          <span class="news-social-like"><i class="fas fa-heart"> </i> {{article.like.total_likes}}</span>
         </div>
         </div>
       </div>
@@ -68,7 +68,7 @@
   {% endfor %}
   {% endif %}
 </ul>
-
+ 
 {% else %}
 <ul class="news-ul">
   {% for article in articles %}
@@ -85,8 +85,8 @@
         <span class="news-date">{{article.created_string}}</span>
       </div>
       <div class="news-social-infor">
-        <span class="news-social-comment"><i class="fas fa-comment-alt"> </i> 12</span>
-        <span class="news-social-like"><i class="fas fa-heart"> </i> 2</span>
+        <span class="news-social-comment"><i class="fas fa-comment-alt"> </i> {{article.comment.all | length}}</span>
+        <span class="news-social-like"><i class="fas fa-heart"> </i> {{article.like.total_likes}}</span>
       </div>
       </div>
     </div>
