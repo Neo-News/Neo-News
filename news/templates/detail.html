@@ -31,6 +31,7 @@
 
     <form class="social-heart-form" action="" method="POST" onsubmit="toggleLike(event)">
       {% csrf_token %}
+
       {% if is_liked %}
       <button class="social-heart-btn"><i
           class="social-heart fas fa-heart change-color"></i><span class="social-like-cnt">{{like.total_likes}}</span>명이 기사를 좋아해요</button>
@@ -337,6 +338,7 @@
       'article_pk': '{{article.pk}}',
     }
     fetch("{% url 'social:like' %}", {
+<<<<<<< HEAD
       method: "POST",
       headers: {
         "X-CSRFToken": csrfValue,
@@ -361,9 +363,23 @@
 
       //  `;
 
+=======
+      method : "POST",
+        headers : {
+          "X-CSRFToken" : csrfValue,
+          "X-Requested-With" : "XMLHttpRequest"
+        },
+        body : JSON.stringify(param)
+    }).then(function(response) {
+       return response.json();
+     }).then(function(data) {
+       console.log(data)
+       let count = data['count']
+       let socialHeart = document.querySelector(".social-heart");
+       socialHeart.classList.toggle("change-color");
+>>>>>>> 7efcf2713d3992f92041bfc34f2351e67cad2d56
     })
   }
-
 </script>
 
 {% endblock script %}
