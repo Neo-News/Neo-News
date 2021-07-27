@@ -27,6 +27,7 @@ from user.services import UserService
 from .dto import SignupDto,ResendDto
 from django.contrib.auth import authenticate, login as auth_login
 from user.models import User
+from social.models import Like, Comment
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth import logout 
 from django.views.decorators.csrf import csrf_exempt
@@ -260,8 +261,10 @@ class SignupDeatilView(View):
 
 class UserInforEditView(View):
     def get(self, request, **kwargs):
-        img = ProfileImage.objects.filter(pk=4).first()
-        return render(request, 'user-infor-edit.html', {'img' : img})
+        likes = Like.objects.all()
+        articles = [like.article for like in likes if request.user in like.users.all()]
+        context = context_infor(articles=articles)
+        return render(request, 'user-infor-edit.html', context)
 
     def post(self, request, *args, **kwargs):
         if self.request.is_ajax():
