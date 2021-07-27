@@ -270,10 +270,11 @@ class UserInforEditView(View):
 
             nickname = data.get('nickname')
             user = UserService.update_nickname(request, nickname)
-            print(user)
+            # print(user)
             print("유저 닉네임 수정 완료")
             context = {
                 'nickname' : user.nickname,
+                'msg' : '유저 닉네임 수정 성공'
             }
             return JsonResponse(context, status=200)
         else:
@@ -281,33 +282,50 @@ class UserInforEditView(View):
 
 
 # 프로필 이미지 등록하는 함수
-def ImageUpload(request):
+# def ImageUpload(request):
+class ImageUploadView(View):
     """
     author: Oh Ji Yun
     date: 0711
     description: 
     
     """
+    def post(self, request, *args, **kwargs):
+        if self.request.is_ajax():
+            print("image - ajax 요청 성공")
+            data = json.loads(request.body)
+            image = data.get('imageURL')
+            title = data.get('title')
 
-    if request.method == 'POST':
-        file = request.FILES.get('img')
-        session = Session(
-            aws_access_key_id=AWS_ACCESS_KEY_ID,
-            aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-            region_name=AWS_S3_REGION_NAME
-        )
-        s3 = session.resource('s3')
-        now = datetime.now().strftime('%Y%H%M%S')
-        img_object = s3.Bucket(AWS_STORAGE_BUCKET_NAME).put_object(
-            Key = now+file.name,
-            Body = file
-        )
-        s3_url = "https://neonews-s3.s3.ap-northeast-2.amazonaws.com/"
-        ProfileImage.objects.create(
-            title = now+file.name,
-            url = s3_url+now+file.name
-        )
-        return redirect('user:infor-edit')
+            # file = request.FILES.get('img')
+            session = Session(
+                aws_access_key_id=AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                region_name=AWS_S3_REGION_NAME
+            )
+            s3 = session.resource('s3')
+            now = datetime.now().strftime('%Y%H%M%S')
+            img_object = s3.Bucket(AWS_STORAGE_BUCKET_NAME).put_object(
+                Key = now+title,
+                Body = image
+            )
+            s3_url = "https://neonews-s3.s3.ap-northeast-2.amazonaws.com/"
+            User.objects.filter(pk=request.user.pk).update(
+                # image=now+title
+                image=image
+            )
+            # ProfileImage.objects.create(
+            #     title = now+file.name,
+            #     url = s3_url+now+file.name
+            # )
+            # return redirect('user:infor-edit')
+            context = {
+                'msg' : '유저 이미지 수정 성공'
+            }
+            return JsonResponse(context, status=200)
+        else:
+            return JsonResponse({"error" : "Error occured during request"}, status=400)
+
 
     # imgs = ProfileImage.objects.all()
 

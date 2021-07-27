@@ -3,7 +3,7 @@ from django.urls import path
 
 from django.contrib.auth.views import LogoutView
 from user.views import (
-    UserLoginView, UserSignupView, SignupDeatilView, UserInforEditView, ImageUpload,
+    UserLoginView, UserSignupView, SignupDeatilView, UserInforEditView, ImageUploadView,
     Activate, UserInforAddView, kakao_login, kakao_login_callback, ChangePasswordView,
     DeletePasswordView, FindPwView, PasswordCheckView, PasswordConfirmView,ValidChangePassword,
     LoginCallBackView, ResendEmailView)
@@ -33,6 +33,6 @@ urlpatterns = [
     path('password/change/', ChangePasswordView.as_view(), name='change_password'),
     path('password/valid/change/', ValidChangePassword.as_view(), name='valid_change_pwd'),
     path('password/confirm/', PasswordConfirmView.as_view(), name='confirm_password'),
-    path('infor/image/', ImageUpload, name='image-upload'),
+    path('infor/image/', ImageUploadView.as_view(), name='image-upload'),
     path('delete/', DeletePasswordView.as_view(), name='delete'),
 ]
