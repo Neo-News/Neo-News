@@ -263,6 +263,22 @@ class UserInforEditView(View):
         img = ProfileImage.objects.filter(pk=4).first()
         return render(request, 'user-infor-edit.html', {'img' : img})
 
+    def post(self, request, *args, **kwargs):
+        if self.request.is_ajax():
+            print("ajax 요청 받기 성공")
+            data = json.loads(request.body)
+
+            nickname = data.get('nickname')
+            user = UserService.update_nickname(request, nickname)
+            print(user)
+            print("유저 닉네임 수정 완료")
+            context = {
+                'nickname' : user.nickname,
+            }
+            return JsonResponse(context, status=200)
+        else:
+            return JsonResponse({"error" : "Error occured during request"}, status=400)
+
 
 # 프로필 이미지 등록하는 함수
 def ImageUpload(request):

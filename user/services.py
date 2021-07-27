@@ -75,3 +75,10 @@ class UserService():
     user = User.objects.filter(email=dto.email).first()
     print('skurseouroier',user)
     return user
+
+  def update_nickname(request, nickname):
+    User.objects.filter(pk=request.user.pk).update(
+      nickname=nickname
+    )
+    user = User.objects.filter(pk=request.user.pk).first()
+    return user

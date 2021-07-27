@@ -65,6 +65,7 @@ let image = event.target.files[0]
 function UploadImg(event){
 $uploadImgInput.click();
 }
+
 function editChangePwd(event){
   event.preventDefault();
   console.log('d')
@@ -132,9 +133,35 @@ function DeleteUserSubmit(){
     console.log('error', error);
   })
 }
+</script>
 
-
-
-
+<!-- 닉네임 또는 프로필 사진 수정 -->
+<script>
+  function editPersonalInfor(e) {
+    e.preventDefault();
+    console.log("edit personal information");
+    let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    let userNickname = document.querySelector(".infor-user-nickname").value;
+    let param = {
+      // 'article_pk': '{{article.pk}}',
+      'nickname' : userNickname,
+    }
+    fetch("{% url 'user:infor-edit' %}", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param)
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      let nickname = data['nickname'];
+      console.log("성공", data)
+      userNickname.innerText = `${nickname}`;
+    }).catch(error => {
+      console.log("Error", error);
+    })
+  }
 </script>
 {% endblock script %}
