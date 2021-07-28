@@ -101,11 +101,13 @@ class NewsInforEditView(ListView):
     해당 템플릿에서 for문으로 전체 press와 하나씩 비교하여 유/무에 따라 체크박스 설정을 달리 해줍니다
     """
     def get(self, request, **kwargs):
+        keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
         press_list = Press.objects.all().order_by('name')
         userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
         non_press = userpress.non_press.all()
         press = userpress.press.all()
-
+        categories = Category.objects.exclude(name='속보').all()
+        user_categories = Category.objects.filter(users__pk = request.user.pk).all()
         if non_press is not None:
           non_press = userpress.non_press.all()
           press = userpress.press.all()
@@ -125,13 +127,18 @@ class NewsInforEditView(ListView):
         if end_index >= max_index:
             end_index = max_index
         page_range = paginator.page_range[start_index:end_index]
-
-        context = context_infor(press_list=press_obj, page_range=page_range,in_press=press,non_press=non_press)    
+        context = context_infor(press_list=press_obj, 
+                                page_range=page_range,
+                                in_press=press,
+                                non_press=non_press,
+                                keywords=keywords,
+                                categories=categories,
+                                user_categories=user_categories
+                                )    
         return render(request, 'infor-edit.html',context)
 
     def post(self, request, **kwargs):
         pass
-
 
 
 class CategoryIndexView(View):
@@ -190,19 +197,8 @@ class KeywordIndexView(View):
             msg = '선택하신 키워드에 관련된 기사가 아직 없어요 -!'
         
         page = request.GET.get('page','1')
-
-        # 유저가 제거한 언론사 제거하고 Article 보여 주기 위한 로직이였음
-        # article_list = []
-        # press_list = Press.objects.exclude(users = request.user).all()
-        # for li in press_list:
-        #     # a = Article.objects.filter( press__name = li.name).first()
-            
-        #     a = Article.objects.filter(Q(title__contains=keyword_name) | Q(content__contains=keyword_name),press__name = li.name).first()
-        #     if a is not None:
-        #         article_list.append(a)
         article_list = articles
         
-        # article_list = articles
         paginator = Paginator(article_list, 20)
         article_obj = paginator.page(page)
          #  페이징 번호 5개씩 보이기 로직
@@ -217,3 +213,4 @@ class KeywordIndexView(View):
         page_range = paginator.page_range[start_index:end_index]
         context = context_infor(articles=article_obj, categories=categories, keywords=keywords, is_none = is_none, msg=msg, page_range=page_range)
         return render(request,'index.html', context)
+

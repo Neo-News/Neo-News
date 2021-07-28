@@ -1,16 +1,19 @@
 <div class="infor-keyword-div">
+  <form action="" method="POST">
+    {% csrf_token %}
   <input class="infor-keyword-input" type="text" name="keyword" placeholder="키워드를 입력해주세요">
-  <a class="keyword-add" href="">추가</a>
-
+  <button type="submit" class="keyword-add" href="" onclick="clickSubmitBtn(event)">추가</button>
+  </form>
+  <form action="" method="POST">
+    {% csrf_token %}
   <ul class="infor-keyword-ul">
-    <li class="infor-keyword-list">
-      <span class="infor-keyword">BTS</span>
-      <i class="fas fa-times"></i>
+    {% for keyword in keywords %}
+    <li class="infor-keyword-list infor-keyword-list{{keyword.pk}}">{{keyword.name}}
+      <i class="fas fa-times" onclick="clickDeleteBtn('{{keyword.pk}}')"></i>
     </li>
-    <li class="infor-keyword-list">
-      <span class="infor-keyword">BTS</span>
-      <i class="fas fa-times"></i>
-    </li>
+  </form>
+    {% endfor %}
+
 
   </ul>
 </div><br>

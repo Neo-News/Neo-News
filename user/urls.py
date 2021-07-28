@@ -6,7 +6,7 @@ from user.views import (
     UserLoginView, UserSignupView, SignupDeatilView, UserInforEditView, ImageUpload,
     Activate, UserInforAddView, kakao_login, kakao_login_callback, ChangePasswordView,
     DeletePasswordView, FindPwView, PasswordCheckView, PasswordConfirmView,ValidChangePassword,
-    LoginCallBackView, ResendEmailView)
+    LoginCallBackView, ResendEmailView,UserKeywordDeleteView,UserKeywordEditView,UserCategoryEditView)
 
 
 
@@ -30,6 +30,9 @@ urlpatterns = [
     path('signup/detail/', SignupDeatilView.as_view() ,name='signup_detail'),
     path('infor/', UserInforAddView.as_view(), name='infor'),
     path('infor/edit/', UserInforEditView.as_view() ,name='infor-edit'),
+    path('infor/category/', UserCategoryEditView.as_view() ,name='category_infor'),
+    path('keyword/delete/', UserKeywordDeleteView.as_view() ,name='keyword_delete'),
+    path('keyword/create/', UserKeywordEditView.as_view() ,name='keyword_create'),
     path('password/change/', ChangePasswordView.as_view(), name='change_password'),
     path('password/valid/change/', ValidChangePassword.as_view(), name='valid_change_pwd'),
     path('password/confirm/', PasswordConfirmView.as_view(), name='confirm_password'),

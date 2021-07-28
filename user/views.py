@@ -1,4 +1,6 @@
 
+from django.contrib.messages.api import success
+from django.forms.models import model_to_dict
 from django.views.generic.base import TemplateView
 from news.validate import email_valid_num
 from news.models import Press, UserPress
@@ -261,6 +263,7 @@ class SignupDeatilView(View):
 class UserInforEditView(View):
     def get(self, request, **kwargs):
         img = ProfileImage.objects.filter(pk=4).first()
+    
         return render(request, 'user-infor-edit.html', {'img' : img})
 
 
@@ -315,15 +318,8 @@ class UserInforAddView(View):
         data = json.loads(request.body)
         category = Category.objects.all()
         keyword_list = Keyword.objects.all()
-        # # 카테고리/ 아직 설문 버튼이 보이기 때문에 user의 카테고리 설문 버튼 눌러서 수정될 수 있게 remove -> add 해줌
-        # for lists in category:
-        #   category = Category.objects.filter(name=lists).first().users.remove(request.user)
         for category in data.get('category_list'):
           category = Category.objects.filter(name=category).first().users.add(request.user)
-        
-
-        # for keyword in keyword_list:
-        #   keyword = Keyword.objects.filter(name=keyword).first().users.remove(request.user)
         for keyword in data.get('todo_list'):
           Keyword.objects.create(
             name = keyword,
@@ -332,10 +328,7 @@ class UserInforAddView(View):
         User.objects.filter(pk=request.user.pk).update(
           is_detailed = True
         )
-        # 유저 상세페이지에서 유저만의 언론사 테이블 생성함
         presses = Press.objects.all()
-        # userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
-        # if userpress is None:
         userpress = UserPress.objects.create(
         user = User.objects.filter(pk=request.user.pk).first()
         )
@@ -347,7 +340,64 @@ class UserInforAddView(View):
           'url': 'http://127.0.0.1:8000/'
           })
       
-      
+
+class UserKeywordEditView(View):
+    def get(self, request, **kwargs):
+        pass
+
+    def post(self, request, **kwargs):
+        if request.is_ajax():
+            data = json.loads(request.body)
+            content = data.get('todo')
+            keyword = Keyword.objects.filter(name=content).first()
+            if not keyword:
+                keyword = Keyword.objects.create(
+                    name = content,
+                    )
+            keyword.users.add(request.user)
+            context = context_infor(keyword_pk=keyword.pk, content=content)
+            
+            return JsonResponse(context)
+
+
+class UserKeywordDeleteView(View):
+    def get(self, request, **kwargs):
+        pass
+
+    def post(self, request, **kwargs):
+        if request.is_ajax():
+            data = json.loads(request.body)
+            keyword_pk = data.get('keyword_pk')
+            keyword = Keyword.objects.filter(pk=keyword_pk).first()
+            if keyword :
+                keyword.users.remove(request.user)
+            context = context_infor(is_completed=True)
+            
+            return JsonResponse(context)
+
+
+class UserCategoryEditView(View):
+    def get(self, request, **kwargs):
+        pass
+
+    def post(self, request, **kwargs):
+        if request.is_ajax():
+            data = json.loads(request.body)
+            category_pk = data.get('category_pk')
+            category = Category.objects.filter(pk=category_pk).first()
+            if request.user in category.users.all():
+                category.users.remove(request.user)
+            else:
+                category.users.add(request.user)
+            
+            categories = Category.objects.filter(users__pk = request.user.pk).all()
+            category_list = []
+            for category in categories:
+                category_list.append(category.name)
+            context = context_infor(category_list=category_list)
+
+            return JsonResponse(context)
+
 class ChangePasswordView(View):
     """
     마이페이지의 비밀번호 수정 클래스

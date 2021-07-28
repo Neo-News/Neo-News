@@ -68,11 +68,9 @@ function clickSubmitBtn(e){
   todoInput = document.querySelector('.signup-detail-keyword-input')
   todo = todoInput.value;
   if (todoInput.value == ''){
-    console.log('dsf')
     return
   }
   todo_list.push(todo)
-  console.log(todo_list)
   document.querySelector('.keyword-input-ul').innerHTML +=  `
   <li class="keyword-list todo${i}">
           <span class="todo_keyword${i} keyword">${todo}</span>
