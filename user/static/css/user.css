@@ -211,6 +211,12 @@
   text-align: left;
   color: #56595c;
 }
+.edit-personal-infor-msg {
+  font-size: 0.8rem;
+  position: relative;
+  top: -55px;
+  color: #56595c;
+}
 .personal-icon{
   margin-right: 8px;
   font-size: 1.0rem;
@@ -396,8 +402,8 @@ margin-bottom: 180px;
   top: 0;
   left: 0;
   display: inline-block;
-  width: 250px;
-  height: 270px;
+  width: 200px;
+  height: 210px;
 }
 
 .upload-img-div{

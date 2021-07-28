@@ -1,6 +1,8 @@
 <ul class="user-like">
+  {% for article in articles %}
   <li class="user-like-li">
-    <span class="user-like-title">이기사를 찜했음 좋아요</span>
-    <span class="user-like-icon"><i class="fas fa-heart"></i></span>
+    <span class="user-like-title"><a href="{% url 'news:detail' article.pk %}">{{article.title}}</a></span>
+    <span class="user-like-icon"><i class="fas fa-heart change-color"></i></span>
   </li>
+  {% endfor %}
 </ul>
