@@ -35,7 +35,6 @@
         <a href="{% url 'index' %}"><h1 class="main-title">너뉴스</h1></a>
       </div>
       <div class="main-user">
-        <!-- <a href="{% url 'user:signup_detail' %}"><button class="signin">설문</button></a> -->
         {% if user.is_authenticated %}
         <span class="main-social">
           <a href="{% url 'news:infor-edit' %}"><i class="adjust-icon fas fa-sliders-h"></i></a>
