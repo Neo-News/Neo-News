@@ -1,4 +1,4 @@
-
+from django.db.models import Q
 import requests
 from bs4 import BeautifulSoup
 from requests.api import head
@@ -139,27 +139,26 @@ try:
         if news['category'] == "세계":
             category = Category.objects.filter(name='국제').first()
         
-        if Article.objects.filter(title=news['title']) or Article.objects.filter(title=news['content']):
-            pass 
 
-        article = Article.objects.create(
-            category=category,
-            press=press,
-            potal=Potal.objects.filter(name="네이버").first(),
-            code=news['code'],
-            preview_img=news['preview_img'],
-            title=news['title'],
-            content=news['content'],
-            date=news['date'],
-            ref=news['ref'],
-            counted_at = 0,
-            created_at=time_obj,
-        )
-        print("기사 DB 넣기 성공")
-        Like.objects.create(
-            article=article
-        )
-        print("좋아요 인스턴스 생성")
+        if not Article.objects.filter(Q(title=news['title']) | Q(content=news['content'])):
+            article = Article.objects.create(
+                category=category,
+                press=press,
+                potal=Potal.objects.filter(name="네이버").first(),
+                code=news['code'],
+                preview_img=news['preview_img'],
+                title=news['title'],
+                content=news['content'],
+                date=news['date'],
+                ref=news['ref'],
+                counted_at = 0,
+                created_at=time_obj,
+            )
+            print("기사 DB 넣기 성공")
+            Like.objects.create(
+                article=article
+            )
+            print("좋아요 인스턴스 생성")
 
 
 except:
