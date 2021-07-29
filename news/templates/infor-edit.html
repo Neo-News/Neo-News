@@ -122,15 +122,20 @@ fetch("{% url 'user:keyword_create' %}", {
   console.log(data)
   keyword_pk = data['keyword_pk']
   content = data['content']
-  document.querySelector('.infor-keyword-ul').innerHTML +=  `
-  <li class="infor-keyword-list infor-keyword-list${keyword_pk}">
-  ${content}
-  <i class="fas fa-times delete${keyword_pk}" onclick="clickDeleteBtn('${keyword_pk}')"></i>
-  </li>`
-
-document.querySelector('.infor-keyword-input').value='';
-document.querySelector('.infor-keyword-input').focus();
-
+  if (data['status']){
+    document.querySelector('.infor-keyword-input').value='';
+    document.querySelector('.infor-keyword-input').placeholder = data['msg'];
+  }else {
+    document.querySelector('.infor-keyword-ul').innerHTML +=  `
+    <li class="infor-keyword-list infor-keyword-list${keyword_pk}">
+    ${content}
+    <i class="fas fa-times delete${keyword_pk}" onclick="clickDeleteBtn('${keyword_pk}')"></i>
+    </li>`
+  
+    document.querySelector('.infor-keyword-input').value='';
+    document.querySelector('.infor-keyword-input').placeholder = '키워드를 입력해주세요';
+    document.querySelector('.infor-keyword-input').focus();
+  }
 }).catch((error) => {
   console.log('error', error);
 })

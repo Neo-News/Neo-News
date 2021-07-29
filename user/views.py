@@ -59,6 +59,8 @@ class UserLoginView(FormView):
         print(user)
         if user is not None:
             auth_login(self.request, user)
+            return super().form_valid(form)
+
         print(User.objects.filter(pk=self.request.user.pk).first().is_active)
         if User.objects.filter(pk=self.request.user.pk).first().is_detailed == False:
             categories = Category.objects.all()
@@ -261,29 +263,29 @@ class SignupDeatilView(View):
     pass
 
 
-class UserInforEditView(View):
-    def get(self, request, **kwargs):
-        likes = Like.objects.all()
-        articles = [like.article for like in likes if request.user in like.users.all()]
-        comments = Comment.objects.filter(writer__pk=request.user.pk)
-        context = context_infor(articles=articles, comments=comments)
-        return render(request, 'user-infor-edit.html', context)
+# class UserInforEditView(View):
+#     def get(self, request, **kwargs):
+#         likes = Like.objects.all()
+#         articles = [like.article for like in likes if request.user in like.users.all()]
+#         comments = Comment.objects.filter(writer__pk=request.user.pk)
+#         context = context_infor(articles=articles, comments=comments)
+#         return render(request, 'user-infor-edit.html', context)
 
-    def post(self, request, *args, **kwargs):
-        if self.request.is_ajax():
-            print("ajax 요청 받기 성공")
-            data = json.loads(request.body)
-            nickname = data.get('nickname')
-            user = UserService.update_nickname(request, nickname)
-            # print(user)
-            print("유저 닉네임 수정 완료")
-            context = {
-                'nickname' : user.nickname,
-                'msg' : '유저 닉네임 수정 성공'
-            }
-            return JsonResponse(context, status=200)
-        else:
-            return JsonResponse({"error" : "Error occured during request"}, status=400)
+#     def post(self, request, *args, **kwargs):
+#         if self.request.is_ajax():
+#             print("ajax 요청 받기 성공")
+#             data = json.loads(request.body)
+#             nickname = data.get('nickname')
+#             user = UserService.update_nickname(request, nickname)
+#             # print(user)
+#             print("유저 닉네임 수정 완료")
+#             context = {
+#                 'nickname' : user.nickname,
+#                 'msg' : '유저 닉네임 수정 성공'
+#             }
+#             return JsonResponse(context, status=200)
+#         else:
+#             return JsonResponse({"error" : "Error occured during request"}, status=400)
 
 
 # 프로필 이미지 등록하는 함수
@@ -357,9 +359,10 @@ class UserInforAddView(View):
         for category in data.get('category_list'):
           category = Category.objects.filter(name=category).first().users.add(request.user)
         for keyword in data.get('todo_list'):
-          Keyword.objects.create(
-            name = keyword,
-          )
+            if not Keyword.objects.filter(name=keyword).first():
+                Keyword.objects.create(
+                    name = keyword,
+                )
         Keyword.objects.filter(name=keyword).first().users.add(request.user)
         User.objects.filter(pk=request.user.pk).update(
           is_detailed = True
@@ -390,10 +393,12 @@ class UserKeywordEditView(View):
                 keyword = Keyword.objects.create(
                     name = content,
                     )
-            keyword.users.add(request.user)
-            context = context_infor(keyword_pk=keyword.pk, content=content)
-            
-            return JsonResponse(context)
+                keyword.users.add(request.user)
+                context = context_infor(keyword_pk=keyword.pk, content=content)
+                return JsonResponse(context)
+            else:
+                context = {'status': True, 'msg' : '중복된 키워드 입니다.'}
+                return JsonResponse(context)
 
 
 class UserKeywordDeleteView(View):
@@ -644,3 +649,38 @@ class ResendEmailView(VerifyEmailMixin, View):
     return ResendDto(
       email = data.email,
     )
+
+
+class MypageView(View):
+    def get(self, request, **kwargs):
+        return render(request, 'user-infor.html')
+
+    def post(self, request, *args, **kwargs):
+        if self.request.is_ajax():
+            print("ajax 요청 받기 성공")
+            data = json.loads(request.body)
+            nickname = data.get('nickname')
+            user = UserService.update_nickname(request, nickname)
+            # print(user)
+            print("유저 닉네임 수정 완료")
+            context = {
+                'nickname' : user.nickname,
+                'msg' : '개인정보가 변경되었습니다.'
+            }
+            return JsonResponse(context, status=200)
+        else:
+            return JsonResponse({"error" : "Error occured during request"}, status=400)
+
+
+class LikeArticleView(View):
+    def get(self, request, **kwargs):
+        likes = Like.objects.all()
+        articles = [like.article for like in likes if request.user in like.users.all()]
+        context = context_infor(articles=articles,)
+        return render(request, 'user-like.html', context)
+
+class CommentArticleView(View):
+    def get(self, request, **kwargs):
+        comments = Comment.objects.filter(writer__pk=request.user.pk)
+        context = context_infor(comments=comments)
+        return render(request, 'user-comment.html', context)
