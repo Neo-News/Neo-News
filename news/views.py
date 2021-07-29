@@ -26,18 +26,17 @@ class IndexView(View):
   def get(self, request, **kwargs):
     categories = Category.objects.filter(users__pk=request.user.pk).all()
     keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
-    page = request.GET.get('page','1')
     article_list = Article.objects.all()
-    
-    
+    page = request.GET.get('page','1')
     if request.user.is_authenticated :
-        userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
         article_list = []
+        press_list = []
+        userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
         if userpress is not None:
+            # 각 언론사를 여기서 for문을 돌린 후 각각의 Article을 순서대로 스크래핑한돠...
             for press in userpress.press.all():
-                articles = Article.objects.filter(press__name=press.name).all()
-                for article in articles:
-                    article_list.append(article)
+                press_list.append(press.name)
+            article_list = Article.objects.filter(press__name__in=press_list).all()
     paginator = Paginator(article_list, 20)
     try:
         article_obj = paginator.page(page)
@@ -55,7 +54,6 @@ class IndexView(View):
     end_index = start_index + page_size
     if end_index >= max_index:
         end_index = max_index
-
     page_range = paginator.page_range[start_index:end_index]
     context = context_infor(categories=categories, keywords=keywords, articles=article_obj,page_range=page_range)    
     return render(request, 'index.html',context)
@@ -102,18 +100,17 @@ class NewsInforEditView(ListView):
     """
     def get(self, request, **kwargs):
         keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
-        press_list = Press.objects.all().order_by('name')
         userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
+        press_list = Press.objects.all().order_by('name')
+        categories = Category.objects.exclude(name='속보').all()
         non_press = userpress.non_press.all()
         press = userpress.press.all()
-        categories = Category.objects.exclude(name='속보').all()
         user_categories = Category.objects.filter(users__pk = request.user.pk).all()
         if non_press is not None:
           non_press = userpress.non_press.all()
           press = userpress.press.all()
         if press is not None:
             press = userpress.press.all()
-
         page = request.GET.get('page','1')
         paginator = Paginator(press_list, 10)
         press_obj = paginator.page(page)
@@ -156,6 +153,18 @@ class CategoryIndexView(View):
         keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
         page = request.GET.get('page','1')
         article_list = Article.objects.filter(category__name=category_name).all()
+        if request.user.is_authenticated :
+            userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
+            article_list = []
+            press_list = []
+            if userpress is not None:
+            # 각 언론사를 여기서 for문을 돌린 후 각각의 Article을 순서대로 스크래핑한돠...
+                for press in userpress.press.all():
+                    press_list.append(press.name)
+                print(press_list)
+
+                article_list = Article.objects.filter(press__name__in=press_list, category__name=category_name).all()
+
 
         paginator = Paginator(article_list, 20)
         article_obj = paginator.page(page)
@@ -196,6 +205,15 @@ class KeywordIndexView(View):
             is_none = True
             msg = '선택하신 키워드에 관련된 기사가 아직 없어요 -!'
         
+        if request.user.is_authenticated :
+                userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
+                article_list = []
+                press_list = []
+                if userpress is not None:
+                    for press in userpress.press.all():
+                        press_list.append(press.name)
+                    article_list = Article.objects.filter(Q(title__contains=keyword_name) | Q(content__contains=keyword_name),press__name__in=press_list).all()
+                            
         page = request.GET.get('page','1')
         article_list = articles
         

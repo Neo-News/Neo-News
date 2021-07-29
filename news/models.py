@@ -34,6 +34,7 @@ class Article(TimeStampable, Countable):
     potal = models.ForeignKey(Potal, on_delete=models.SET_NULL, null=True, related_name='potal')
     code = models.CharField(max_length=62)
     preview_img = models.TextField(default='default.png',blank=True)
+    kakao_img = models.URLField()
     title = models.CharField(max_length=124)
     content = models.TextField()
     date = models.TextField()

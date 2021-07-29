@@ -1,8 +1,10 @@
 import datetime
 from celery import shared_task
 from django.core.mail import EmailMessage
-from news.models import Press, Article, Potal, Category  
-from news.daum_scrapping import parse_daum
+from news.models import Press, Article, Potal, Category
+from social.models import Like  
+from news.scrapping import parse_daum, parse_naver, convert_datetime_to_timestamp
+
 from django.db.models import Q 
 import time
 
@@ -21,27 +23,76 @@ def send_email(mail_title, message_data, mail_to):
 
 
 @shared_task
-def task_scrappy():
-    press_list = ['KBS','MBC','경향신문','MBN','SBS','국민일보','노컷뉴스','뉴시스','디스패치','동아일보','매일경제','머니투데이','서울경제','서울신문','세계일보','연합뉴스','이데일리','중앙일보','한국경제','머니S','스포츠조선','스포츠투데이','오마이뉴스','YTN','MK스포츠','베스트일레븐']
+def task_scrappy_naver():
+    # 네이버 스크래핑
+    scrappy_list = parse_naver()
+    print("스크래핑 성공")
+
+    for news in scrappy_list:
+        date_list = news['date'].replace(".", " ").replace(":", " ").split(" ")
+        time_obj = convert_datetime_to_timestamp(date_list)
+        category = Category.objects.filter(name=news['category']).first()
+        press = Press.objects.filter(name=news['press']).first()
+        if not press:
+            press = Press.objects.create(name=news['press'])
+        
+        if news['category'] == "생활/문화":
+            category = Category.objects.filter(name='문화').first()
+        
+        if news['category'] == "IT/과학":
+            category = Category.objects.filter(name='IT').first()
+        
+        if news['category'] == "세계":
+            category = Category.objects.filter(name='국제').first()
+        
+        if Press.objects.filter(name=news['press']):
+            if not Article.objects.filter(Q(title=news['title']) | Q(content=news['content'])):
+                article = Article.objects.create(
+                    category=category,
+                    press=press,
+                    potal=Potal.objects.filter(name="네이버").first(),
+                    code=news['code'],
+                    preview_img=news['preview_img'],
+                    kakao_img =news['kakao_img'],
+                    title=news['title'],
+                    content=news['content'],
+                    date=news['date'],
+                    ref=news['ref'],
+                    counted_at = 0,
+                    created_at=time_obj,
+                    )
+                print("기사 DB 넣기 성공")
+                if not Like.objects.filter(article = article):
+                    Like.objects.create(
+                        article=article
+                    )
+                    print("좋아요 인스턴스 생성")
+    return None
+
+
+@shared_task
+def task_scrappy_daum():
     news_dict = parse_daum()
     for v in news_dict.values():
         if Press.objects.filter(name=v['press']):
-            print('27개 안에 들어감',v['press'])
             print('여기까지는 성고오오오오오옹')
-            
             if not Article.objects.filter(Q(title=v['title']) | Q(content=v['content'])):
-                Article.objects.create(
+                article = Article.objects.create(
                     press=Press.objects.filter(name=v['press']).first(),
                     potal = Potal.objects.filter(name='다음').first(),
                     category=Category.objects.filter(name=v['news_category']).first(),
                     code=v['news_code'],
                     date=v['date'],
                     preview_img=v['preview_img'],
+                    kakao_img =v['kakao_img'],
                     title=v['title'],
                     content=v['content'],
                     ref=v['ref'],
                     counted_at = 0,
                     created_at = v['created_at']
-                        )
-
+                )
+                if not Like.objects.filter(article = article):
+                    Like.objects.create(
+                    article=article
+                    )
     return None

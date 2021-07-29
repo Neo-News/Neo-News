@@ -33,7 +33,6 @@
   {% endif %}
 </section>
 
-{% if user.is_authenticated %}
 <ul class="news-ul">
   {% for article in articles %}
   <li class="news-li">
@@ -58,33 +57,7 @@
   </li>
   {% endfor %}
 </ul>
- 
-{% else %}
-<ul class="news-ul">
-  {% for article in articles %}
-  <li class="news-li">
-    <div class="news-img"><img src="{{article.preview_img}}" alt="">
-    </div>
-    <a href="{% url 'news:detail' article.pk %}"><div class="news-contents">
-      <div class="news-title">{{article.title}}</div>
-      <div class="news-content">{{article.content|get_hangul |truncatechars:160| slice:"65:"}}</div>
-      <div class="news-social">
-        <div class="news-infor">
-        <span class="news-portal">{{article.potal.name}} · </span>
-        <span class="news-press">{{article.press.name}} · </span>
-        <span class="news-date">{{article.created_string}}</span>
-      </div>
-      <div class="news-social-infor">
-        <span class="news-social-comment"><i class="fas fa-comment-alt"> </i>{{article.comment.all | comment_sum}}</span>
-        <span class="news-social-like"><i class="fas fa-heart"> </i>{{article.like.total_likes}}</span>
-      </div>
-      </div>
-    </div>
-  </a>
-  </li>
-  {% endfor %}
-</ul>
-{% endif %}
+
 
 {% include 'pagination.html' %}
 {% endblock content %}
