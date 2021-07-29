@@ -59,9 +59,7 @@ class UserLoginView(FormView):
         print(user)
         if user is not None:
             auth_login(self.request, user)
-            return super().form_valid(form)
 
-        print(User.objects.filter(pk=self.request.user.pk).first().is_active)
         if User.objects.filter(pk=self.request.user.pk).first().is_detailed == False:
             categories = Category.objects.all()
             context = context_infor(categories=categories)
@@ -393,12 +391,11 @@ class UserKeywordEditView(View):
                 keyword = Keyword.objects.create(
                     name = content,
                     )
-                keyword.users.add(request.user)
-                context = context_infor(keyword_pk=keyword.pk, content=content)
-                return JsonResponse(context)
-            else:
-                context = {'status': True, 'msg' : '중복된 키워드 입니다.'}
-                return JsonResponse(context)
+            keyword.users.add(request.user)
+            context = context_infor(keyword_pk=keyword.pk, content=content)
+            
+            return JsonResponse(context)
+            
 
 
 class UserKeywordDeleteView(View):
