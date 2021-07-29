@@ -10,7 +10,6 @@
   justify-content: center;
   align-items: center;
 }
-
 .registration{
   min-height: 100vh;
   margin-top: -150px;
@@ -74,7 +73,6 @@
   color: white;
   background-color: rgb(248, 161, 104);
 }
-
 .form-actions input{
   display: block;
   width: 280px;
@@ -86,11 +84,11 @@
   color: white;
   background-color: rgb(248, 161, 104);
 }
-.login-btn:hover, .signup-btn:hover {
+.login-btn:hover, 
+.signup-btn:hover {
   background-color: #F7B34F;
   box-shadow: 0px 0px 5px 0px rgb(197, 195, 195);
 }
-
 .social-signup {
   text-align: center;
   margin: 25px 0 -7px 0;
@@ -99,13 +97,11 @@
   color: #81530d;
   font-size: 0.8rem;
   margin: 0px 5px;
-  
 }
 .social-signup-text-icon{
   color: #81530d;
   display: inline-block;
   font-size: 0.5rem;
-  
 }
 .social-quote{
   font-size: .8rem;
@@ -117,6 +113,7 @@
 .social-strong{
   color: #F7B34F;
 }
+
 /* formview 레이아웃 */
 .signup-form,
 .form-actions,.kakao-btn{
@@ -124,7 +121,6 @@
   text-align: center;
 }
 .error{
-  /* text-align: left; */
   margin: 20px 0 15px 0;
   color: #1cc02f;
   font-weight: bold;
@@ -133,7 +129,6 @@
   margin: 10px auto;
 }
 .error-word{
-  
   font-size: .78rem;
   text-align: center;
 }
@@ -189,23 +184,21 @@
 .kakao-btn i{
   font-size: 1.2rem;
 }
-
 .naver-btn > a > img {
   width: 267px;
   height: 35px;
   margin: 5px 0;
 }
-.resend-email, .find_password {
+.resend-email, 
+.find_password {
   text-decoration: none;
   color: dodgerblue;
   margin: 5px 0 ;
   font-size: 12px;
 }
 
-
 /* user infor edit page */
 .edit-personal-infor{
-  /* background-color: red; */
   margin-bottom: 20px;
   font-size: .9rem;
   text-align: left;
@@ -228,18 +221,16 @@
   background-color: rgb(249, 247, 244);
   padding-top: 150px;
   min-height: 100vh;
-  /* min-height: 100vh; */
 }
 .user-infor-contents{
-  /* min-height: 100%; */
   text-align: center;
   width: 50%;
-  padding-left: 50px;
+  padding-left: 40px;
   border-radius: 5px;
   position: relative;
 }
-/* 유저 내계정 레이아웃 */
 
+/* 유저 내계정 레이아웃 */
 .edit-nickname{
   position: absolute;
   width: 100%;
@@ -247,7 +238,7 @@
   border-bottom: 1px solid #eee;
 }
 .edit-password{
-text-align: left;
+  text-align: left;
 }
 .edit-password-infor{
   display: flex;
@@ -255,11 +246,10 @@ text-align: left;
   width: 100%;
 }
 .resend-pwd{
-margin-left: 30px;
-padding: 12px;
-border: none;
-border-radius: 5px;
-
+  margin-left: 30px;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
 }
 .user-infor-contents h2{
   font-size: 1.2rem;
@@ -269,7 +259,6 @@ border-radius: 5px;
 .infor-user-nickname{
   border: none;
   width: 60%;
-  /* margin: 20px auto; */
   margin: 20px 0px;
   padding: 15px 10px;
   border-radius: 5px;
@@ -279,13 +268,11 @@ border-radius: 5px;
 .infor-user-password{
   border: none;
   width: 50%;
-  /* margin: 20px auto; */
   padding: 15px 10px;
   border-radius: 5px;
   background-color: rgb(235, 233, 233);
   display: block;
 }
-
 .user-nickname-btn{
   position: relative;
   padding: 8px 10px;
@@ -312,11 +299,10 @@ border-radius: 5px;
   font-size: 1rem;
 }
 .user-infor-ul{
-  width: 250px;
+  width: 260px;
   border-radius: 5px;
   background-color: #eee;
   display: inline-block;
-  margin-right: 5%;
 }
 .user-infor-ul li{
   margin: 20px;
@@ -327,27 +313,29 @@ border-radius: 5px;
   border-radius: 5px;
   transition: all 200ms;
 }
-.user-infor-ul li:hover button,
-.user-infor-ul li:focus button {
+.user-infor-ul li:hover a,
+.user-infor-ul li:focus a{
   border-radius: 5px;
   color: #eee;
   background-color: rgba(87, 84, 84, 0.671);
   transition: all 200ms;
 }
-.user-infor-ul li button{
+.user-infor-ul li a{
   padding: 5px 10px;
-  width: 100%;
+  /* width: 100%; */
+  display: inline-block;
+  width: 200px;
   font-size: 2em;
   border: none;
 }
-.user-infor-ul li button i{
+.user-infor-ul li a i{
   width: 20%;
-  margin-right: 20px;
+  margin-right: 10px;
   text-align: left;
   display: inline-block;
   font-size: 1.3em;
 }
-.user-infor-ul li button span{
+.user-infor-ul li a span{
   font-size: 1em;
   width: 80%;
   margin-right: 20px;
@@ -360,14 +348,17 @@ border-radius: 5px;
 }
 .edit-profile-img{
   text-align: left;
-margin-bottom: 180px;
+  margin-bottom: 180px;
+  padding-left: 40px;
 }
 .edit-profile-pwd{
   margin-bottom: 100px;
   padding-top: 50px;
   padding-bottom: 50px;
   border-bottom: 1px solid #eee;
+  padding-left: 40px;
 }
+
 /* 이미지,닉네임 변경 레이아웃 */
 .profile-edit{
   text-align: center;
@@ -376,7 +367,6 @@ margin-bottom: 180px;
   background-color: #eee;
   overflow: hidden;
   box-shadow: 0px 0px 7px 2px rgb(209, 207, 207);
-  /* margin: 0 auto; */
   position: relative;
   width: 200px;
   height: 200px;
@@ -405,13 +395,10 @@ margin-bottom: 180px;
   width: 200px;
   height: 210px;
 }
-
 .upload-img-div{
   text-overflow: ellipsis;
   position: absolute;
   top: 0;
-
-
 }
 .upload-user-img{
   position: absolute;
@@ -422,7 +409,6 @@ margin-bottom: 180px;
   left: 0;
 }
 
-  
 /* user my page - comment,like page */
 .user-comment-li,
 .user-like-li{
@@ -440,6 +426,9 @@ margin-bottom: 180px;
   font-size: 1rem;
   cursor: pointer;
 }
+.fa-comment-alt {
+  color: rgb(97, 94, 94);
+}
 
 /* 마이페이지 탈퇴 popup창 */
 .delete-popup-section{
@@ -451,11 +440,11 @@ margin-bottom: 180px;
   left:0;
   right:0;
   bottom:0;               
-  /* display:flex; */
   display:none; 
   padding:15px; 
   backdrop-filter: blur(3px)
 }
+
 /* signup detail popup창 */
 .delete-popup{
   width:100%;               
@@ -466,7 +455,6 @@ margin-bottom: 180px;
   overflow:hidden;          
   background-color:#eee; 
   box-shadow: 5px 10px 10px 1px rgba(0,0,0,.3); 
-  /* background-color: red; */
 }
 .delete-email-popup{
   text-align: center;
@@ -479,7 +467,6 @@ margin-bottom: 180px;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  /* right:20px; */
   cursor: pointer;
   width: 100%;
   height: 60px;
@@ -518,17 +505,14 @@ margin-bottom: 180px;
   font-size: 1.1rem;
   margin-right: 6px;
 }
-
 .delete-popup-content2{
   position: absolute;
   font-size: .7rem;
   top: 35%;
   left: 50%;
   width: 80%;
-transform: translate(-50%,-50%);
-/* background-color: blue; */
+  transform: translate(-50%,-50%);
 }
-
 .delete-ok{
   position: absolute;
   bottom:10px;
@@ -549,8 +533,8 @@ transform: translate(-50%,-50%);
   border: none; 
   background-color: rgb(212, 209, 209);
 }
-/* 유저 password 변경 페이지 */
 
+/* 유저 password 변경 페이지 */
 .change-popup-section{
   background-color:rgba(0,0,0,.3); 
   justify-content:center; 
@@ -561,10 +545,10 @@ transform: translate(-50%,-50%);
   right:0;
   bottom:0;               
   display:flex;
-  /* display:none;  */
   padding:15px; 
   backdrop-filter: blur(6px);
 }
+
 /* signup detail popup창 */
 .change-popup-section{
   background-color: rgba(241, 240, 239, 0.637);
@@ -579,11 +563,9 @@ transform: translate(-50%,-50%);
   overflow:hidden;          
   background-color:#eee; 
   box-shadow: 5px 10px 10px 1px rgba(0,0,0,.3); 
-  /* background-color: red; */
 }
 .change-email-popup{
   text-align: center;
-  /* position: relative; */
   height: 200px;
 }
 .change-popup-close{
@@ -593,7 +575,6 @@ transform: translate(-50%,-50%);
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  /* right:20px; */
   cursor: pointer;
   width: 100%;
   height: 60px;
@@ -622,21 +603,17 @@ transform: translate(-50%,-50%);
   width: 70%;
   border: none;
 }
-
 .fa-user-check{
   font-size: 1.1rem;
   margin-right: 6px;
 }
-
 .change-popup-content2{
   position: absolute;
   font-size: .7rem;
   top: 35%;
   left: 50%;
-transform: translate(-50%,-50%);
-/* background-color: blue; */
+  transform: translate(-50%,-50%);
 }
-
 .change-ok{
   position: absolute;
   bottom:40px;
@@ -696,12 +673,10 @@ transform: translate(-50%,-50%);
   font-weight: bold;
 }
 .find-password-level{
-  /* background-color: red; */
   position: absolute;
   top: 20px;
   left: 20px;
   padding: 10px;
-
 }
 .level{
   font-size: .9rem;
@@ -732,7 +707,6 @@ transform: translate(-50%,-50%);
   font-weight: bold;
   text-align: left;
 }
-
 .return-home{
   font-size: .8rem;
   border-radius: 5px;
@@ -741,40 +715,39 @@ transform: translate(-50%,-50%);
   padding: 10px;
 }
 .valid-num-input{
-display: inline-block;
-width: 55%;
-margin: 0 auto;
-padding: 10px;
-border: none;
-background-color: rgb(230, 228, 228);
+  display: inline-block;
+  width: 55%;
+  margin: 0 auto;
+  padding: 10px;
+  border: none;
+  background-color: rgb(230, 228, 228);
 }
 .valid-num-btn{
-width: 15%;
-border: none;
-padding: 8px;
-box-sizing: border-box;
-background-color: rgb(230, 228, 228);
+  width: 15%;
+  border: none;
+  padding: 8px;
+  box-sizing: border-box;
+  background-color: rgb(230, 228, 228);
 }
 .password,
 .password_chk{
-padding: 10px;
-display: block;
-width: 60%;
-margin: 0px auto;
-margin-bottom: 20px;
-border: none;
-background-color: rgb(230, 228, 228);
-
+  padding: 10px;
+  display: block;
+  width: 60%;
+  margin: 0px auto;
+  margin-bottom: 20px;
+  border: none;
+  background-color: rgb(230, 228, 228);
 }
 .find-pwd-btn{
   margin-top: 10px;
   width: 30%;
   background-color: rgb(248, 161, 104);;
 }
+
 /* 이메일 재인증 레이아웃 */
 .resend-div{
   margin: 0 auto;
-  /* display: flex; */
   justify-content: space-between;
   align-items: center;
 }
@@ -802,7 +775,6 @@ background-color: rgb(230, 228, 228);
   display: inline-block;
   font-weight: bold;
 }
-
 .non-clicked{
   display: none;
 }
@@ -816,7 +788,6 @@ background-color: rgb(230, 228, 228);
     justify-content:flex-start;
     min-height: 100vh;
   }
- 
   .user-infor-contents{
     margin: 0 auto;
     width: 90%;
@@ -843,69 +814,67 @@ background-color: rgb(230, 228, 228);
   .registration-signup{
     /* margin-top: -50px; */
   }
-.edit-profile-img{
-  text-align: center;
-}
-/* 비밀번호 찾기 레이아웃 - 모바일 */
-.find-password-section{
-  padding-top: 150px;
-}
-.find-password-form{
-  background-color: rgb(249, 247, 244);
-  width: 90%;
-  margin-top: 35px;
-  box-shadow: none;
-}
-.find-password-form > h1{
-  margin-bottom: 50px;
-}
-.find-password-form .user-email{
-  width: 70%;
-  margin-bottom: 50px;
-}
-.find-password-msg{
-  width: 80%;
-  margin: 0 auto;
-  margin-bottom: 70px;
-}
-.find-password-level{
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-}
-.confirm-num{
-  width: 100%;
-}
-.valid-num-btn{
-width: auto;
-}
+  .edit-profile-img{
+    text-align: center;
+  }
+  
+  /* 비밀번호 찾기 레이아웃 - 모바일 */
+  .find-password-section{
+    padding-top: 150px;
+  }
+  .find-password-form{
+    background-color: rgb(249, 247, 244);
+    width: 90%;
+    margin-top: 35px;
+    box-shadow: none;
+  }
+  .find-password-form > h1{
+    margin-bottom: 50px;
+  }
+  .find-password-form .user-email{
+    width: 70%;
+    margin-bottom: 50px;
+  }
+  .find-password-msg{
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 70px;
+  }
+  .find-password-level{
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+  }
+  .confirm-num{
+    width: 100%;
+  }
+  .valid-num-btn{
+    width: auto;
+  }
 }
 
 @media screen and (max-width:450px){
-
   .base{
     padding: 0;
   }
   .category >.category-non-login{
-     display: none;
-}
-.registration{
-  padding-top: 100px;
-  min-height: 100vh;
-}
-.registration-signup{
-  padding-top: 70px;
-
-}
-.category{
-  padding: 0;
-  margin: 0;
-}
-
-.level{
-  font-size: 0.75rem;
-}
-.resend-div{
-  width: 100%;
-}
+    display: none;
+  }
+  .registration{
+    padding-top: 100px;
+    min-height: 100vh;
+  }
+  .registration-signup{
+    padding-top: 70px;
+  }
+  .category{
+    padding: 0;
+    margin: 0;
+  }
+  .level{
+    font-size: 0.75rem;
+  }
+  .resend-div{
+    width: 100%;
+ }
 }

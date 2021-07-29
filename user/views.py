@@ -1,42 +1,36 @@
 
-from django.contrib.messages.api import success
-from django.forms.models import model_to_dict
-from django.views.generic.base import TemplateView
-from news.validate import email_valid_num
-from news.models import Press, UserPress
 import os
-import boto3
-import requests
-from boto3.session import Session
-from datetime import datetime
-from django.http.response import JsonResponse
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from config.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME, AWS_S3_REGION_NAME
-from .models import ProfileImage, User
-from .exception import SocialLoginException, KakaoException
-from datetime import datetime
-from .models import Category, Keyword, ProfileImage
-from utils import context_infor
-from user.forms import FindPwForm, SignupForm, LoginForm, ChangeSetPwdForm,VerificationEmailForm
-from django.utils.encoding import force_text
-from django.utils.http import urlsafe_base64_decode
-from django.utils.encoding import force_text
-from django.views.generic import View, FormView
-from user.forms import SignupForm
-from user.tasks import send_email
-from user.services import UserService
-from .dto import SignupDto,ResendDto
-from django.contrib.auth import authenticate, login as auth_login
-from user.models import User
-from social.models import Like, Comment
-from django.contrib.auth.hashers import check_password
-from django.contrib.auth import logout 
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
-from user.mixin import VerifyEmailMixin
 import jwt
 import json
+import requests
+from datetime import datetime
+from django.contrib.auth import authenticate, login as auth_login, logout
+from django.contrib.messages.api import success
+from django.contrib.auth.hashers import check_password
+from django.contrib import messages
+from django.forms.models import model_to_dict
+from django.http.response import JsonResponse
+from django.utils.decorators import method_decorator
+from django.utils.encoding import force_text
+from django.utils.http import urlsafe_base64_decode
+from django.views.decorators.csrf import csrf_exempt
+from django.views.generic.base import TemplateView
+from django.views.generic import View, FormView
+from django.shortcuts import render, redirect
+from boto3.session import Session
+
+from utils import context_infor
+from config.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME, AWS_S3_REGION_NAME
+from news.validate import email_valid_num
+from news.models import Press, UserPress
+from social.models import Like, Comment
+from .dto import SignupDto,ResendDto
+from .exception import SocialLoginException, KakaoException
+from .forms import FindPwForm, SignupForm, LoginForm, ChangeSetPwdForm,VerificationEmailForm
+from .models import User, Category, Keyword
+from .mixin import VerifyEmailMixin
+from .tasks import send_email
+from .services import UserService
 
 
 class UserLoginView(FormView):
@@ -66,18 +60,6 @@ class UserLoginView(FormView):
             return render(self.request,'signup_detail.html',context)
 
         return super().form_valid(form)
-
-
-
-# class UserLoginView(LoginView):
-#     """
-#     author: Oh Ji Yun
-#     date: 0715
-#     description:
-#     FormView 상속받아서 로그인 기능 구현
-#     Form은 authenticate가 있는 authentication form 사용 
-#     """
-#     template_name = 'login.html'
 
 
 # 카카오 로그인 뷰
@@ -110,6 +92,7 @@ def kakao_login(request):
         messages.error(request, error)
         return redirect("index")
 
+
 # 카카오 로그인 콜백뷰
 def kakao_login_callback(request):
     """
@@ -140,10 +123,8 @@ def kakao_login_callback(request):
         token_info_json = request_access_token.json()
         error = token_info_json.get("error", None)
         if error is not None:
-            # print(error)
             KakaoException("Can't get access token")
 
-        # print(token_info_json)
         access_token = token_info_json.get("access_token")
         headers = {"Authorization": f"Bearer {access_token}"}
         profile_request = requests.post(
@@ -156,8 +137,6 @@ def kakao_login_callback(request):
 
         nickname = profile.get("nickname", None)
         email = kakao_account.get("email", None)
-
-        # user = User.objects.filter(email=email).first()
 
         user, created = User.objects.get_or_create(email=email)
         if created:
@@ -287,7 +266,6 @@ class SignupDeatilView(View):
 
 
 # 프로필 이미지 등록하는 함수
-# def ImageUpload(request):
 class ImageUploadView(View):
     """
     author: Oh Ji Yun
@@ -319,23 +297,11 @@ class ImageUploadView(View):
                 # image=now+title
                 image=image
             )
-            # ProfileImage.objects.create(
-            #     title = now+file.name,
-            #     url = s3_url+now+file.name
-            # )
-            # return redirect('user:infor-edit')
-            context = {
-                'msg' : '유저 이미지 수정 성공'
-            }
+            context = { 'msg' : '유저 이미지 수정 성공' }
             return JsonResponse(context, status=200)
         else:
             return JsonResponse({"error" : "Error occured during request"}, status=400)
 
-
-    # imgs = ProfileImage.objects.all()
-
-    # return render(request, 'user-infor.html', {'imgs' : imgs})
-    
 
 class UserInforAddView(View):
   """
@@ -396,7 +362,6 @@ class UserKeywordEditView(View):
             
             return JsonResponse(context)
             
-
 
 class UserKeywordDeleteView(View):
     def get(self, request, **kwargs):
@@ -658,7 +623,6 @@ class MypageView(View):
             data = json.loads(request.body)
             nickname = data.get('nickname')
             user = UserService.update_nickname(request, nickname)
-            # print(user)
             print("유저 닉네임 수정 완료")
             context = {
                 'nickname' : user.nickname,
@@ -671,10 +635,13 @@ class MypageView(View):
 
 class LikeArticleView(View):
     def get(self, request, **kwargs):
-        likes = Like.objects.all()
-        articles = [like.article for like in likes if request.user in like.users.all()]
-        context = context_infor(articles=articles,)
-        return render(request, 'user-like.html', context)
+        # likes = Like.objects.all()
+        # articles = [like.article for like in likes if request.user in like.users.all()]
+        user = User.objects.filter(pk=request.user.pk).first()
+        likes = user.like.all()
+        context = context_infor(likes=likes,)
+        return render(request, 'user-like.html',context )
+
 
 class CommentArticleView(View):
     def get(self, request, **kwargs):
