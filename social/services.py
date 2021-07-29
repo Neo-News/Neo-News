@@ -26,7 +26,8 @@ class ReCommentService():
             recomment = ReComment.objects.create(
                 comment=dto.comment,
                 writer=dto.writer,
-                content=dto.content
+                content=dto.content,
+                created_at=time.time()
             )
         return recomment
 
