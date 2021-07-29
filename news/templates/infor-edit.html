@@ -6,11 +6,11 @@
 
 {% block content %}
 <section class="news-infor-edit">
-  <a href='' class="news-infor-back"><i class="fas fa-chevron-left"></i></a>
+  <a href="{% url 'index' %}" class="news-infor-back"><i class="fas fa-chevron-left"></i></a>
   <div class="news-infor-div">
   <div class="news-infor">
     <ul class="infor-ul">
-      <li class="press-infor"><button class="clicked press-btn" onclick="pressInfor(event)" ; href="#"><i class="far fa-newspaper"></i><span>언론사 선택</span></button></li>
+      <li class="press-infor"><button class="clicked press-btn" onclick="pressInfor(event)" ;><i class="far fa-newspaper"></i><span>언론사 선택</span></button></li>
       <li class="keyword-infor"><button class="keyword-btn" onclick="keywordInfor(event)" ;><i class="far fa-bell"></i><span>키워드 선택</span></button></li>
       <li class="keyword-infor"><button class="category-btn" onclick="categoryInfor(event)" ;><i class="far fa-bell"></i><span>카테고리 선택</span></button></li>
       

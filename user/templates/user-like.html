@@ -20,7 +20,7 @@
     <ul class="user-like">
       {% for like in likes %}
       <li class="user-like-li">
-        <span class="user-like-title"><a href="{% url 'news:detail' like.article.pk %}">{{like.article.title}}</a></span>
+        <span class="user-like-title"><a href="{% url 'news:detail' like.article.pk %}">{{like.article.title |truncatechars:42 }}</a></span>
         <span class="user-like-icon"><i class="fas fa-heart change-color"></i></span>
       </li>
       {% endfor %}

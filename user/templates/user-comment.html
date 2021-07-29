@@ -20,12 +20,12 @@
     <ul class="user-comment">
       {% for comment in comments%}
       <li class="user-comment-li">
-        <span class="user-comment-title"><a href="{% url 'news:detail' comment.article.pk %}">{{comment.article.title}}</a></span>
+        <span class="user-comment-title"><a href="{% url 'news:detail' comment.article.pk %}">{{comment.article.title |truncatechars:42 }}</a></span>
         <span class="user-comment-delete"><i class="fas fa-comment-alt"></i></span>
       </li>
       {% for recomment in comment.re_comment.all %}
       <li class="user-comment-li">
-        <span class="user-comment-title"><a href="{% url 'news:detail' comment.article.pk %}">{{recomment.comment.article.title}}</a></span>
+        <span class="user-comment-title"><a href="{% url 'news:detail' comment.article.pk %}">{{recomment.comment.article.title |truncatechars:42 }}</a></span>
         <span class="user-comment-delete"><i class="fas fa-comment-alt"></i></span>
       </li>
       {% endfor %}
