@@ -1,16 +1,14 @@
-from utils import context_infor
+import json
 from django.http.response import JsonResponse
 from django.shortcuts import render
 from django.views.generic import View
 from django.forms.models import model_to_dict
+from utils import context_infor, get_time_passed_comment
 from user.models import User
 from news.models import Press, UserPress, Article
-from .models import Comment, ReComment, Like
-from utils import get_time_passed_comment
 from .dto import CommentCreateDto, ReCommentCreateDto
+from .models import Comment, ReComment, Like
 from .services import CommentService, ReCommentService
-
-import json
 
 
 class PressEditView(View):
@@ -44,15 +42,10 @@ class CommentCreateView(View):
     
     def post(self, request, *args, **kwargs):
         if self.request.is_ajax():
-            print("ajax 요청 받기 성공")
             data = json.loads(request.body)
 
             comment_dto = self._build_comment_dto(request, data)
             comment = CommentService.create(comment_dto)
-            print(comment.created_at)
-            print(get_time_passed_comment(comment.created_at))
-            print("댓글 인스턴스 생성")
-            
             recomments = ReComment.objects.filter(comment__pk=comment.pk)
             total_recomments = [recomment for recomment in recomments]
 
@@ -64,7 +57,6 @@ class CommentCreateView(View):
                 'created_time' : comment.created_string,
                 'total_recomments' : len(total_recomments)
             }
-
             return JsonResponse(context, status=200)
         else:
             return JsonResponse({"error" : "Error occured during request"}, status=400)
@@ -84,24 +76,19 @@ class CommentCreateView(View):
 class ReCommentCreateView(View):
     def get(self, request, *args, **kwargs):
         pass
+
     def post(self, request, *args, **kwargs):
         if self.request.is_ajax():
-            print("ajax 요청 받기 성공")
             data = json.loads(request.body)
-            # comment_pk = data.get('comment_pk')
 
             recomment_dto = self._build_recomment_dto(request, data)
             recomment = ReCommentService.create(recomment_dto)
-            # recomments = ReComment.objects.filter(comment__pk=comment_pk)
-            # total_recomments = [recomment for recomment in recomments]
-            print("대댓글 인스턴스 생성")
             context = {
                 'recomment_pk' : recomment.pk,
                 'writer' : recomment.writer.nickname,
                 'writer_img' : recomment.writer.image,
                 'content' : recomment.content,
                 'created_time' : recomment.created_string,
-                # 'total_recomments' : len(total_recomments)
             }
             return JsonResponse(context, status=200)
         else:
@@ -123,31 +110,18 @@ class LikeToggleView(View):
     def post(self, request, *args, **kwargs):
         if self.request.is_ajax():
             context = {}
-            print("ajax 요청 받기 성공")
             data = json.loads(request.body)
             article_pk = data.get('article_pk')
             like = Like.objects.filter(article__pk=article_pk).first()
-            user = User.objects.filter(pk=request.user.pk).first()
-            
             if request.user in like.users.all():
                 like.users.remove(request.user)
-                user.is_liked = False
-                user.save()
-                # context['is_liked'] = False
-
-                print("좋아요 인스턴스 변경")
                 context = {
                     'is_liked' : False,
                     'count' : like.total_likes,
                 }
-            
                 return JsonResponse(context, status=200)
 
             like.users.add(request.user)
-            user.is_liked = True
-            user.save()
-
-            print("좋아요 인스턴스 변경")
             context = {
                 'is_liked' : True,
                 'count' : like.total_likes,

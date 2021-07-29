@@ -1,8 +1,31 @@
-<ul class="user-like">
-  {% for article in articles %}
-  <li class="user-like-li">
-    <span class="user-like-title"><a href="{% url 'news:detail' article.pk %}">{{article.title}}</a></span>
-    <span class="user-like-icon"><i class="fas fa-heart change-color"></i></span>
-  </li>
-  {% endfor %}
-</ul>
+{% extends 'base.html' %}
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/user.css' %}">
+{% endblock head %}
+
+{% block content %}
+<section class="user-infor-edit">
+  <div class="user-infor-div">
+  <div class="user-infor">
+    <ul class="user-infor-ul">
+      <li class="user-infor"><a href="{% url 'user:mypage' %}" class="user-infor-btn"><i class="far fa-user"></i><span>내 계정</span></a></li>
+      <li class="user-like"><a href="{% url 'user:like-article' %}" class="clicked user-like-btn"><i class="far fa-heart"></i><span>좋아요 한 기사</span></a></li>
+      <li class="user-comment"><a href="{% url 'user:comment-article' %}" class="user-comment-btn"><i class="far fa-comment"></i><span>댓글 단 기사</span></a></li>
+    </ul>
+  </div>
+  </div>
+
+  <div class="user-infor-contents">
+    <ul class="user-like">
+      {% for like in likes %}
+      <li class="user-like-li">
+        <span class="user-like-title"><a href="{% url 'news:detail' like.article.pk %}">{{like.article.title |truncatechars:42 }}</a></span>
+        <span class="user-like-icon"><i class="fas fa-heart change-color"></i></span>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endblock content %}
+

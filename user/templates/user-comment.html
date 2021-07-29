@@ -1,14 +1,36 @@
-<ul class="user-comment">
-  {% for comment in comments%}
-  <li class="user-comment-li">
-    <span class="user-comment-title"><a href="{% url 'news:detail' comment.article.pk %}">{{comment.article.title}}</a></span>
-    <span class="user-comment-delete"><i class="fas fa-comment-alt"></i></span>
-  </li>
-  {% for recomment in comment.re_comment.all %}
-  <li class="user-comment-li">
-    <span class="user-comment-title"><a href="{% url 'news:detail' comment.article.pk %}">{{recomment.comment.article.title}}</a></span>
-    <span class="user-comment-delete"><i class="fas fa-comment-alt"></i></span>
-  </li>
-  {% endfor %}
-  {% endfor %}
-</ul>
+{% extends 'base.html' %}
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/user.css' %}">
+{% endblock head %}
+
+{% block content %}
+<section class="user-infor-edit">
+  <div class="user-infor-div">
+  <div class="user-infor">
+    <ul class="user-infor-ul">
+      <li class="user-infor"><a href="{% url 'user:mypage' %}" class="user-infor-btn"><i class="far fa-user"></i><span>내 계정</span></a></li>
+      <li class="user-like"><a href="{% url 'user:like-article' %}" class="user-like-btn"><i class="far fa-heart"></i><span>좋아요 한 기사</span></a></li>
+      <li class="user-comment"><a href="{% url 'user:comment-article' %}" class="clicked user-comment-btn"><i class="far fa-comment"></i><span>댓글 단 기사</span></a></li>
+    </ul>
+  </div>
+  </div>
+
+  <div class="user-infor-contents">
+    <ul class="user-comment">
+      {% for comment in comments%}
+      <li class="user-comment-li">
+        <span class="user-comment-title"><a href="{% url 'news:detail' comment.article.pk %}">{{comment.article.title |truncatechars:42 }}</a></span>
+        <span class="user-comment-delete"><i class="fas fa-comment-alt"></i></span>
+      </li>
+      {% for recomment in comment.re_comment.all %}
+      <li class="user-comment-li">
+        <span class="user-comment-title"><a href="{% url 'news:detail' comment.article.pk %}">{{recomment.comment.article.title |truncatechars:42 }}</a></span>
+        <span class="user-comment-delete"><i class="fas fa-comment-alt"></i></span>
+      </li>
+      {% endfor %}
+      {% endfor %}
+    </ul>
+  </div>
+
+{% endblock content %}
