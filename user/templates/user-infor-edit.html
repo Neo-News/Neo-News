@@ -52,10 +52,11 @@ const $uploadPreviewImg = document.querySelector('.profile-upload-preview-img');
 $uploadImgInput.onchange = (e) => {
 // document.querySelector('.upload-img-div').innerHTML='';
 let image = event.target.files[0]
+  console.log(image)
   let reader = new FileReader();
   reader.onload = function (event) {
     $uploadPreviewImg.setAttribute('src', event.target.result);
-    let title = e.target.value.split("\\")[2].split(".")[0];
+    let title = e.target.value.split("\\")[2];
     $uploadPreviewImg.setAttribute('title', title);
     $uploadPreviewImg.setAttribute('alt', title);
   }
@@ -197,7 +198,11 @@ function DeleteUserSubmit(){
     let userImageTitle = document.querySelector(".profile-upload-preview-img")['title'];
     if (userNickname) {
       editNickname(userNickname);
+    }else {
+      document.querySelector(".infor-user-nickname").placeholder ="닉네임을 입력해 주세요."
+      console.log("You cannot submit an empty form")
     }
+
     if (userImage){
       editUserImage(userImage, userImageTitle);
 
