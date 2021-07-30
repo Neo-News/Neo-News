@@ -642,6 +642,7 @@ transform: translate(-50%,-50%);
 }
 .user-image {
   width: 25px;
+  height: 25px;
   border-radius: 50%;
   margin-right: 3px;
 }
@@ -1284,6 +1285,10 @@ body > div > section.detail-section > section > div > p{
   }
   .detail-recomment-input{
     width: auto;
+  }
+  img.user-image {
+    width: 25px;
+    height: 25px;
   }
 }
 
