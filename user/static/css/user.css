@@ -52,14 +52,22 @@
   cursor: pointer;
 }
 .errorlist {
-  color: rgb(248, 161, 104);
-  font-weight: 700;
+  color: #1cc02f;
   text-align: center;
+  font-weight: bold;
+  letter-spacing: 2px;
+  width: 100%;
+  margin: 0 auto;
+  font-size: 0.78rem;
 }
 .login-errmsg {
-  color: rgb(248, 161, 104);
+  color: #1cc02f;
   font-weight: 700;
   text-align: center;
+  letter-spacing: 2px;
+  width: 100%;
+  margin: 0 auto;
+  font-size: 0.78rem;
 }
 
 /* formview에서 form 레이아웃 */

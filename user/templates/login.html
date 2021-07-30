@@ -29,7 +29,7 @@
             <form action="." method="POST">
                 {% csrf_token %}
                 {% for field in form %}
-                {{field.errors}}   <!--필드 상단에 오류 메시지 출력-->
+                {{field.errors}}   
                 <div class="login-form">
                     <input id="{{field.id_for_label}}" type="{{field.field.widget.input_type}}" name="{{field.html_name}}" placeholder="{% if field.html_name == 'username' %}email{% else %}{{field.html_name}}{% endif %}">
                 {% endfor %}
