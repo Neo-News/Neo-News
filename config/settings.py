@@ -11,8 +11,11 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
+from django.forms.widgets import DateTimeBaseInput
+import django_celery_beat
 import environ
 import my_settings
+from datetime import timedelta
 
 env = environ.Env()
 environ.Env.read_env()
@@ -42,11 +45,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_celery_beat',
+    'django_celery_results',
     'news',
     'user',
     'social',
-
 ]
+DJANGO_CELERY_RESULTS_TASK_ID_MAX_LENGTH = 191
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -158,13 +162,18 @@ EMAIL_USE_TLS=env('EMAIL_USE_TLS')
 # celery 환경설정
 from celery.schedules import crontab
 
+
+CELERY_beat_scheduler = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERYD_OPTS="--beat --scheduler=django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_USER = 'heejung'
+CELERY_GROUP = 'heejung'
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
     'task-number-one': {
         'task': 'user.tasks.task_scrappy_daum', # 실행함수
-        'schedule': crontab(minute='*/4', hour='*,5-22')
+        'schedule': crontab(minute='*/3', hour='*,5-22')
     },
     'task-number-two': {
         'task': 'user.tasks.task_scrappy_naver', # 실행함수
