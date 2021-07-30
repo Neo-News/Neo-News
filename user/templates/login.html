@@ -21,15 +21,20 @@
                 <img class="neonews-balloon" src="{% static 'img/balloon.png' %}" alt="neonews_logo">
                 <img class="neonews-logo" src="{% static 'img/news-logo.png' %}" alt="neonews_logo">
             </div>
+            {% if messages %}
+            {% for message in messages %}
+            <p class="login-errmsg">{{message}}</p>
+            {% endfor %}
+            {% endif %}
             <form action="." method="POST">
                 {% csrf_token %}
                 {% for field in form %}
                 {{field.errors}}   <!--필드 상단에 오류 메시지 출력-->
                 <div class="login-form">
-                    <input id="{{field.id_for_label}}" type="{{field.field.widget.input_type}}" name="{{field.html_name}}" placeholder="{{field.html_name}}">
+                    <input id="{{field.id_for_label}}" type="{{field.field.widget.input_type}}" name="{{field.html_name}}" placeholder="{% if field.html_name == 'username' %}email{% else %}{{field.html_name}}{% endif %}">
                 {% endfor %}
                     <div class="form-actions">
-                        <button class="login-btn" type="submit">LOGIN</button>
+                        <button class="login-btn" type="submit" onsubmit="submitLogin(event)" >LOGIN</button>
                     </div>
                     <div class="kakao-btn">
                         <a href="{% url 'user:kakao-login' %}"><i class="fas fa-comment"></i><span class="kakao-span">카카오계정으로 로그인</span>
@@ -54,3 +59,48 @@
 </section>
 
 {% endblock content %}
+
+{% block script%}
+<script>
+    function submitLogin(e) {
+    e.preventDefault();
+    let email = document.getElementById("#id_username").value;
+    let password = document.getElementById("id_password").value;
+
+    let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+
+    let param = {
+      'email': email,
+      'password': password,
+    }
+
+    fetch("{% url 'user:login' %}", {
+      method: 'POST',
+      headers: {
+        "X-CSRFToken": csrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param),
+    }).then(function (response) {
+      return response.json()
+    }).then(function (data) {
+      // 회원가입 유효성 검사시 발생하는 Error문 템플릿에 출력
+      if (data['is_error'] == 1) {
+        document.querySelector('.error').innerHTML = `<span class="error-word">${data['error'][0]}</span>`
+        document.querySelector('.user-pwd').value = '';
+        document.querySelector('.user-pwd-chk').value = '';
+        document.querySelector('.user-nickname').value = '';
+      }
+      if (data['is_error'] == 0) {
+        document.querySelector('.error').innerHTML = `<span class="error-word">${data['error']}</span>`
+        document.querySelector('.user-pwd').value = '';
+        document.querySelector('.user-pwd-chk').value = '';
+        document.querySelector('.user-nickname').value = '';
+      }
+      return data
+    }).catch((error) => {
+      console.log('error', error);
+    })
+  }
+</script>
+{% endblock script%}

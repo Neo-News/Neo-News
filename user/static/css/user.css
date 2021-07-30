@@ -51,6 +51,16 @@
   align-items: center;
   cursor: pointer;
 }
+.errorlist {
+  color: rgb(248, 161, 104);
+  font-weight: 700;
+  text-align: center;
+}
+.login-errmsg {
+  color: rgb(248, 161, 104);
+  font-weight: 700;
+  text-align: center;
+}
 
 /* formview에서 form 레이아웃 */
 .login-form > input, 

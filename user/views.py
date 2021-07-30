@@ -47,10 +47,8 @@ class UserLoginView(FormView):
     
     def form_valid(self, form):
         email = form.cleaned_data.get('username')
-        print(email)
         password = form.cleaned_data.get('password')
         user = authenticate(self.request, username=email, password=password)
-        print(user)
         if user is not None:
             auth_login(self.request, user)
 
@@ -58,9 +56,11 @@ class UserLoginView(FormView):
             categories = Category.objects.all()
             context = context_infor(categories=categories)
             return render(self.request,'signup_detail.html',context)
-
         return super().form_valid(form)
 
+    def form_invalid(self, form):
+        messages.error(self.request, '로그인에 실패하였습니다.' )
+        return super().form_invalid(form)
 
 # 카카오 로그인 뷰
 def kakao_login(request):
