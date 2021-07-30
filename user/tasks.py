@@ -4,7 +4,7 @@ from django.core.mail import EmailMessage
 from news.models import Press, Article, Potal, Category
 from social.models import Like  
 from news.scrapping import parse_daum, parse_naver, convert_datetime_to_timestamp
-
+from django_celery_beat.models import PeriodicTask, IntervalSchedule
 from django.db.models import Q 
 import time
 
