@@ -1,0 +1,36 @@
+<!-- 페이징처리 시작 -->
+<ul class="page-ul">
+  <!-- 이전페이지 -->
+  {% if articles.has_previous %}
+  <li class="page-li">
+      <a class="page-link" href="?page={{ articles.previous_page_number}}"><i class="page-icon fas fa-chevron-left"></i>이전</a>
+  </li>
+  {% else %}
+  <li class="page-li disabled">
+      <a class="page-link" tabindex="-1" aria-disabled="true" href="#"><i class="page-icon fas fa-chevron-left"></i>이전</a>
+  </li>
+  {% endif %}
+  <!-- 페이지리스트 -->
+  {% for page_number in page_range %}
+      {% if page_number == question_list.number %}
+      <li class="page-li active" aria-current="page">
+          <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+      </li>
+      {% else %}
+      <li class="page-li">
+          <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+      </li>
+      {% endif %}
+  {% endfor %}
+  <!-- 다음페이지 -->
+  {% if articles.has_next %}
+  <li class="page-li">
+      <a class="page-link" href="?page={{ articles.next_page_number }}">다음<i class="page-icon fas fa-chevron-right"></i></a>
+  </li>
+  {% else %}
+  <li class="page-li disabled">
+      <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음<i class="page-icon fas fa-chevron-right"></i></a>
+  </li>
+  {% endif %}
+</ul>
+<!-- 페이징처리 끝 -->

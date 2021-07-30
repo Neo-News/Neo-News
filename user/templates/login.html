@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/user.css' %}">
+{% endblock head %}
+
+{% block content %}
+
+{% static 'img/kakao_login_ov.png' as kakao_button %}
+{% static 'img/kakao_login.png' as kakao_button_hover %}
+{% static 'img/naver_login_green.png' as naver_button %}
+{% static 'img/naver_login_white.png' as naver_button_hover %}
+
+<section class="base">
+    <section class="category">
+      <p class="category-non-login"><i class="fas fa-quote-left social-quote"></i><span class="social-non-login-text"><strong class="social-strong">로그인</strong>하시면 관심있는 이슈를 기사별로 선택해서 보실 수 있어요</span><i class="fas fa-quote-right social-quote"></i></p>
+    </section>
+    <section class="panel registration">
+        <div class="panel-body">
+            <div class="logo-image">
+                <img class="neonews-balloon" src="{% static 'img/balloon.png' %}" alt="neonews_logo">
+                <img class="neonews-logo" src="{% static 'img/news-logo.png' %}" alt="neonews_logo">
+            </div>
+            {% if messages %}
+            {% for message in messages %}
+            <p class="login-errmsg">{{message}}</p>
+            {% endfor %}
+            {% endif %}
+            <form action="." method="POST">
+                {% csrf_token %}
+                {% for field in form %}
+                {{field.errors}}   
+                <div class="login-form">
+                    <input id="{{field.id_for_label}}" type="{{field.field.widget.input_type}}" name="{{field.html_name}}" placeholder="{% if field.html_name == 'username' %}email{% else %}{{field.html_name}}{% endif %}">
+                {% endfor %}
+                    <div class="form-actions">
+                        <button class="login-btn" type="submit" onsubmit="submitLogin(event)" >LOGIN</button>
+                    </div>
+                    <div class="kakao-btn">
+                        <a href="{% url 'user:kakao-login' %}"><i class="fas fa-comment"></i><span class="kakao-span">카카오계정으로 로그인</span>
+                            <!-- <img src="{% static 'img/kakao.png' %}" 
+                                         onmouseover="src='{{kakao_button_hover}}'"
+                                         onmouseleave="src='{{kakao_button}}'"
+                                         alt="kakao-login-button"> -->
+                        </a>
+                    </div>
+                    <!-- <div class="naver-btn">
+                        <a href="#"><img src="{% static 'img/naver_non.png' %}" style="width: 25px; height: 25px;"><span class="naver-span">네이버 아이디로 로그인</span>
+
+
+                        </a>
+                    </div>
+                </div> -->
+            </form>
+            <!-- <a class="resend-email" href="#">인증이메일 재발송</a> -->
+            <a class="find_password" href="{% url 'user:password' %}">비밀번호 찾기</a>
+        </div>
+    </section>
+</section>
+
+{% endblock content %}
+
+{% block script%}
+<script>
+    function submitLogin(e) {
+    e.preventDefault();
+    let email = document.getElementById("#id_username").value;
+    let password = document.getElementById("id_password").value;
+
+    let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+
+    let param = {
+      'email': email,
+      'password': password,
+    }
+
+    fetch("{% url 'user:login' %}", {
+      method: 'POST',
+      headers: {
+        "X-CSRFToken": csrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param),
+    }).then(function (response) {
+      return response.json()
+    }).then(function (data) {
+      // 회원가입 유효성 검사시 발생하는 Error문 템플릿에 출력
+      if (data['is_error'] == 1) {
+        document.querySelector('.error').innerHTML = `<span class="error-word">${data['error'][0]}</span>`
+        document.querySelector('.user-pwd').value = '';
+        document.querySelector('.user-pwd-chk').value = '';
+        document.querySelector('.user-nickname').value = '';
+      }
+      if (data['is_error'] == 0) {
+        document.querySelector('.error').innerHTML = `<span class="error-word">${data['error']}</span>`
+        document.querySelector('.user-pwd').value = '';
+        document.querySelector('.user-pwd-chk').value = '';
+        document.querySelector('.user-nickname').value = '';
+      }
+      return data
+    }).catch((error) => {
+      console.log('error', error);
+    })
+  }
+</script>
+{% endblock script%}

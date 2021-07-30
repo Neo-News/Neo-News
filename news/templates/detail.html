@@ -1,0 +1,369 @@
+{% extends 'base.html' %}
+{% block head %}
+{% load static %}
+{% load article_hangul %}
+
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<!-- 카카오톡 공유 api -->
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
+{% endblock head %}
+
+{% block content %}
+<section class="detail-section">
+  <div class="detail-section-title">
+    <h1 class="detail-title">{{article.title}}</h1>
+    <div class="detail-infor">
+      <span class="detail-portal">{{article.potal.name}} |</span>
+      <span class="detail-date">{{article.date}}</span>
+    </div>
+  </div>
+
+  <p class="detail-content">
+    {% autoescape off %}
+    {{ article.content}}
+    {% endautoescape %}
+  </p>
+  <div class="detail-original">
+    <a href="{{article.ref}}">원본기사 보러가기 <i class="fas fa-chevron-right"></i></a>
+    <p class="detail-press">{{article.press.name}}</p>
+  </div>
+  <div class="detail-social">
+
+    <form class="social-heart-form" action="" method="POST" onsubmit="toggleLike(event)">
+      {% csrf_token %}
+
+      {% if is_liked %}
+      <button class="social-heart-btn"><i
+          class="social-heart fas fa-heart change-color"></i><span class="social-like-cnt">{{like.total_likes}}</span>명이 기사를 좋아해요</button>
+      {% else %}
+      <button class="social-heart-btn"><i
+        class="social-heart fas fa-heart "></i><span class="social-like-cnt">{{like.total_likes}}</span>명이 기사를 좋아해요</button>
+      {% endif %}
+    </form>
+    <!-- <span class="social-heart-span"> 명이 기사를 좋아해요</span> -->
+    <span class="social-share-span"><a href="javascript:sendLinkKakao()"><i class="social-share fas fa-share-alt"></i>
+        카카오톡으로 공유하기</a></span>
+
+  </div>
+  {% if user.is_authenticated %}
+  <div class="detail-comment">
+    <form class="comment-form" action="" method='POST'>
+      {% csrf_token %}
+      <input type="text" class="detail-comment-input" placeholder="댓글을 입력해주세요.">
+      <button class="detail-comment-submit">등록</button>
+    </form>
+  </div>
+  {% else %}
+  <p class="category-non-login"><i class="quote fas fa-quote-left"> </i> 로그인 하시면 댓글 작성이 가능합니다 <i
+      class="quote fas fa-quote-right"> </i></p>
+  {% endif %}
+  <ul class="detail-comments-ul">
+    {% for comment in comments %}
+    <li class="detail-comment-list">
+      <div class="comment-user-infor">
+        <div class="comment-user">
+          <span class="user-image-span"><img class="user-image" src="{{comment.writer.image}}" alt=""></span>
+          <span class="user-nickname">{{comment.writer}}</span>
+          <span class="user-date">{{comment.created_string}}</span>
+        </div>
+        <div><i class=" ellipsis-{{comment.pk}} fas fa-ellipsis-v" onclick="clickEditDeleteBtn(event)"></i>
+          <div class="comment-edit-div btn-ellipsis-{{comment.pk}} non-clicked">
+            <button class="comment-edit">수정하기</button>
+            <button class="comment-delete">삭제하기</button>
+          </div>
+        </div>
+      </div>
+      <div class="comment-content">
+        <p>{{comment.content}}</p>
+        <button class="recomment recomment-{{comment.pk}}" onclick="showRecommentForm(event)">답글
+          {{comment.re_comment.all | length }} </button>
+        <form class="non-clicked form-recomment-{{comment.pk}} form-recomment"
+          onsubmit="submitReComment('{{comment.pk}}')" action="" method='POST'>
+          {% csrf_token %}
+          <input type="text" class="detail-recomment-input detail-recomment-input-{{comment.pk}}"
+            placeholder="댓글을 입력해주세요.">
+          <button class="detail-recomment-submit">등록</button>
+        </form>
+      </div>
+      <ul class="detail-recomments-ul detail-recomments-ul-{{comment.pk}} non-clicked">
+        {% for recomment in comment.re_comment.all %}
+        <li class="detail-recomment-list">
+          <div class="comment-user-infor">
+            <div class="comment-user">
+              <span class="user-image-span"><img class="user-image" src="{{recomment.writer.image}}" alt=""></span>
+              <span class="user-nickname">{{recomment.writer.nickname}}</span>
+              <span class="user-date">{{recomment.created_string}}</span>
+            </div>
+            <div><i class=" ellipsis-{{recomment.pk}} fas fa-ellipsis-v" onclick="clickEditDeleteBtn(event)"></i>
+              <div class="comment-edit-div btn-ellipsis-{{recomment.pk}} non-clicked">
+                <button class="comment-edit">수정하기</button>
+                <button class="comment-delete">삭제하기</button>
+              </div>
+            </div>
+          </div>
+          <div class="comment-content">
+            <p>{{recomment.content}}</p>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+
+</div>
+{% endblock content %}
+
+{% block script %}
+<script>
+  function clickEditDeleteBtn(e) {
+    console.log(e)
+    let btnNum = e.target.classList[0];
+    let btnEditDelete = document.querySelector(`.btn-${btnNum}`);
+    btnEditDelete.classList.toggle("non-clicked");
+  }
+  // $commentEditDiv = document.querySelector('.ellipsis');
+  // let bool = false
+  // $commentEditDiv.addEventListener('click', function (e) {
+  //   if (bool == true) {
+  //     document.querySelector('.comment-edit-div').classList.add('non-clicked');
+  //     bool = false;
+  //     console.log(bool)
+  //   }
+  //   else {
+  //     document.querySelector('.comment-edit-div').classList.remove('non-clicked');
+  //     bool = true;
+  //     console.log(bool)
+  //   }
+  // });
+  // document.onmousedown = () => {
+  //   bool = false;
+  //   if (window.event.path[0].classList[0] != 'ellipsis') {
+  //     document.querySelector('.comment-edit-div').classList.add('non-clicked');
+  //   }
+  // }
+
+
+  // 댓글기능 스크립트
+  function createComment(content) {
+    console.log("Posting Comment");
+    let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    let param = {
+      'article_pk': '{{article.pk}}',
+      'content': content,
+    }
+    fetch("{% url 'social:comment' %}", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param)
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      let commentPk = data['comment_pk'];
+      let writer = data['writer'];
+      let writerImg = data['writer_img'];
+      let content = data['content'];
+      let createdTime = data['created_time'];
+      let totalRecomments = data['total_recomments'];
+      let commentList = document.querySelector(".detail-comments-ul");
+      commentList.innerHTML += `
+      <li class="detail-comment-list">
+        <div class="comment-user-infor">
+          <div class="comment-user">
+            <span class="user-image-span"><img class="user-image" src="${writerImg}" alt=""></span>
+            <span class="user-nickname">${writer}</span>
+            <span class="user-date">${createdTime}</span>
+          </div>
+          <div><i class=" ellipsis-${commentPk} fas fa-ellipsis-v" onclick="clickEditDeleteBtn(event)"></i>
+            <div class="comment-edit-div btn-ellipsis-${commentPk} non-clicked">
+              <button class="comment-edit">수정하기</button>
+              <button class="comment-delete">삭제하기</button>
+            </div>
+          </div>
+        </div>
+        <div class="comment-content">
+          <p>${content}</p>
+          <button class="recomment recomment-${commentPk}" onclick="showRecommentForm(event)">답글 ${totalRecomments}</button>
+          <form class="non-clicked form-recomment-${commentPk}" onsubmit="submitReComment('${commentPk}')" action="" method='POST'>
+            {% csrf_token %}
+          <input type="text" class="detail-recomment-input detail-recomment-input-${commentPk}" placeholder="댓글을 입력해주세요.">
+          <button type="submit" class="detail-recomment-submit">등록</button>
+          </form>
+        </div>
+        <ul class="detail-recomments-ul detail-recomments-ul-${commentPk} non-clicked"></ul>
+      </li>
+      `;
+      document.querySelector('.detail-comment-input').value = '';
+      document.querySelector('.detail-comment-input').foucs();
+    }).catch(error => {
+      console.log("Error", error);
+    })
+  }
+
+  function submitComment(e) {
+    e.preventDefault();
+
+    let content = document.querySelector(".detail-comment-input").value;
+    if (content) {
+      createComment(content);
+    } else {
+      console.log("You cannot submit an empty form")
+    }
+  }
+
+  let commentForm = document.querySelector(".comment-form");
+  commentForm.addEventListener("submit", submitComment);
+
+  // 대댓글 폼, 대댓글 리스트 보여주기
+  function showRecommentForm(e) {
+    e.preventDefault();
+    let commentPk = e.target.classList[1].split("-")[1];
+    let formRecommentNum = e.target.classList[1];
+    let recommentForm = document.querySelector(`.form-${formRecommentNum}`);
+    let recommentList = document.querySelector(`.detail-recomments-ul-${commentPk}`)
+    recommentForm.classList.toggle("non-clicked");
+    recommentList.classList.toggle("non-clicked");
+  }
+
+  // let recommentBtn = document.querySelector(".recomment");
+  // console.log(recommentBtn)
+  // recommentBtn.addEventListener("click", showRecommentForm);
+
+  // 대댓글 스크립트 
+  function createReComment(content, e) {
+    event.preventDefault();
+    console.log("Posting ReComment");
+    let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    let commentPk = e.target.classList[0].split("-")[2]
+    console.log(commentPk)
+    let param = {
+      'comment_pk': `${commentPk}`,
+      'content': content,
+    }
+    console.log(param)
+    fetch("{% url 'social:recomment' %}", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param)
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      let recommentPk = data['recomment_pk'];
+      let writer = data['writer'];
+      let writerImg = data['writer_img'];
+      let content = data['content'];
+      let createdTime = data['created_time'];
+      let recommentList = document.querySelector(`.detail-recomments-ul-${commentPk}`);
+      recommentList.innerHTML += `
+      <li class="detail-recomment-list">
+        <div class="comment-user-infor">
+          <div class="comment-user">
+            <span class="user-image-span"><img class="user-image" src="${writerImg}" alt=""></span>
+            <span class="user-nickname">${writer}</span>
+            <span class="user-date">${createdTime}</span>
+          </div>
+          <div><i class=" ellipsis-${recommentPk} fas fa-ellipsis-v" onclick="clickEditDeleteBtn(event)"></i>
+            <div class="comment-edit-div btn-ellipsis-${recommentPk} non-clicked">
+              <button class="comment-edit">수정하기</button>
+              <button class="comment-delete">삭제하기</button>
+            </div>
+          </div>
+        </div>
+        <div class="comment-content">
+          <p>${content}</p>
+        </div>
+      </li>
+      `;
+      document.querySelector(`.detail-recomment-input-${commentPk}`).value = '';
+      document.querySelector(`.detail-recomment-input-${commentPk}`).focus();
+
+    }).catch(error => {
+      console.log("Error", error);
+    })
+  }
+
+  function submitReComment(pk) {
+    event.preventDefault();
+    let content = document.querySelector(`.detail-recomment-input-${pk}`).value;
+    if (content) {
+      // console.log(e);
+      createReComment(content, event);
+    } else {
+      console.log("You cannot submit an empty form")
+    }
+  }
+
+
+  // 공유하기 스크립트
+  Kakao.init('32cbd11246656adc34f9add26b2a772b');
+  function sendLinkKakao() {
+    Kakao.Link.sendDefault({
+      objectType: 'feed',
+      content: {
+        title: '{{ article.title|get_hangul_num }}',
+        description: '{{ article.content|get_hangul|slice:"65:"}}',
+        // 컨텐츠 이미지 가져오는거 필요해보임
+        imageUrl: '{{article.kakao_img}}',
+        link: {
+          mobileWebUrl: '{{ request.build_absolute_uri }}',
+          webUrl: '{{ request.build_absolute_uri }}'
+        }
+      },
+      buttons: [
+        {
+          title: '링크 열기',
+          link: {
+            mobileWebUrl: '{{ request.build_absolute_uri }}',
+            webUrl: '{{ request.build_absolute_uri }}'
+          }
+        }
+      ]
+    });
+  }
+
+// 좋아요 스크립트 
+  function toggleLike(e) {
+
+    e.preventDefault();
+    console.log("toggle like")
+    let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    let param = {
+      'article_pk': '{{article.pk}}',
+    }
+    fetch("{% url 'social:like' %}", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param)
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      console.log(data)
+      let count = data['count']
+      console.log(count)
+      let socialHeart = document.querySelector(".social-heart")
+      let socialHeartBtn = document.querySelector(".social-like-cnt").innerText = `${count}`
+      if (data['is_liked'] == true){
+        socialHeart.classList.add("change-color");
+      }
+      else{
+        socialHeart.classList.remove("change-color");
+      }
+      //  socialHeartBtn.innerHTML += `${count}
+
+      //  `;
+
+    })
+  }
+</script>
+
+{% endblock script %}

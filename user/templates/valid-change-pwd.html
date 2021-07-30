@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/user.css' %}">
+{% endblock head %}
+{% block content %}
+<section class="find-password-section">
+  <div class="find-password-form">
+    <div class="find-password-level">
+      <span class="level01 level"><i class="fas fa-circle"></i> 본인인증</span>
+      <span class="level02 level"><i class="find_clicked fas fa-circle"></i>비밀번호 변경</span>
+      <span class="level03 level"><i class="fas fa-circle"></i>변경성공</span>
+    </div>
+    <h1>비밀번호 변경</h1>
+    <p class="find-password-msg">패스워드를 변경해주세요. 8자리 이상을 입력하셔야 합니다. 최소 1개의 숫자와 문자, 특수문자의 조합이 들어가야 합니다</p>
+    {% if error %}
+    {{msg}}
+    {% endif %}
+    <span class="find-password-error-msg"></span>
+    <form action="" method="POST">
+      {% csrf_token %}
+      {% for form in forms %}
+      {{form}}
+    {% endfor %}
+      <input class="find-pwd-btn" type="submit" value="변경하기" onclick="sendPwd(event)">
+    
+    </form>
+
+
+  </div>
+</section>
+{% endblock content %}
+
+{% block script %}
+<script>
+  function sendPwd(e) {
+    e.preventDefault();
+    $password = document.querySelector('.password').value;
+    $password_chk = document.querySelector('.password_chk').value;
+    let param = {
+      'new_password1': $password,
+      'new_password2': $password_chk
+    }
+    let CsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    fetch("{% url 'user:valid_change_pwd' %}", {
+      method: 'POST',
+      headers: {
+        "X-CSRFToken": CsrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param),
+    }).then(function (response) {
+      return response.json()
+    }).then(function (data) {
+      if(data['error'] == true){
+        document.querySelector('.find-password-error-msg').innerText = `${data['msg']}`
+      }
+      else{
+        window.location.href=data['url'];
+      }
+      console.log(data)
+    }).catch((error) => {
+      console.log('error', error);
+    })
+  }
+</script>
+{% endblock script %}

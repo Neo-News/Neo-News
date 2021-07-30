@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/user.css' %}">
+{% endblock head %}
+{% block content %}
+<section class="find-password-section">
+  <div class="find-password-form">
+    <div class="find-password-level">
+      <span class="level01 level"><i class="fas fa-circle"></i> 본인인증</span>
+      <span class="level02 level"><i class="fas fa-circle"></i>비밀번호 변경</span>
+      <span class="level03 level"><i class="find_clicked fas fa-circle"></i>변경성공</span>
+    </div>
+    <h1>비밀번호 변경성공 !</h1>
+    <p class="find-password-msg">비밀번호 변경에 성공하셨습니다 :-) 다시 로그인 해주세요.</p>
+    <a href="{% url 'user:login' %}" class="return-home">로그인하러가기</a>
+  </div>
+</section>
+{% endblock content %}

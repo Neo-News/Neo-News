@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock head %}
+
+{% block content %}
+<section class="signup-detail">
+  <div class="signup-detail-logo">
+    <h1>SIGN IN</h1>
+  </div>
+  <div class="signup-detail-user-base-infor">
+    <label class="base-user-name-label" for="base-user-name">닉네임</label><br>
+    <input id="base-user-name" type="text" placeholder="{{user.nickname}}" disabled><br>
+    <label class="base-user-email-label" for="base-user-email">메일주소</label><br>
+    <input id="base-user-email" type="text" placeholder="{{user.email}}" disabled>
+  </div>
+
+  <form action="" method="POST">
+    {% csrf_token %}
+    <div class="signup-detail-category-title"><span> 관심있는 카테고리를 선택해주세요 :-)</span></div>
+    <ul class="signup-detail-category-ul">
+      <div class="category-div">
+        {% for category in categories %}
+        <li class="detail-category-li"><label for="{{category}}"><input id="{{category}}" class="{{category}} category-input" name='category'
+              type="checkbox" value="{{category}}">{{category}}</label></li>
+        {% endfor %}
+      </div>
+    </ul>
+    <div class="signup-detail-keyword-title"><span> 추가하고 싶은 키워드를 입력해주세요 :-)</span></div><br>
+
+    <div class="signup-detail-keyword-div">
+      <div class="signup-detail-keyword-input-div">
+      <input class="signup-detail-keyword-input" type="text" name="keyword" placeholder="키워드를 입력해주세요">
+      <input class="submitbtn keyword-add" onclick="clickSubmitBtn(event)" type="submit" value="키워드 입력"></input><br>
+    </div>
+      <ul class="keyword-input-ul">
+      </ul>
+    </div><br>
+    <button class="signup-detail-submit" type="submit" onclick="todoBtn('{{request.user.pk}}')">가입하기</button>
+
+  </form>
+</section>
+<section class="detail-popup-section">
+  <div class="detail-popup">
+    <div class="email-popup">
+      <span class="email-popup-close"><i class="popup-close fas fa-times" onclick="popupClose(event)"></i></span>
+      <p class="email-popup-title"><i class="fas fa-user-check"></i> 첫 로그인에 성공하셨습니다 !</p>
+      <p class="email-popup-content1">여러분의 정보들을 입력해주세요 :-)</p>
+      <p class="email-popup-content2">여러분이 선택하신 카테고리나 관심 있는 키워드를 입력하시면 그에 맞는 각종 포털에 있는 뉴스 기사들을 보여드려요</p>
+    </div>
+  </div>
+</section>
+{% endblock content %}
+
+{% block script %}
+<script>
+
+  function popupClose(e) {
+    document.querySelector('.detail-popup-section').style.display = 'none';
+  }
+
+// 키워드 추가.삭제
+i = 1;
+todo_list = []
+function clickSubmitBtn(e){
+  e.preventDefault();
+  todoInput = document.querySelector('.signup-detail-keyword-input')
+  todo = todoInput.value;
+  if (todoInput.value == ''){
+    return
+  }
+  todo_list.push(todo)
+  document.querySelector('.keyword-input-ul').innerHTML +=  `
+  <li class="keyword-list todo${i}">
+          <span class="todo_keyword${i} keyword">${todo}</span>
+          <i class="fas fa-times delete${i}" onclick="clickDeleteBtn('${i}')"></i>
+        </li>`
+  i += 1;
+  todoInput.value='';
+}
+function clickDeleteBtn(li){
+  console.log(li)
+  delete_word = document.querySelector(`.todo_keyword${li}`).innerText.replace(' ','')
+  todo_list.splice(todo_list.indexOf(`${delete_word}`),1);
+  console.log(todo_list)
+  document.querySelector(`.todo${li}`).remove();
+}
+
+
+
+function todoBtn(user_pk) {
+  event.preventDefault();
+
+  // 카테고리 가져오기
+let chkList = document.querySelectorAll('input[name=category]:checked');
+let category_list = []
+
+chkList.forEach(function(ch){
+  category_list.push(ch.value)
+});
+
+
+  let CsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+  let param = {
+    'todo_list':todo_list,
+    'category_list':category_list,
+    'user_pk': user_pk
+  }
+  fetch("{% url 'user:infor' %}", {
+    method: 'POST',
+    headers: {
+      "X-CSRFToken": CsrfValue,
+      "X-Requested-With": "XMLHttpRequest"
+    },
+    body: JSON.stringify(param),
+  }).then(function (response) {
+    console.log('readdss', response)
+    return response.json()
+  }).then(function (data) {
+    if(data.success){
+      window.location.href=data.url;
+    }
+    return(data)
+  }).catch((error) => {
+    console.log('error', error);
+  })
+}
+
+</script>
+{% endblock script %}

@@ -1,0 +1,202 @@
+{% extends 'base.html' %}
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/user.css' %}">
+{% endblock head %}
+
+{% block content %}
+
+{% static 'img/kakao_signup.png' as kakao_button %}
+{% static 'img/naver_signup.png' as naver_button %}
+
+<section class="base">
+  <section class="category">
+    <p class="category-non-login"><i class="fas fa-quote-left social-quote"></i><span
+        class="social-non-login-text"><strong class="social-strong">회원가입</strong>하시면 관심있는 이슈를 기사별로 선택해서 보실 수
+        있어요</span><i class="fas fa-quote-right social-quote"></i></p>
+  </section>
+  <section class="panel registration registration-signup">
+    <div class="panel-body">
+      <div class="logo-image">
+        <img class="neonews-balloon" src="{% static 'img/balloon.png' %}" alt="neonews_logo">
+        <!-- <span>회원가입</span> -->
+        <img class="neonews-logo" src="{% static 'img/news-logo.png' %}" alt="neonews_logo">
+      </div>
+      <form action="." method="POST">
+        {% csrf_token %}
+        <div class="signup-form">
+          <div class="error">
+          </div>
+          {% for form in forms %}
+          <div>
+            {{form}}
+          </div>
+          {% endfor %}
+
+          <div class="form-actions">
+            <input class="signup-btn" type="submit" value="SIGN UP" onclick="signupBtn(event)">
+          </div>
+      </form>
+
+      <form action=""method="POST" class="resend-form ">
+        {% csrf_token %}
+        <span class="resend-email" href="#" onclick="resendEmail(event)">인증이메일 재발송</span>
+        
+        <div class="valid-error non-clicked">
+        </div>
+        <div class="resend-div non-clicked">
+        </div>
+        </form>
+      <div class="social-signup">
+        <span class="social-signup-text-icon"><i class="fas fa-quote-left"></i><span class="social-signup-text">소셜 계정으로도
+            가입 가능합니다</span><i class="fas fa-quote-right"></i></span>
+      </div>
+      <div class="kakao-btn">
+        <a href="{% url 'user:kakao-login' %}"><i class="fas fa-comment"></i><span class="kakao-span">카카오계정으로 로그인</span>
+        </a>
+      </div>
+      <!-- <div class="naver-btn">
+        <a href="#"><img src="{% static 'img/naver_non.png' %}" style="width: 25px; height: 25px;"><span
+            class="naver-span">네이버 아이디로 로그인</span>
+        </a>
+      </div> -->
+    </div>
+    </div>
+  </section>
+</section>
+
+{% endblock content %}
+
+{% block script %}
+<script>
+
+  function signupBtn(e) {
+    document.querySelector('.resend-form ').classList.remove('non-clicked')
+    // 회원가입 ajax 통신
+    e.preventDefault();
+    // 회원가입 정보 서버로 전송/ 문제점 : password 평문으로 전송됨
+    $email = document.querySelector('.user-email').value;
+    $nickname = document.querySelector('.user-nickname').value;
+    $password = document.querySelector('.user-pwd').value;
+    $password_chk = document.querySelector('.user-pwd-chk').value;
+
+    let signupCsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+
+    let param = {
+      'email': $email,
+      'nickname': $nickname,
+      'password': $password,
+      'password_chk': $password_chk
+    }
+
+    fetch("{% url 'user:signup' %}", {
+      method: 'POST',
+      headers: {
+        "X-CSRFToken": signupCsrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param),
+    }).then(function (response) {
+      return response.json()
+    }).then(function (data) {
+      // 회원가입 유효성 검사시 발생하는 Error문 템플릿에 출력
+      if (data['is_error'] == 1) {
+        document.querySelector('.error').innerHTML = `<span class="error-word">${data['error'][0]}</span>`
+        document.querySelector('.user-pwd').value = '';
+        document.querySelector('.user-pwd-chk').value = '';
+        document.querySelector('.user-nickname').value = '';
+      }
+      if (data['is_error'] == 0) {
+        document.querySelector('.error').innerHTML = `<span class="error-word">${data['error']}</span>`
+        document.querySelector('.user-pwd').value = '';
+        document.querySelector('.user-pwd-chk').value = '';
+        document.querySelector('.user-nickname').value = '';
+      }
+      return data
+    }).catch((error) => {
+      console.log('error', error);
+    })
+  }
+  
+  //이메일 재인증하기 
+  function resendEmail(e){
+  console.log('움움우뭉')
+  e.preventDefault();
+  let resendCsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+
+
+  document.querySelector('.resend-div').classList.toggle('non-clicked');
+  document.querySelector('.valid-error').classList.toggle('non-clicked');
+
+
+  fetch("{% url 'user:resend' %}", {
+    method: 'GET',
+    headers: {
+      "X-CSRFToken": resendCsrfValue,
+      "X-Requested-With": "XMLHttpRequest"
+    },
+    // body: JSON.stringify(param),
+  }).then(function (response) {
+    console.log('sdafjalfja')
+    return response.json()
+  }).then(function (data) {
+    console.log(data['forms'])
+    document.querySelector('.resend-div').innerHTML =
+     `
+     ${data['forms']}
+     <input type="submit" class="resend-input-btn" value="보내기" onclick="resendBtn(event)">
+    ` 
+}).catch((error) => {
+    console.log('error', error);
+  })
+}
+
+function resendBtn(e){
+  console.log('hahahah')
+  e.preventDefault();
+  $email = document.querySelector('.resend-input').value;
+  $recent_email = document.querySelector('.user-email').value;
+  let resendCsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+  console.log($email)
+  console.log($recent_email)
+  let param = {
+    'email':$email,
+    'recent-email':$recent_email
+
+  }
+  // document.querySelector('.resend-form').style.display='none';
+
+  fetch("{% url 'user:resend' %}", {
+    method: 'POST',
+    headers: {
+      "X-CSRFToken": resendCsrfValue,
+      "X-Requested-With": "XMLHttpRequest"
+    },
+    body: JSON.stringify(param),
+  }).then(function (response) {
+    return response.json()
+  }).then(function (data) {
+    console.log(data['error'],data['msg'])
+    // 회원가입 유효성 검사시 발생하는 Error문 템플릿에 출력
+    if(data['error'] == true){
+      console.log(`${data['msg']}`)
+    document.querySelector('.valid-error').innerHTML = `${data['msg']}`
+
+    }
+    if(data['error'] == false){
+      console.log(`${data['msg'[0]]}`)
+      document.querySelector('.valid-error').innerText = `${data['msg']}`
+      // document.querySelector('.resend-email').classList.toggle('clicked');
+    }
+}).catch((error) => {
+    console.log('error', error);
+  })
+}
+
+
+
+</script>
+
+
+
+{% endblock script %}

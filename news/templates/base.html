@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://kit.fontawesome.com/453205446a.js" crossorigin="anonymous"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <title>너뉴스</title>
+  {% block head %}
+  {% endblock head %}
+  <!--Start of Tawk.to Script-->
+<!-- <script type="text/javascript">
+  var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+  (function(){
+  var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+  s1.async=true;
+  s1.src='https://embed.tawk.to/60f95ec2d6e7610a49ac7bd9/1fb71ka3c';
+  s1.charset='UTF-8';
+  s1.setAttribute('crossorigin','*');
+  s0.parentNode.insertBefore(s1,s0);
+  })(); -->
+  </script>
+</head>
+<body>
+  <div class="container">
+    <section class="main-section">
+      <div class="main-div">
+        <img class="main-logo" src="{% static 'img/logo.png' %}" alt="로고이미지">
+        <a href="{% url 'index' %}"><h1 class="main-title">너뉴스</h1></a>
+      </div>
+      <div class="main-user">
+        {% if user.is_authenticated %}
+        <span class="main-social">
+          <a href="{% url 'news:infor-edit' %}"><i class="adjust-icon fas fa-sliders-h"></i></a>
+          <a href="{% url 'user:mypage' %}"><i class="user-icon fas fa-user"></i></a>
+        </span>
+        <span class="main-user-nickname"><strong>{{request.user.nickname}}</strong>님</span>
+        <a href="{% url 'user:logout' %}"><button class="signout">로그아웃</button></a>
+        {% else %}
+        <a href="{% url 'user:login' %}"><button class="signin">로그인</button></a>
+        <a href="{% url 'user:signup' %}"><button class="signup">회원가입</button></a>
+        {% endif %}
+      </div>
+    </section>
+    {% block content %}
+    {% endblock content %}
+  </div>
+  {% block script %}
+  {% endblock script %}
+</body>
+</html>

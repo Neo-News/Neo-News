@@ -1,0 +1,23 @@
+<div class="edit-category-div">
+  <form action="" method="POST">
+    {% csrf_token %}
+
+    <ul class="edit-category-ul">
+      <!-- <div class="edit-category-ul-div"> -->
+        {% for category in categories %}
+        {% if category in user_categories %}
+        <li class="edit-category-li"><label for="{{category}}"><input id="{{category}}" class="{{category}} edit-category-input" name='category'
+          type="checkbox" value="{{category}}" checked="checked" onclick="categoryBtn('{{category.pk}}')">{{category}}</label></li>
+        <!-- </div> -->
+          {% else %}
+        <li class="edit-category-li"><label for="{{category}}"><input id="{{category}}" class="{{category}} edit-category-input" name='category'
+          type="checkbox" value="{{category}}" onclick="categoryBtn('{{category.pk}}')">{{category}}</label></li>
+        {% endif %}
+        {% endfor %}
+      <!-- </div> -->
+    </ul>
+    </form>
+
+
+  </ul>
+</div><br>

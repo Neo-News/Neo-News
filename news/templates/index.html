@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% block head %}
+{% load static %}
+{% load article_hangul %}
+{% load social_sum %}
+{% endblock head %}
+
+{% block content %}
+{% include 'banner.html' %}
+  <section class="category">
+  {% if user.is_authenticated %}
+    <i class="fas fa-bars category-open" onclick="categoryOpen()"></i>
+  <ul class="category-ul">
+    <div class="category-scroll">
+      <i class="fas fa-times category-close" onclick="categoryClose()"></i>
+    <li class="category-li">
+      <a class="category-all" href="{% url 'index' %}">전체보기</a>
+    </li>
+    {% for category in categories %}
+    <li class="category-li">
+      <a href="{% url 'news:category' category.pk %}">{{category.name}}</a>
+    </li>
+    {% endfor %}
+    {% for keyword in keywords %}
+    <li class="category-li">
+      <a href="{% url 'news:keyword' keyword.pk %}">{{keyword.name}}</a>
+    </li>
+    {% endfor %}
+    </div>
+  </ul>
+  {% else %}
+  <p class="category-non-login"><i class="quote fas fa-quote-left"> </i> 로그인 하시면 관심있는 이슈를 기사별로 선택해서 보실 수 있어요 <i class="quote fas fa-quote-right"> </i></p>
+  {% endif %}
+</section>
+
+<ul class="news-ul">
+  {% for article in articles %}
+  <li class="news-li">
+    <div class="news-img"><img src="{{article.preview_img}}" alt="">
+    </div>
+    <a href="{% url 'news:detail' article.pk %}"><div class="news-contents">
+      <div class="news-title">{{article.title}}</div>
+      <div class="news-content">{{article.content|get_hangul |truncatechars:160| slice:"65:"}}</div>
+      <div class="news-social">
+        <div class="news-infor">
+        <span class="news-portal">{{article.potal.name}} · </span>
+        <span class="news-press">{{article.press.name}} · </span>
+        <span class="news-date">{{article.created_string}}</span>
+      </div>
+      <div class="news-social-infor">
+        <span class="news-social-comment"><i class="fas fa-comment-alt"> </i>{{article.comment.all | comment_sum}}</span>
+        <span class="news-social-like"><i class="fas fa-heart"> </i>{{article.like.total_likes}}</span>
+      </div>
+      </div>
+    </div>
+  </a>
+  </li>
+  {% endfor %}
+</ul>
+
+
+{% include 'pagination.html' %}
+{% endblock content %}
+
+{% block script %}
+<script>
+  document.querySelector('.category-ul').classList.add('category-close-ani')
+function categoryClose(){
+  document.querySelector('.category-ul').classList.add('category-close-ani')
+  document.querySelector('.category-ul').classList.remove('category-open-ani')
+}
+function categoryOpen(){
+  document.querySelector('.category-ul').classList.add('category-open-ani')
+  document.querySelector('.category-ul').classList.remove('category-close-ani')
+}
+
+// 페이징 처리한 기사 링크와 비교해서 카테고리 색상 포커스 주기
+let url = window.location.pathname;
+a_list  = document.querySelectorAll('.category-li > a')
+url = `http://127.0.0.1:8000${url}` 
+
+a_list.forEach(function(a){
+  if(url == a['href']){
+    // console.log('a링크',a['href'])
+    href = url
+    a.parentNode.classList.add('active');
+  }
+})
+
+// 페이징 번호 선택한 버튼에 색상 포커스 주기
+
+let page_url = window.location.href
+page_lis = document.querySelectorAll('.page-li > a')
+page_lis.forEach(function(a){
+  if(page_url == a['href']){
+    console.log('haha')
+    a.classList.add('page-active')
+  }
+})
+
+
+</script>
+
+{% endblock script %}

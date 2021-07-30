@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/user.css' %}">
+{% endblock head %}
+
+{% block content %}
+<section class="user-infor-edit">
+  <div class="user-infor-div">
+  <div class="user-infor">
+    <ul class="user-infor-ul">
+      <li class="user-infor"><button class="clicked user-infor-btn" onclick="userInfor(event)" ; href="#"><i class="far fa-user"></i><span>내 계정</span></button></li>
+      <li class="user-like"><button class="user-like-btn" onclick="likeInfor(event)" ;><i class="far fa-heart"></i><span>찜 한 기사</span></button></li>
+      <li class="user-comment"><button class="user-comment-btn" onclick="commentInfor(event)" ;><i class="far fa-comment"></i><span>댓글 단 기사</span></button></li>
+      
+    </ul>
+  </div>
+  </div>
+
+  <div class="user-infor-contents">
+ {% include 'user-infor.html' %}
+  </div>
+</section>
+{% endblock content %}
+
+{% block script %}
+<script src="static/js/user/script.js" type="text/javascript"></script>
+<script>
+function userInfor(e){
+  document.querySelector('.user-infor-btn').classList.add('clicked');
+  document.querySelector('.user-like-btn').classList.remove('clicked');
+  document.querySelector('.user-comment-btn').classList.remove('clicked');
+  document.querySelector('.user-infor-contents').innerHTML=`{% include 'user-infor.html'%}`;
+}
+function commentInfor(e){
+  document.querySelector('.user-infor-btn').classList.remove('clicked');
+  document.querySelector('.user-like-btn').classList.remove('clicked');
+  document.querySelector('.user-comment-btn').classList.add('clicked');
+  document.querySelector('.user-infor-contents').innerHTML=`{% include 'user-comment.html'%}`;
+}
+function likeInfor(e){
+  document.querySelector('.user-infor-btn').classList.remove('clicked');
+  document.querySelector('.user-like-btn').classList.add('clicked');
+  document.querySelector('.user-comment-btn').classList.remove('clicked');
+  document.querySelector('.user-infor-contents').innerHTML=`{% include 'user-like.html'%}`;
+}
+
+// profile user 이미지 업로드 기능
+const $uploadImgInput = document.querySelector('.profile-upload-img-input');
+const $uploadPreviewImg = document.querySelector('.profile-upload-preview-img');
+
+$uploadImgInput.onchange = (e) => {
+// document.querySelector('.upload-img-div').innerHTML='';
+let image = event.target.files[0]
+  console.log(image)
+  let reader = new FileReader();
+  reader.onload = function (event) {
+    $uploadPreviewImg.setAttribute('src', event.target.result);
+    let title = e.target.value.split("\\")[2];
+    $uploadPreviewImg.setAttribute('title', title);
+    $uploadPreviewImg.setAttribute('alt', title);
+  }
+
+  reader.readAsDataURL(image);
+}
+
+
+
+function UploadImg(event){
+$uploadImgInput.click();
+}
+
+function editChangePwd(event){
+  event.preventDefault();
+  console.log('d')
+  document.querySelector('.edit-password-infor').classList.toggle('non-clicked');
+}
+
+// 탈퇴하기 popup창 toggle
+function changePwd(e){
+  e.preventDefault()
+  document.querySelector('.delete-popup-section').style.display = 'flex';
+  document.querySelector('.delete-password').focus();
+}
+
+function popupClose(e){
+  document.querySelector('.delete-popup-section').style.display = 'none';
+}
+function deleteCancel(e){
+  e.preventDefault();
+  document.querySelector('.delete-popup-section').style.display = 'none';
+  document.querySelector('.delete-msg').innerText ='';
+  document.querySelector('.delete-password').value = '';
+  console.log('d')
+}
+  
+// 탈퇴 popup ajax 
+deleteForm = document.querySelector('.delete-form');
+deleteForm.addEventListener('submit', DeleteUserSubmit);
+
+function DeleteUserSubmit(){
+  event.preventDefault();
+  
+  $password = document.querySelector('.delete-password').value;
+
+  let CsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+  
+  let param = {
+    'password':$password,
+  }
+
+  fetch("{% url 'user:delete' %}", {
+    method: 'POST',
+    headers: {
+      "X-CSRFToken": CsrfValue,
+      "X-Requested-With": "XMLHttpRequest"
+    },
+    body: JSON.stringify(param),
+  }).then(function (response) {
+    return response.json()
+  }).then(function (data) {
+    console.log(data)
+    if(data['error'] == true){
+      document.querySelector('.delete-msg').innerText = `${data['msg']}`
+      document.querySelector('.delete-password').value='';
+      
+    }
+    else{
+      document.querySelector('.delete-popup-section').style.backdropFilter="blur(8px)";
+      document.querySelector('.delete-popup').style.display='none';
+      setTimeout(function(){window.alert('회원 탈퇴에 성공하셨습니다');window.location.href=data['url'];},500);
+    console.log('dd')
+    }
+
+    return data
+  }).catch((error) => {
+    console.log('error', error);
+  })
+}
+</script>
+
+<!-- 닉네임 또는 프로필 사진 수정 -->
+<script>
+  function editNickname(userNickname) {
+    console.log("edit personal information");
+    let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    
+    let param = {
+      'nickname' : userNickname,
+    }
+    fetch("{% url 'user:infor-edit' %}", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param)
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      let nickname = data['nickname'];
+      console.log(data)
+      userNickname.innerText = `${nickname}`;
+    }).catch(error => {
+      console.log("Error", error);
+    })
+  }
+
+  function editUserImage(userImage, userImageTitle) {
+    console.log("edit profile image");
+    let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    
+    let param = {
+      'imageURL' : userImage,
+      'title' : userImageTitle
+    }
+    fetch("{% url 'user:image-upload' %}", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": csrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param)
+    }).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      console.log(data)
+    }).catch(error => {
+      console.log("Error", error);
+    })
+  }
+
+  function submitPersonalInfor(e) {
+    e.preventDefault();
+    let userNickname = document.querySelector(".infor-user-nickname").value;
+    // let userImage = document.querySelector(".profile-upload-img-input");
+    let userImage = document.querySelector(".profile-upload-preview-img")['src'];
+    let userImageTitle = document.querySelector(".profile-upload-preview-img")['title'];
+    if (userNickname) {
+      editNickname(userNickname);
+    }else {
+      document.querySelector(".infor-user-nickname").placeholder ="닉네임을 입력해 주세요."
+      console.log("You cannot submit an empty form")
+    }
+
+    if (userImage){
+      editUserImage(userImage, userImageTitle);
+
+    }else {
+      console.log("You cannot submit an empty form")
+    }
+
+
+
+  }
+</script>
+{% endblock script %}
