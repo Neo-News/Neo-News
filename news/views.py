@@ -11,7 +11,7 @@ from utils import context_infor, get_time_passed
 from user.models import Category, Keyword, User
 from social.models import Comment, ReComment, Like
 from .models import Article, Press,Potal,UserPress
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 # templateview로 변경가능 할 것 같음 일단은 detailview -> view로 변경함 
 class IndexView(View):
@@ -62,13 +62,16 @@ class IndexView(View):
     pass
 
 
-class NewsDetailView(DetailView):
+class NewsDetailView(LoginRequiredMixin, DetailView):
     """
     참고하셨으면 지우셔도 됩니당 :-)
     기사를 누르면 세부 페이지로 이동시키기 위해 템플릿에서 article의 pk를 함께 보내도록 로직을 변경했습니다. news/detail<pk>/로 url도
     변경했습니다. url로 요청이 오는 로직이 get방식인듯 합니다(이부분 까먹었어요,,ㅋㅋㅋㅋ) 
     해당 기사의 Article 데이터를 filter해온뒤 템플릿에 context로 보냈습니다
     """
+    login_url = 'user/login/'
+    redirect_field_name='/'
+
     def get(self, request, **kwargs):
         article_pk = kwargs['pk']
         article_list = Article.objects.filter(pk=article_pk).first()
@@ -88,7 +91,7 @@ class NewsDetailView(DetailView):
 
 
 # 카테고리나, 키워드 수정하는 페이지
-class NewsInforEditView(ListView):
+class NewsInforEditView(LoginRequiredMixin, ListView):
     """
     author: son hee jung
     date: 0722
@@ -98,6 +101,9 @@ class NewsInforEditView(ListView):
     이후 전체 press와 각각의 press들의 정보를 context에 담아 템플릿에 보내줍니다.
     해당 템플릿에서 for문으로 전체 press와 하나씩 비교하여 유/무에 따라 체크박스 설정을 달리 해줍니다
     """
+    login_url = 'user/login/'
+    redirect_field_name='/'
+    
     def get(self, request, **kwargs):
         keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
         userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
@@ -148,6 +154,7 @@ class CategoryIndexView(View):
     따로 코드를 분리하는 작업이 필요합니다 
     """
     def get(self, request, **kwargs):
+        # 지울 예정 
         category_name =Category.objects.filter(pk=kwargs['pk']).first().name
         categories = Category.objects.filter(users__pk=request.user.pk).all()
         keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
@@ -165,7 +172,6 @@ class CategoryIndexView(View):
 
                 article_list = Article.objects.filter(press__name__in=press_list, category__name=category_name).all()
 
-
         paginator = Paginator(article_list, 20)
         article_obj = paginator.page(page)
         #  페이징 번호 5개씩 보이기 로직
@@ -178,9 +184,7 @@ class CategoryIndexView(View):
         if end_index >= max_index:
             end_index = max_index
         page_range = paginator.page_range[start_index:end_index]
-        
         context = context_infor(articles=article_obj, categories=categories, keywords=keywords, page_range=page_range)
-
         return render(request,'index.html', context)
 
 
@@ -206,13 +210,13 @@ class KeywordIndexView(View):
             msg = '선택하신 키워드에 관련된 기사가 아직 없어요 -!'
         
         if request.user.is_authenticated :
-                userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
-                article_list = []
-                press_list = []
-                if userpress is not None:
-                    for press in userpress.press.all():
-                        press_list.append(press.name)
-                    article_list = Article.objects.filter(Q(title__contains=keyword_name) | Q(content__contains=keyword_name),press__name__in=press_list).all()
+            userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
+            article_list = []
+            press_list = []
+            if userpress is not None:
+                for press in userpress.press.all():
+                    press_list.append(press.name)
+                article_list = Article.objects.filter(Q(title__contains=keyword_name) | Q(content__contains=keyword_name),press__name__in=press_list).all()
                             
         page = request.GET.get('page','1')
         article_list = articles

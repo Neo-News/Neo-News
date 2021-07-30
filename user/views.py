@@ -2,6 +2,7 @@
 import os
 import jwt
 import json
+from kombu.log import Log
 import requests
 from datetime import datetime
 from django.contrib.auth import authenticate, login as auth_login, logout
@@ -31,7 +32,7 @@ from .models import User, Category, Keyword
 from .mixin import VerifyEmailMixin
 from .tasks import send_email
 from .services import UserService
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 class UserLoginView(FormView):
     """
@@ -230,39 +231,17 @@ class Activate(View):
             return redirect('user:login')
 
 
-class SignupDeatilView(View):
-  def get(self,request, *args, **kwargs):
-    categories = Category.objects.exclude(name='속보').all()
-    context = context_infor(categories=categories)
-    return render(request, 'signup_detail.html', context)
+class SignupDeatilView(LoginRequiredMixin,View):
+    login_url = 'user/login/'
+    redirect_field_name='/'
 
-  def post(self, *args, **kwargs):
-    pass
+    def get(self,request, *args, **kwargs):
+        categories = Category.objects.exclude(name='속보').all()
+        context = context_infor(categories=categories)
+        return render(request, 'signup_detail.html', context)
 
-
-# class UserInforEditView(View):
-#     def get(self, request, **kwargs):
-#         likes = Like.objects.all()
-#         articles = [like.article for like in likes if request.user in like.users.all()]
-#         comments = Comment.objects.filter(writer__pk=request.user.pk)
-#         context = context_infor(articles=articles, comments=comments)
-#         return render(request, 'user-infor-edit.html', context)
-
-#     def post(self, request, *args, **kwargs):
-#         if self.request.is_ajax():
-#             print("ajax 요청 받기 성공")
-#             data = json.loads(request.body)
-#             nickname = data.get('nickname')
-#             user = UserService.update_nickname(request, nickname)
-#             # print(user)
-#             print("유저 닉네임 수정 완료")
-#             context = {
-#                 'nickname' : user.nickname,
-#                 'msg' : '유저 닉네임 수정 성공'
-#             }
-#             return JsonResponse(context, status=200)
-#         else:
-#             return JsonResponse({"error" : "Error occured during request"}, status=400)
+    def post(self, *args, **kwargs):
+        pass
 
 
 # 프로필 이미지 등록하는 함수
@@ -303,48 +282,54 @@ class ImageUploadView(View):
             return JsonResponse({"error" : "Error occured during request"}, status=400)
 
 
-class UserInforAddView(View):
-  """
-  author: Son Hee Jung
-  date: 0715
-  description: 
-  ajax를 통해 유저가 선택한 카테고리, 키워드 저장 후 메인에 카테고리 띄어줌. 
-  is_detailed true로 변환해 설문 페이지 뜨지 않게 설정
-  코드 리팩토링 필요함
-  """
-  def get(self, request, *args, **kwargs):
-    pass
+class UserInforAddView(LoginRequiredMixin,View):
+    """
+    author: Son Hee Jung
+    date: 0715
+    description: 
+    ajax를 통해 유저가 선택한 카테고리, 키워드 저장 후 메인에 카테고리 띄어줌. 
+    is_detailed true로 변환해 설문 페이지 뜨지 않게 설정
+    코드 리팩토링 필요함
+    """
+    login_url = '/user/login/'
+    redirect_field_name='/'
 
-  def post(self, request, *args, **kwargs):
-      if request.is_ajax():
-        data = json.loads(request.body)
-        category = Category.objects.all()
-        keyword_list = Keyword.objects.all()
-        for category in data.get('category_list'):
-          category = Category.objects.filter(name=category).first().users.add(request.user)
-        for keyword in data.get('todo_list'):
-            if not Keyword.objects.filter(name=keyword).first():
-                Keyword.objects.create(
-                    name = keyword,
-                )
-        Keyword.objects.filter(name=keyword).first().users.add(request.user)
-        User.objects.filter(pk=request.user.pk).update(
-          is_detailed = True
-        )
-        presses = Press.objects.all()
-        userpress = UserPress.objects.create(
-        user = User.objects.filter(pk=request.user.pk).first()
-        )
-        for press in presses:
-            userpress.press.add(press)
-        
-        return JsonResponse({
-          'success':True,
-          'url': 'http://127.0.0.1:8000/'
-          })
+    def get(self, request, *args, **kwargs):
+        pass
+
+    def post(self, request, *args, **kwargs):
+        if request.is_ajax():
+            data = json.loads(request.body)
+            category = Category.objects.all()
+            keyword_list = Keyword.objects.all()
+            for category in data.get('category_list'):
+                category = Category.objects.filter(name=category).first().users.add(request.user)
+            for keyword in data.get('todo_list'):
+                if not Keyword.objects.filter(name=keyword).first():
+                    Keyword.objects.create(
+                        name = keyword,
+                    )
+            Keyword.objects.filter(name=keyword).first().users.add(request.user)
+            User.objects.filter(pk=request.user.pk).update(
+                is_detailed = True
+            )
+            presses = Press.objects.all()
+            userpress = UserPress.objects.create(
+            user = User.objects.filter(pk=request.user.pk).first()
+            )
+            for press in presses:
+                userpress.press.add(press)
+            
+            return JsonResponse({
+                'success':True,
+                'url': 'http://127.0.0.1:8000/'
+                })
       
 
-class UserKeywordEditView(View):
+class UserKeywordEditView(LoginRequiredMixin,View):
+    login_url = '/user/login/'
+    redirect_field_name='/'
+
     def get(self, request, **kwargs):
         pass
 
@@ -363,7 +348,10 @@ class UserKeywordEditView(View):
             return JsonResponse(context)
             
 
-class UserKeywordDeleteView(View):
+class UserKeywordDeleteView(LoginRequiredMixin, View):
+    login_url = '/user/login/'
+    redirect_field_name='/'
+
     def get(self, request, **kwargs):
         pass
 
@@ -379,7 +367,10 @@ class UserKeywordDeleteView(View):
             return JsonResponse(context)
 
 
-class UserCategoryEditView(View):
+class UserCategoryEditView(LoginRequiredMixin, View):
+    login_url = '/user/login/'
+    redirect_field_name='/'
+
     def get(self, request, **kwargs):
         pass
 
@@ -401,10 +392,13 @@ class UserCategoryEditView(View):
 
             return JsonResponse(context)
 
-class ChangePasswordView(View):
+class ChangePasswordView(LoginRequiredMixin ,View):
     """
     마이페이지의 비밀번호 수정 클래스
     """
+    login_url = '/user/login/'
+    redirect_field_name='/'
+    
     def get(self, request, **kwargs):
         return render(request,'change-password.html')
 
@@ -415,13 +409,16 @@ class ChangePasswordView(View):
         return redirect('/')
 
 
-class DeletePasswordView(View):
+class DeletePasswordView(LoginRequiredMixin ,View):
     """
     author: Son Hee Jung
     date: 0726
     description: 
     회원 탈퇴 클래스. ajax를 통해 비밀번호를 입력받아 유효성 검증 후 탈퇴가 진행된다
     """
+    login_url = '/user/login/'
+    redirect_field_name='/'
+
     def post(self, request, **kwargs):
         if request.is_ajax():
             data = json.loads(request.body)
@@ -451,13 +448,15 @@ class DeletePasswordView(View):
         return JsonResponse(context)
 
 
-class FindPwView(View):
+class FindPwView(LoginRequiredMixin ,View):
     """
     author: Son Hee Jung
     date: 0726
     description: 
     비밀번호 찾기 클래스. 비밀번호 찾기 버튼을 누르면 해당 템플릿으로 이동된다
     """
+    login_url = '/user/login/'
+    redirect_field_name='/'
     template_name = 'find_pw.html'
     find_pw = FindPwForm
 
@@ -467,7 +466,7 @@ class FindPwView(View):
         return render(request, self.template_name, context)
 
 
-class PasswordCheckView(View):
+class PasswordCheckView(LoginRequiredMixin ,View):
     """
     author: Son Hee Jung
     date: 0726
@@ -475,6 +474,9 @@ class PasswordCheckView(View):
     비밀번호 찾기에서 이메일을 입력받아 해당 이메일에 대한 유효성 검증 후 인증번호를
     해당 이메일로 전송한다(celery사용)
     """
+    login_url = '/user/login/'
+    redirect_field_name='/'
+
     def get(self, request, *args, **kwargs):
         pass
 
@@ -504,7 +506,7 @@ class PasswordCheckView(View):
             return JsonResponse(context)
 
 
-class PasswordConfirmView(View):
+class PasswordConfirmView(LoginRequiredMixin ,View):
     """
     author: Son Hee Jung
     date: 0726
@@ -512,6 +514,9 @@ class PasswordConfirmView(View):
     정상적인 인증번호를 입력했는지에 대한 검증을 하는 클래스. ajax를 이용해 올바르지
     않으면 에러 메시지를 띄어주고 인증된 경우 패스워드 변경 템플릿으로 이동시킨다
     """
+    login_url = '/user/login/'
+    redirect_field_name='/'
+
     def get(self, request, *args, **kwargs):
         context = context_infor(name = request.user.nickname)
         return render(request,'change-password.html',context)
@@ -537,7 +542,7 @@ class PasswordConfirmView(View):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class ValidChangePassword(View):
+class ValidChangePassword(LoginRequiredMixin, View):
     """
     author: Son Hee Jung
     date: 0726
@@ -545,6 +550,9 @@ class ValidChangePassword(View):
     비밀번호를 변경해주는 클래스. SetPasswordForm을 사용하여 비밀번호의 검증을 한 후 실제 유저의 패스워드를 변경한다
     csrf_token관련 문제로 csrf_exempt 데코레이터 사용한 이슈 발생 
     """
+    login_url = '/user/login/'
+    redirect_field_name='/'
+
     def get(self, request, *args, **kwargs):
         reset_pwd_form = ChangeSetPwdForm(None)
         return render(request, 'valid-change-pwd.html', {'forms':reset_pwd_form})
@@ -586,34 +594,37 @@ class LoginCallBackView(TemplateView):
         return self.render_to_response(context)
 
 
-class ResendEmailView(VerifyEmailMixin, View):
+class ResendEmailView(LoginRequiredMixin ,VerifyEmailMixin, View):
+    login_url = '/user/login/'
+    redirect_field_name='/'
 
-  def get(self, request, *args, **kwargs):
-    print('여기로 접근은 되니?')
-    forms = VerificationEmailForm()
-    forms = str(forms)
-    context = {'forms':forms}
-    print(context)
-    return JsonResponse(context)
-  
-  def post(self, request, *args, **kwargs):
-     if request.is_ajax():
-      data = json.loads(request.body)
-      resent_email = data['recent-email']
-      change_email = data['email']
-      forms = VerificationEmailForm(data)
-    #   recent_email = data.get('recent-email')
-      context = self.send_verification_email(request, forms ,resent_email = resent_email,change_email=change_email, email='again')
-      return JsonResponse(context)
+    def get(self, request, *args, **kwargs):
 
-  @staticmethod
-  def _build_resend_dto(data):
-    return ResendDto(
-      email = data.email,
-    )
+        forms = VerificationEmailForm()
+        forms = str(forms)
+        context = {'forms':forms}
+        return JsonResponse(context)
+
+    def post(self, request, *args, **kwargs):
+        if request.is_ajax():
+            data = json.loads(request.body)
+            resent_email = data['recent-email']
+            change_email = data['email']
+            forms = VerificationEmailForm(data)
+            context = self.send_verification_email(request, forms ,resent_email = resent_email,change_email=change_email, email='again')
+            return JsonResponse(context)
+
+    @staticmethod
+    def _build_resend_dto(data):
+        return ResendDto(
+            email = data.email,
+        )
 
 
-class MypageView(View):
+class MypageView(LoginRequiredMixin, View):
+    login_url = '/user/login/'
+    redirect_field_name='/'
+
     def get(self, request, **kwargs):
         return render(request, 'user-infor.html')
 
@@ -633,17 +644,21 @@ class MypageView(View):
             return JsonResponse({"error" : "Error occured during request"}, status=400)
 
 
-class LikeArticleView(View):
+class LikeArticleView(LoginRequiredMixin, View):
+    login_url = '/user/login/'    
+    redirect_field_name='/'
+
     def get(self, request, **kwargs):
-        # likes = Like.objects.all()
-        # articles = [like.article for like in likes if request.user in like.users.all()]
         user = User.objects.filter(pk=request.user.pk).first()
         likes = user.like.all()
         context = context_infor(likes=likes,)
         return render(request, 'user-like.html',context )
 
 
-class CommentArticleView(View):
+class CommentArticleView(LoginRequiredMixin, View):
+    login_url = '/user/login/'    
+    redirect_field_name='/'
+
     def get(self, request, **kwargs):
         comments = Comment.objects.filter(writer__pk=request.user.pk)
         context = context_infor(comments=comments)
