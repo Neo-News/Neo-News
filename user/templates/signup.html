@@ -6,8 +6,6 @@
 
 {% block content %}
 
-{% static 'img/kakao_signup.png' as kakao_button %}
-{% static 'img/naver_signup.png' as naver_button %}
 
 <section class="base">
   <section class="category">
@@ -18,9 +16,9 @@
   <section class="panel registration registration-signup">
     <div class="panel-body">
       <div class="logo-image">
-        <img class="neonews-balloon" src="{% static 'img/balloon.png' %}" alt="neonews_logo">
+        <img class="neonews-balloon" src="/static/img/balloon.png" alt="neonews_logo">
         <!-- <span>회원가입</span> -->
-        <img class="neonews-logo" src="{% static 'img/news-logo.png' %}" alt="neonews_logo">
+        <img class="neonews-logo" src="/static/img/news-logo.png" alt="neonews_logo">
       </div>
       <form action="." method="POST">
         {% csrf_token %}
