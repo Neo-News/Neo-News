@@ -1,0 +1,898 @@
+/* user login, signup page */
+.base {
+  background-color: rgb(249, 247, 244);
+  box-sizing: border-box;
+  padding-top: 70px;
+}
+.panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.registration{
+  min-height: 100vh;
+  margin-top: -150px;
+  background-color: rgb(249, 247, 244);
+}
+.registration-signup{
+  margin-top: -20px;
+}
+.logo-image {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: 10px;
+}
+.neonews-balloon {
+  margin: 6px;
+  width: 150px;
+  animation: balloon 1.5s infinite;
+}
+@keyframes balloon{
+  0%{
+    transform: rotate(-5deg);
+  }
+  50%{
+    transform: rotate(15deg);
+  }
+  100%{
+    transform: rotate(-5deg);
+  }
+}
+.neonews-logo {
+  width: 150px;
+}
+.login-form,.resend-email {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.errorlist {
+  color: #1cc02f;
+  text-align: center;
+  font-weight: bold;
+  letter-spacing: 2px;
+  width: 100%;
+  margin: 0 auto;
+  font-size: 0.78rem;
+}
+.login-errmsg {
+  color: #1cc02f;
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 2px;
+  width: 100%;
+  margin: 0 auto;
+  font-size: 0.78rem;
+}
+
+/* formview에서 form 레이아웃 */
+.login-form > input, 
+.user-email, .user-nickname, .user-pwd, .user-pwd-chk{
+  width: 260px;
+  padding: 5px 10px;
+  height: 30px;
+  margin: 13px 0;
+  border-radius: 3px;
+  border: none;
+  box-shadow: 0px 0px 5px 0px rgb(219, 218, 218);
+}
+.login-btn {
+  width: 280px;
+  height: 40px;
+  margin: 3px 0;
+  border: none;
+  border-radius: 3px;
+  font-weight: bold;
+  color: white;
+  background-color: rgb(248, 161, 104);
+}
+.form-actions input{
+  display: block;
+  width: 280px;
+  height: 40px;
+  margin: 3px 0px;
+  border: none;
+  border-radius: 3px;
+  font-weight: bold;
+  color: white;
+  background-color: rgb(248, 161, 104);
+}
+.login-btn:hover, 
+.signup-btn:hover {
+  background-color: #F7B34F;
+  box-shadow: 0px 0px 5px 0px rgb(197, 195, 195);
+}
+.social-signup {
+  text-align: center;
+  margin: 25px 0 -7px 0;
+}
+.social-signup-text{
+  color: #81530d;
+  font-size: 0.8rem;
+  margin: 0px 5px;
+}
+.social-signup-text-icon{
+  color: #81530d;
+  display: inline-block;
+  font-size: 0.5rem;
+}
+.social-quote{
+  font-size: .8rem;
+}
+.social-non-login-text{
+  display: inline-block;
+  margin: 0px 5px;
+}
+.social-strong{
+  color: #F7B34F;
+}
+
+/* formview 레이아웃 */
+.signup-form,
+.form-actions,.kakao-btn{
+  display: inline-block;
+  text-align: center;
+}
+.error{
+  margin: 20px 0 15px 0;
+  color: #1cc02f;
+  font-weight: bold;
+  letter-spacing: 2px;
+  width: 70%;
+  margin: 10px auto;
+}
+.error-word{
+  font-size: .78rem;
+  text-align: center;
+}
+
+/* 회원가입/로그인 버튼 변경부분 */
+.kakao-btn{
+  text-align: center;
+  align-items: center;
+  width: 280px;
+  height: 40px;
+  margin: 25px 0 5px 0;
+  background-color:#FEF01B ;
+  border-radius: 3%;
+}
+.kakao-btn:hover,
+.naver-btn:hover{
+  box-shadow: 0px 0px 8px 0px rgb(184, 181, 181);
+}
+.naver-btn{
+  text-align: center;
+  align-items: center;
+  width: 280px;
+  height: 40px;
+  margin: 10px 0 15px 0;
+  background-color:#1cc02f ;
+  border-radius: 3%;
+  position: relative;
+}
+.naver-btn img{
+  position: absolute;
+  left: 24%;
+  top: 5%;
+}
+.kakao-span{
+  font-weight: 600;
+  align-items: center;
+  line-height: 3.7;
+  font-size: .7rem;
+  margin-left: 15px;
+}
+.naver-span{
+  font-weight: 600;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 33%;
+  transform: translateY(-50%);
+  line-height: 1;
+  font-size: .7rem;
+  margin-left: 10px;
+  color: #fff;
+}
+.kakao-btn i{
+  font-size: 1.2rem;
+}
+.naver-btn > a > img {
+  width: 267px;
+  height: 35px;
+  margin: 5px 0;
+}
+.resend-email, 
+.find_password {
+  text-decoration: none;
+  color: dodgerblue;
+  margin: 5px 0 ;
+  font-size: 12px;
+}
+
+/* user infor edit page */
+.edit-personal-infor{
+  margin-bottom: 20px;
+  font-size: .9rem;
+  text-align: left;
+  color: #56595c;
+}
+.edit-personal-infor-msg {
+  font-size: 0.8rem;
+  position: relative;
+  top: -55px;
+  color: #56595c;
+}
+.personal-icon{
+  margin-right: 8px;
+  font-size: 1.0rem;
+  margin-bottom: 50px;
+}
+.user-infor-edit{
+  display: flex;
+  justify-content: space-evenly;
+  background-color: rgb(249, 247, 244);
+  padding-top: 150px;
+  min-height: 100vh;
+}
+.user-infor-contents{
+  text-align: center;
+  width: 50%;
+  padding-left: 40px;
+  border-radius: 5px;
+  position: relative;
+}
+
+/* 유저 내계정 레이아웃 */
+.edit-nickname{
+  position: absolute;
+  width: 100%;
+  padding-bottom: 50px;
+  border-bottom: 1px solid #eee;
+}
+.edit-password{
+  text-align: left;
+}
+.edit-password-infor{
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+.resend-pwd{
+  margin-left: 30px;
+  padding: 12px;
+  border: none;
+  border-radius: 5px;
+}
+.user-infor-contents h2{
+  font-size: 1.2rem;
+  margin-top: 30px;
+  margin-bottom: 60px;
+}
+.infor-user-nickname{
+  border: none;
+  width: 60%;
+  margin: 20px 0px;
+  padding: 15px 10px;
+  border-radius: 5px;
+  background-color: rgb(235, 233, 233);
+  display: block;
+}
+.infor-user-password{
+  border: none;
+  width: 50%;
+  padding: 15px 10px;
+  border-radius: 5px;
+  background-color: rgb(235, 233, 233);
+  display: block;
+}
+.user-nickname-btn{
+  position: relative;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 5px;
+}
+.user-password-btn{
+  cursor: pointer;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  left: 5%;
+  padding: 8px 10px;
+  border: none;
+  border-radius: 5px;
+  background-color: #fff;
+  border: 1px solid rgb(168, 167, 167);
+}
+.user-infor-edit-title{
+  margin: 10px 0 20px 0;
+  font-size: 1rem;
+}
+.user-infor-edit-content{
+  letter-spacing: 2px;
+  font-size: 1rem;
+}
+.user-infor-ul{
+  width: 260px;
+  border-radius: 5px;
+  background-color: #eee;
+  display: inline-block;
+}
+.user-infor-ul li{
+  margin: 20px;
+  z-index: 1;
+}
+.user-infor-ul li:hover,
+.user-infor-ul li:focus{
+  border-radius: 5px;
+  transition: all 200ms;
+}
+.user-infor-ul li:hover a,
+.user-infor-ul li:focus a{
+  border-radius: 5px;
+  color: #eee;
+  background-color: rgba(87, 84, 84, 0.671);
+  transition: all 200ms;
+}
+.user-infor-ul li a{
+  padding: 5px 10px;
+  /* width: 100%; */
+  display: inline-block;
+  width: 200px;
+  font-size: 2em;
+  border: none;
+}
+.user-infor-ul li a i{
+  width: 20%;
+  margin-right: 10px;
+  text-align: left;
+  display: inline-block;
+  font-size: 1.3em;
+}
+.user-infor-ul li a span{
+  font-size: 1em;
+  width: 80%;
+  margin-right: 20px;
+  text-align: left;
+}
+.clicked{
+  border-radius: 5px;
+  color: #eee;
+  background-color:rgb(248, 161, 104);
+}
+.edit-profile-img{
+  text-align: left;
+  margin-bottom: 180px;
+  padding-left: 40px;
+}
+.edit-profile-pwd{
+  margin-bottom: 100px;
+  padding-top: 50px;
+  padding-bottom: 50px;
+  border-bottom: 1px solid #eee;
+  padding-left: 40px;
+}
+
+/* 이미지,닉네임 변경 레이아웃 */
+.profile-edit{
+  text-align: center;
+}
+.profile-upload-img{
+  background-color: #eee;
+  overflow: hidden;
+  box-shadow: 0px 0px 7px 2px rgb(209, 207, 207);
+  position: relative;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.profile-image-file{
+  position: relative;
+  top: 70px;
+  left: 40px;
+  width: 0px;
+}
+.fa-image{
+  font-size: 5.5em;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  color: #495057;
+}
+.profile-upload-preview-img{
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-block;
+  width: 200px;
+  height: 210px;
+}
+.upload-img-div{
+  text-overflow: ellipsis;
+  position: absolute;
+  top: 0;
+}
+.upload-user-img{
+  position: absolute;
+  width: 250px;
+  height: 250px;
+  text-overflow: ellipsis;
+  top: 0;
+  left: 0;
+}
+
+/* user my page - comment,like page */
+.user-comment-li,
+.user-like-li{
+  display: flex;
+  justify-content: space-between;
+  padding: 20px 0px;
+  border-bottom: 1px solid rgb(212, 210, 210);
+  width: 85%;
+  margin: 0 auto;
+}
+.user-comment-title,
+.user-comment-delete,
+.user-like-title,
+.user-like-icon{
+  font-size: 1rem;
+  cursor: pointer;
+}
+.fa-comment-alt {
+  color: rgb(97, 94, 94);
+}
+
+/* 마이페이지 탈퇴 popup창 */
+.delete-popup-section{
+  background-color:rgba(0,0,0,.3); 
+  justify-content:center; 
+  align-items:center;     
+  position:fixed;         
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;               
+  display:none; 
+  padding:15px; 
+  backdrop-filter: blur(3px)
+}
+
+/* signup detail popup창 */
+.delete-popup{
+  width:100%;               
+  max-width:350px;   
+  height: 450px;       
+  border-radius:10px;     
+  position: relative;  
+  overflow:hidden;          
+  background-color:#eee; 
+  box-shadow: 5px 10px 10px 1px rgba(0,0,0,.3); 
+}
+.delete-email-popup{
+  text-align: center;
+  height: 200px;
+}
+.delete-popup-close{
+  text-align: right;
+  font-size: 1.2rem;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+  width: 100%;
+  height: 60px;
+  background-color: rgb(248, 161, 104);
+  padding-bottom: 30px; 
+}
+.delete-popup-title{
+  font-weight: bold;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  font-size: .9rem;
+  transform: translate(-50%,-50%);
+  background-color: rgb(248, 161, 104);
+  width: 100%;
+  height: 20px;
+}
+.delete-popup-infor{
+  position: absolute;
+  width: 100%;
+  bottom: 35%;
+}
+.delete-popup-infor input{
+  margin-bottom: 10px;
+  padding: 10px 8px;
+  width: 80%;
+  border: none;
+}
+.delete-msg{
+  padding: 10px 0px;
+  font-size: .8rem;
+  color: red;
+  font-weight: bold;
+}
+.fa-user-check{
+  font-size: 1.1rem;
+  margin-right: 6px;
+}
+.delete-popup-content2{
+  position: absolute;
+  font-size: .7rem;
+  top: 35%;
+  left: 50%;
+  width: 80%;
+  transform: translate(-50%,-50%);
+}
+.delete-ok{
+  position: absolute;
+  bottom:10px;
+  right: 30%;
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: rgb(212, 209, 209);
+}
+.delete-cancel{
+  cursor: pointer;
+  position: absolute;
+  bottom: 10px;
+  left: 30%;
+  padding: 5px;
+  border-radius: 5px;
+  border: none; 
+  background-color: rgb(212, 209, 209);
+}
+
+/* 유저 password 변경 페이지 */
+.change-popup-section{
+  background-color:rgba(0,0,0,.3); 
+  justify-content:center; 
+  align-items:center;     
+  position:fixed;         
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;               
+  display:flex;
+  padding:15px; 
+  backdrop-filter: blur(6px);
+}
+
+/* signup detail popup창 */
+.change-popup-section{
+  background-color: rgba(241, 240, 239, 0.637);
+  position: absolute;
+}
+.change-popup{
+  width:100%;               
+  max-width:500px;   
+  height: 450px;       
+  border-radius:10px;     
+  position: relative;  
+  overflow:hidden;          
+  background-color:#eee; 
+  box-shadow: 5px 10px 10px 1px rgba(0,0,0,.3); 
+}
+.change-email-popup{
+  text-align: center;
+  height: 200px;
+}
+.change-popup-close{
+  text-align: right;
+  font-size: 1.2rem;
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: pointer;
+  width: 100%;
+  height: 60px;
+  background-color: rgb(248, 161, 104);
+  padding-bottom: 30px; 
+}
+.change-popup-title{
+  font-weight: bold;
+  position: absolute;
+  top: 10%;
+  left: 50%;
+  font-size: .9rem;
+  transform: translate(-50%,-50%);
+  background-color: rgb(248, 161, 104);
+  width: 100%;
+  height: 20px;
+}
+.change-popup-infor{
+  position: absolute;
+  bottom: 35%;
+  width: 100%;
+}
+.change-popup-infor input{
+  margin-bottom: 10px;
+  padding: 10px 8px;
+  width: 70%;
+  border: none;
+}
+.fa-user-check{
+  font-size: 1.1rem;
+  margin-right: 6px;
+}
+.change-popup-content2{
+  position: absolute;
+  font-size: .7rem;
+  top: 35%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+.change-ok{
+  position: absolute;
+  bottom:40px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: none;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: rgb(212, 209, 209);
+}
+
+/* 이메일 찾기 레이아웃 */
+.find-password-section{
+  background-color: rgb(249, 247, 244);
+  text-align: center;
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+}
+.find-password-form{
+  background-color: #fff;
+  box-shadow: 0px 0px 10px 0px rgb(226, 223, 223);
+  border-radius: 5px;
+  display: inline-block;
+  position: absolute;
+  width: 60%;
+  top: 45%;
+  left: 50%;
+  padding: 100px 0px;
+  transform: translate(-50%,-50%);
+}
+.find-password-form > h1{
+  font-size: 1.2rem;
+  margin-bottom: 50px;
+  margin-top: 15px;
+}
+.find-password-form .user-email{
+  padding: 10px;
+  width: 70%;
+  border: none;
+  margin-bottom: 50px;
+  background-color: rgb(229, 226, 226);
+}
+.find-pwd-btn{
+  padding:9px;
+  border: none;
+  border-radius: 5px;
+  background-color: rgb(229, 226, 226);
+}
+.find-password-msg{
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 70px;
+  font-size: 0.75rem;
+  color:rgb(248, 161, 104);
+  font-weight: bold;
+}
+.find-password-level{
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  padding: 10px;
+}
+.level{
+  font-size: .9rem;
+  margin-right: 10px;
+}
+.level:after{
+  content:'-----';
+  width: 30px;
+  height: 10px;
+}
+.level:last-child:after {
+  content: '';
+}
+.fa-circle{
+  margin-right: 5px;
+  color: rgb(206, 201, 201);
+}
+.find_clicked{
+  color:rgb(248, 161, 104);
+}
+.find-password-error-msg,
+.find-password-success-msg{
+  font-size: 0.75rem;
+  width: 60%;
+  padding: 5px 10px;
+  display: inline-block;
+  color: tomato;
+  font-weight: bold;
+  text-align: left;
+}
+.return-home{
+  font-size: .8rem;
+  border-radius: 5px;
+  box-shadow: 0px 0px 5px 0px rgb(190, 189, 189);
+  background-color: rgb(248, 161, 104);
+  padding: 10px;
+}
+.valid-num-input{
+  display: inline-block;
+  width: 55%;
+  margin: 0 auto;
+  padding: 10px;
+  border: none;
+  background-color: rgb(230, 228, 228);
+}
+.valid-num-btn{
+  width: 15%;
+  border: none;
+  padding: 8px;
+  box-sizing: border-box;
+  background-color: rgb(230, 228, 228);
+}
+.password,
+.password_chk{
+  padding: 10px;
+  display: block;
+  width: 60%;
+  margin: 0px auto;
+  margin-bottom: 20px;
+  border: none;
+  background-color: rgb(230, 228, 228);
+}
+.find-pwd-btn{
+  margin-top: 10px;
+  width: 30%;
+  background-color: rgb(248, 161, 104);;
+}
+
+/* 이메일 재인증 레이아웃 */
+.resend-div{
+  margin: 0 auto;
+  justify-content: space-between;
+  align-items: center;
+}
+.resend-input-btn{
+  padding: 10px 10px;
+  border: none;
+  border-radius: 5px;
+  display: inline-block;
+  cursor: pointer;
+}
+.resend-input{
+  font-size: .7rem;
+  width: 70%;
+  padding: 5px 10px;
+  height: 30px;
+  margin: 13px 0;
+  border-radius: 3px;
+  border: none;
+  box-shadow: 0px 0px 5px 0px rgb(219, 218, 218);
+}
+.valid-error{
+  margin-top: 20px;
+  color: tomato;
+  font-size: .78rem;
+  display: inline-block;
+  font-weight: bold;
+}
+.non-clicked{
+  display: none;
+}
+/* user responsive */
+@media screen and (max-width:576px){
+  .user-infor-edit{
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+    padding-top: 100px;
+    justify-content:flex-start;
+    min-height: 100vh;
+  }
+  .user-infor-contents{
+    margin: 0 auto;
+    width: 90%;
+    margin-top: 50px;
+    padding-left: 0px;
+  }
+  .profile-image-form{
+    text-align: center;
+  }
+  .infor-user-nickname{
+    width: 90%;
+    display: inline-block;
+  }
+  .profile-upload-img{
+    margin: 20px auto;
+  }
+  .edit-password{
+    text-align: center;
+  }
+  .infor-user-password{
+    width: 90%;
+    margin: 20px auto;
+  }
+  .registration-signup{
+    /* margin-top: -50px; */
+  }
+  .edit-profile-img{
+    text-align: center;
+  }
+  
+  /* 비밀번호 찾기 레이아웃 - 모바일 */
+  .find-password-section{
+    padding-top: 150px;
+  }
+  .find-password-form{
+    background-color: rgb(249, 247, 244);
+    width: 90%;
+    margin-top: 35px;
+    box-shadow: none;
+  }
+  .find-password-form > h1{
+    margin-bottom: 50px;
+  }
+  .find-password-form .user-email{
+    width: 70%;
+    margin-bottom: 50px;
+  }
+  .find-password-msg{
+    width: 80%;
+    margin: 0 auto;
+    margin-bottom: 70px;
+  }
+  .find-password-level{
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+  }
+  .confirm-num{
+    width: 100%;
+  }
+  .valid-num-btn{
+    width: auto;
+  }
+}
+
+@media screen and (max-width:450px){
+  .base{
+    padding: 0;
+  }
+  .category >.category-non-login{
+    display: none;
+  }
+  .registration{
+    padding-top: 100px;
+    min-height: 100vh;
+  }
+  .registration-signup{
+    padding-top: 70px;
+  }
+  .category{
+    padding: 0;
+    margin: 0;
+  }
+  .level{
+    font-size: 0.75rem;
+  }
+  .resend-div{
+    width: 100%;
+ }
+}

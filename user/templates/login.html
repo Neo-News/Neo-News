@@ -6,11 +6,6 @@
 
 {% block content %}
 
-{% static 'img/kakao_login_ov.png' as kakao_button %}
-{% static 'img/kakao_login.png' as kakao_button_hover %}
-{% static 'img/naver_login_green.png' as naver_button %}
-{% static 'img/naver_login_white.png' as naver_button_hover %}
-
 <section class="base">
     <section class="category">
       <p class="category-non-login"><i class="fas fa-quote-left social-quote"></i><span class="social-non-login-text"><strong class="social-strong">로그인</strong>하시면 관심있는 이슈를 기사별로 선택해서 보실 수 있어요</span><i class="fas fa-quote-right social-quote"></i></p>
@@ -18,8 +13,8 @@
     <section class="panel registration">
         <div class="panel-body">
             <div class="logo-image">
-                <img class="neonews-balloon" src="{% static 'img/balloon.png' %}" alt="neonews_logo">
-                <img class="neonews-logo" src="{% static 'img/news-logo.png' %}" alt="neonews_logo">
+                <img class="neonews-balloon" src="/static/img/balloon.png" alt="neonews_logo">
+                <img class="neonews-logo" src="/static/img/news-logo.png" alt="neonews_logo">
             </div>
             {% if messages %}
             {% for message in messages %}
@@ -29,7 +24,7 @@
             <form action="." method="POST">
                 {% csrf_token %}
                 {% for field in form %}
-                {{field.errors}}   <!--필드 상단에 오류 메시지 출력-->
+                {{field.errors}}   
                 <div class="login-form">
                     <input id="{{field.id_for_label}}" type="{{field.field.widget.input_type}}" name="{{field.html_name}}" placeholder="{% if field.html_name == 'username' %}email{% else %}{{field.html_name}}{% endif %}">
                 {% endfor %}
