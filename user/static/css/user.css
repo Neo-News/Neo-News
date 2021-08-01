@@ -359,14 +359,12 @@
 .edit-profile-img{
   text-align: left;
   margin-bottom: 180px;
-  padding-left: 40px;
 }
 .edit-profile-pwd{
   margin-bottom: 100px;
   padding-top: 50px;
   padding-bottom: 50px;
   border-bottom: 1px solid #eee;
-  padding-left: 40px;
 }
 
 /* 이미지,닉네임 변경 레이아웃 */
@@ -790,6 +788,15 @@
 }
 /* user responsive */
 @media screen and (max-width:576px){
+  .user-infor-ul{
+    width: 100%;
+  }
+  .user-infor-ul li a{
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin:0 auto;
+  }
   .user-infor-edit{
     flex-direction: column;
     text-align: center;

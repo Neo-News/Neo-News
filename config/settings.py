@@ -14,7 +14,6 @@ from pathlib import Path
 from django.forms.widgets import DateTimeBaseInput
 import django_celery_beat
 import environ
-import my_settings
 from datetime import timedelta
 
 env = environ.Env()
@@ -86,11 +85,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = my_settings.DATABASES
 DATABASES = {
-    'default' : env.db()
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
 }
-
 AUTH_USER_MODEL = 'user.User'
 
 # Password validation
@@ -163,17 +163,17 @@ EMAIL_USE_TLS=env('EMAIL_USE_TLS')
 from celery.schedules import crontab
 
 
-CELERY_beat_scheduler = 'django_celery_beat.schedulers:DatabaseScheduler'
-CELERYD_OPTS="--beat --scheduler=django_celery_beat.schedulers:DatabaseScheduler"
-CELERY_USER = 'heejung'
-CELERY_GROUP = 'heejung'
+# CELERY_beat_scheduler = 'django_celery_beat.schedulers:DatabaseScheduler'
+# CELERYD_OPTS="--beat --scheduler=django_celery_beat.schedulers:DatabaseScheduler"
+# CELERY_USER = 'heejung'
+# CELERY_GROUP = 'heejung'
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
     'task-number-one': {
         'task': 'user.tasks.task_scrappy_daum', # 실행함수
-        'schedule': crontab(minute='*/3', hour='*,5-22')
+        'schedule': crontab(minute='*/4', hour='*,5-22')
     },
     'task-number-two': {
         'task': 'user.tasks.task_scrappy_naver', # 실행함수

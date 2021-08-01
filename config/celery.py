@@ -8,6 +8,7 @@ from celery.schedules import crontab
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings')
 app = Celery('config', broker='redis://localhost:6379/0', backend='redis://localhost:6379/0')
 app.config_from_object('django.conf:settings', namespace='CELERY')
+
 # app.conf.beat_schedule ={
 #     'task-number-one': {
 #         'task': 'user.tasks.task_scrappy_daum', # 실행함수
@@ -18,12 +19,7 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 #         'schedule': crontab(minute='*/3', hour='*,5-22')
 #     },
 # }
-# app.conf.beat_schedule = {
-#     'every-15-second': {
-#         'task': 'core.tasks.task_scrappy_daum',
-#         'schedule': 15,
-#     }
-# }
+
 
 app.autodiscover_tasks()
 

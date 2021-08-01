@@ -34,6 +34,8 @@ from .tasks import send_email
 from .services import UserService
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+
+
 class UserLoginView(FormView):
     """
     author: Oh Ji Yun
@@ -187,6 +189,7 @@ class UserSignupView(View):
     """
     if request.is_ajax():
       data = json.loads(request.body)
+      print(data)
       signup_form = SignupForm(data)
 
       if signup_form.is_valid():
@@ -448,15 +451,13 @@ class DeletePasswordView(LoginRequiredMixin ,View):
         return JsonResponse(context)
 
 
-class FindPwView(LoginRequiredMixin ,View):
+class FindPwView(View):
     """
     author: Son Hee Jung
     date: 0726
     description: 
     비밀번호 찾기 클래스. 비밀번호 찾기 버튼을 누르면 해당 템플릿으로 이동된다
     """
-    login_url = '/user/login/'
-    redirect_field_name='/'
     template_name = 'find_pw.html'
     find_pw = FindPwForm
 
@@ -466,7 +467,7 @@ class FindPwView(LoginRequiredMixin ,View):
         return render(request, self.template_name, context)
 
 
-class PasswordCheckView(LoginRequiredMixin ,View):
+class PasswordCheckView(View):
     """
     author: Son Hee Jung
     date: 0726
@@ -474,9 +475,6 @@ class PasswordCheckView(LoginRequiredMixin ,View):
     비밀번호 찾기에서 이메일을 입력받아 해당 이메일에 대한 유효성 검증 후 인증번호를
     해당 이메일로 전송한다(celery사용)
     """
-    login_url = '/user/login/'
-    redirect_field_name='/'
-
     def get(self, request, *args, **kwargs):
         pass
 
@@ -506,7 +504,7 @@ class PasswordCheckView(LoginRequiredMixin ,View):
             return JsonResponse(context)
 
 
-class PasswordConfirmView(LoginRequiredMixin ,View):
+class PasswordConfirmView(View):
     """
     author: Son Hee Jung
     date: 0726
@@ -514,9 +512,6 @@ class PasswordConfirmView(LoginRequiredMixin ,View):
     정상적인 인증번호를 입력했는지에 대한 검증을 하는 클래스. ajax를 이용해 올바르지
     않으면 에러 메시지를 띄어주고 인증된 경우 패스워드 변경 템플릿으로 이동시킨다
     """
-    login_url = '/user/login/'
-    redirect_field_name='/'
-
     def get(self, request, *args, **kwargs):
         context = context_infor(name = request.user.nickname)
         return render(request,'change-password.html',context)
@@ -542,7 +537,7 @@ class PasswordConfirmView(LoginRequiredMixin ,View):
 
 
 @method_decorator(csrf_exempt, name='dispatch')
-class ValidChangePassword(LoginRequiredMixin, View):
+class ValidChangePassword(View):
     """
     author: Son Hee Jung
     date: 0726
@@ -550,9 +545,6 @@ class ValidChangePassword(LoginRequiredMixin, View):
     비밀번호를 변경해주는 클래스. SetPasswordForm을 사용하여 비밀번호의 검증을 한 후 실제 유저의 패스워드를 변경한다
     csrf_token관련 문제로 csrf_exempt 데코레이터 사용한 이슈 발생 
     """
-    login_url = '/user/login/'
-    redirect_field_name='/'
-
     def get(self, request, *args, **kwargs):
         reset_pwd_form = ChangeSetPwdForm(None)
         return render(request, 'valid-change-pwd.html', {'forms':reset_pwd_form})
@@ -594,12 +586,9 @@ class LoginCallBackView(TemplateView):
         return self.render_to_response(context)
 
 
-class ResendEmailView(LoginRequiredMixin ,VerifyEmailMixin, View):
-    login_url = '/user/login/'
-    redirect_field_name='/'
-
+class ResendEmailView(VerifyEmailMixin, View):
     def get(self, request, *args, **kwargs):
-
+        print('get 인증 이메일 View 썽공')
         forms = VerificationEmailForm()
         forms = str(forms)
         context = {'forms':forms}
@@ -608,6 +597,7 @@ class ResendEmailView(LoginRequiredMixin ,VerifyEmailMixin, View):
     def post(self, request, *args, **kwargs):
         if request.is_ajax():
             data = json.loads(request.body)
+            print('인증 이메일 View 썽공')
             resent_email = data['recent-email']
             change_email = data['email']
             forms = VerificationEmailForm(data)

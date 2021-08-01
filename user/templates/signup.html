@@ -80,6 +80,11 @@
     $password = document.querySelector('.user-pwd').value;
     $password_chk = document.querySelector('.user-pwd-chk').value;
 
+    if ($email == '' || $nickname == '' || $password == '' | $password_chk == ''){
+      document.querySelector('.error').innerHTML = '<span class=".error-word">모든 정보를 입력해주세요 </span>'
+      return
+    }
+
     let signupCsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
 
     let param = {
@@ -141,6 +146,7 @@
     return response.json()
   }).then(function (data) {
     console.log(data['forms'])
+    console.log(data)
     document.querySelector('.resend-div').innerHTML =
      `
      ${data['forms']}

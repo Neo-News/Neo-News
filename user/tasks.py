@@ -24,7 +24,6 @@ def send_email(mail_title, message_data, mail_to):
 
 @shared_task
 def task_scrappy_naver():
-    # 네이버 스크래핑
     scrappy_list = parse_naver()
     print("스크래핑 성공")
 
@@ -33,63 +32,66 @@ def task_scrappy_naver():
         time_obj = convert_datetime_to_timestamp(date_list)
         category = Category.objects.filter(name=news['category']).first()
         press = Press.objects.filter(name=news['press']).first()
-        if not press:
-            press = Press.objects.create(name=news['press'])
+        if press:
+            if news['category'] == "생활/문화":
+                category = Category.objects.filter(name='문화').first()
+            
+            if news['category'] == "IT/과학":
+                category = Category.objects.filter(name='IT').first()
+            
+            if news['category'] == "세계":
+                category = Category.objects.filter(name='국제').first()
         
-        if news['category'] == "생활/문화":
-            category = Category.objects.filter(name='문화').first()
-        
-        if news['category'] == "IT/과학":
-            category = Category.objects.filter(name='IT').first()
-        
-        if news['category'] == "세계":
-            category = Category.objects.filter(name='국제').first()
-        
-        if Press.objects.filter(name=news['press']):
-            if not Article.objects.filter(Q(title=news['title']) | Q(content=news['content'])):
-                article = Article.objects.create(
-                    category=category,
-                    press=press,
-                    potal=Potal.objects.filter(name="네이버").first(),
-                    code=news['code'],
-                    preview_img=news['preview_img'],
-                    kakao_img =news['kakao_img'],
-                    title=news['title'],
-                    content=news['content'],
-                    date=news['date'],
-                    ref=news['ref'],
-                    counted_at = 0,
-                    created_at=time_obj,
-                    )
-                print("기사 DB 넣기 성공")
-                if not Like.objects.filter(article = article):
-                    Like.objects.create(
-                        article=article
-                    )
-                    print("좋아요 인스턴스 생성")
+            if Press.objects.filter(name=news['press']):
+                if not Article.objects.filter(Q(title=news['title']) | Q(content=news['content'])):
+                    article = Article.objects.create(
+                        category=category,
+                        press=press,
+                        potal=Potal.objects.filter(name="네이버").first(),
+                        code=news['code'],
+                        preview_img=news['preview_img'],
+                        kakao_img =news['kakao_img'],
+                        title=news['title'],
+                        content=news['content'],
+                        date=news['date'],
+                        ref=news['ref'],
+                        counted_at = 0,
+                        created_at=time_obj,
+                        )
+                    print("기사 DB 넣기 성공")
+                    time.sleep(2)
+                    if not Like.objects.filter(article = article):
+                        Like.objects.create(
+                            article=article
+                        )
+                        print("좋아요 인스턴스 생성")
+
     return None
 
 
 @shared_task
 def task_scrappy_daum():
-    news_dict = parse_daum()
-    for v in news_dict.values():
-        if Press.objects.filter(name=v['press']):
+    news_list = parse_daum()
+    print('스크래핑 성공쓰')
+    for news in news_list:
+        print(news['press'])
+        print(Press.objects.filter(name=news['press']))
+        if Press.objects.filter(name=news['press']).first():
             print('여기까지는 성고오오오오오옹')
-            if not Article.objects.filter(Q(title=v['title']) | Q(content=v['content'])):
+            if not Article.objects.filter(Q(title=news['title']) | Q(content=news['content'])):
                 article = Article.objects.create(
-                    press=Press.objects.filter(name=v['press']).first(),
+                    press=Press.objects.filter(name=news['press']).first(),
                     potal = Potal.objects.filter(name='다음').first(),
-                    category=Category.objects.filter(name=v['news_category']).first(),
-                    code=v['news_code'],
-                    date=v['date'],
-                    preview_img=v['preview_img'],
-                    kakao_img =v['kakao_img'],
-                    title=v['title'],
-                    content=v['content'],
-                    ref=v['ref'],
+                    category=Category.objects.filter(name=news['news_category']).first(),
+                    code=news['news_code'],
+                    date=news['date'],
+                    preview_img=news['preview_img'],
+                    kakao_img =news['kakao_img'],
+                    title=news['title'],
+                    content=news['content'],
+                    ref=news['ref'],
                     counted_at = 0,
-                    created_at = v['created_at']
+                    created_at = news['created_at']
                 )
                 if not Like.objects.filter(article = article):
                     Like.objects.create(
