@@ -26,7 +26,6 @@ def send_email(mail_title, message_data, mail_to):
 def task_scrappy_naver():
     scrappy_list = parse_naver()
     print("스크래핑 성공")
-
     for news in scrappy_list:
         date_list = news['date'].replace(".", " ").replace(":", " ").split(" ")
         time_obj = convert_datetime_to_timestamp(date_list)
@@ -59,7 +58,6 @@ def task_scrappy_naver():
                         created_at=time_obj,
                         )
                     print("기사 DB 넣기 성공")
-                    time.sleep(2)
                     if not Like.objects.filter(article = article):
                         Like.objects.create(
                             article=article

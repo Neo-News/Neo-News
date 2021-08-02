@@ -81,7 +81,7 @@ def kakao_login(request):
             raise SocialLoginException("User arleady logged in")
 
         client_id = os.environ.get("KAKAO_CLIENT_ID")
-        redirect_uri = "http://127.0.0.1:8000/user/login/social/kakao/callback/"
+        redirect_uri = "http://3.38.80.84/user/login/social/kakao/callback/"
     
         return redirect(
             f"https://kauth.kakao.com/oauth/authorize?response_type=code&client_id={client_id}&redirect_uri={redirect_uri}"
@@ -117,7 +117,7 @@ def kakao_login_callback(request):
             KakaoException("Can't get code")
 
         client_id = os.environ.get("KAKAO_CLIENT_ID")
-        redirect_uri = "http://127.0.0.1:8000/user/login/social/kakao/callback/"
+        redirect_uri = "http://3.38.80.84/user/login/social/kakao/callback/"
         client_secret = os.environ.get("KAKAO_SECRET_KEY")
         request_access_token = requests.post(
             f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={client_id}&redirect_uri={redirect_uri}&code={code}&client_secret={client_secret}",
@@ -325,7 +325,7 @@ class UserInforAddView(LoginRequiredMixin,View):
             
             return JsonResponse({
                 'success':True,
-                'url': 'http://127.0.0.1:8000/'
+                'url': 'http://3.38.80.84/'
                 })
       
 
@@ -446,7 +446,7 @@ class DeletePasswordView(LoginRequiredMixin ,View):
         logout(request)
         messages.success(request, '회원탈퇴 완료 !')
         error = False
-        url = 'http://127.0.0.1:8000/'
+        url = 'http://3.38.80.84/'
         context = context_infor(error=error,url=url)
         return JsonResponse(context)
 
@@ -562,7 +562,7 @@ class ValidChangePassword(View):
                 current_user.set_password(new_password)
                 current_user.save()
                 logout(request)
-                context=context_infor(error=False, url='http://127.0.0.1:8000/user/login/callback/')
+                context=context_infor(error=False, url='http://3.38.80.84/user/login/callback/')
                 return JsonResponse(context)
             else:
                 logout(request)

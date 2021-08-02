@@ -47,22 +47,13 @@ def convert_datetime_to_timestamp(date_list):
 #     '104' : [231, 232, 233, 234, 322],
 #     '105' : [731, 226, 227, 230, 732],
 # }
-# naver_news_code = {
-#     '100' : [264, 265, 266],
-#     '101' : [259, 258, 261],
-#     '102' : [249, 250, 251],
-#     '103' : [241, 239, 240],
-#     '104' : [231, 232, 233],
-#     '105' : [731, 226, 227],
-# }
-
 naver_news_code = {
-    # '100' : [264, 265, 266],
+    '100' : [264, 265, 266],
     '101' : [259, 258, 261],
-    # '102' : [249, 250, 251],
-    # '103' : [241, 239, 240],
-    # '104' : [231, 232, 233],
-    # '105' : [731, 226, 227],
+    '102' : [249, 250, 251],
+    '103' : [241, 239, 240],
+    '104' : [231, 232, 233],
+    '105' : [731, 226, 227],
 }
 
 
@@ -72,11 +63,11 @@ def parse_naver():
     
     news_info = []
     for naver_category in category_list:
-        print('category이름임',naver_category)
         scraped_date = datetime.today().strftime("%Y%m%d")
         for sub_category in naver_news_code[naver_category]:
             for num in range(1,4):
-                print(f'{naver_category} - {num} 페이지 스크래핑 시작 -!')
+                time.sleep(1)
+                print(f'{naver_category} - {sub_category} - {num} 페이지 스크래핑 시작 -!')
                 url = f'https://news.naver.com/main/list.naver?mode=LS2D&mid=shm&sid2={sub_category}&sid1={naver_category}&date={scraped_date}&page={num}'
                 res = requests.get(url, headers=headers)
                 soup = BeautifulSoup(res.text, 'html.parser')
@@ -149,11 +140,12 @@ def dict_infor(**kwargs):
 
 def parse_daum():
     # insight_news_info = None
-    category_list = ['society','economic']
+    category_list = ['society','economic','politics', 'economic', 'foreign', 'culture', 'digital', 'entertain', 'sports']
     data_list = []
     # i = 0
     for category in category_list:
         for num in range(1,2):
+            time.sleep(1)
             print(f'{category} - {num} 페이지 스크래핑 시작 -!')
             date = datetime.today().strftime("%Y%m%d")
             response = requests.get(f'https://news.daum.net/breakingnews/{category}?page={num}&regDate={date}')
@@ -184,12 +176,40 @@ def parse_daum():
                     timestamp = time.mktime(date_code.timetuple())
                     timestamp = str(timestamp)
                     content = news_url_html.select_one('#harmonyContainer > section')
+                    context = dict_infor( press=press,news_code=code, news_category=detail_li, date=date_code, preview_img=preview_img, title=title, content=str(content),ref=ref, created_at = timestamp, kakao_img=kakao_img)
+                    data_list.append(context)
                 except TypeError:
                     print('error')
                     pass
-                
-                context = dict_infor( press=press,news_code=code, news_category=detail_li, date=date_code, preview_img=preview_img, title=title, content=str(content),ref=ref, created_at = timestamp, kakao_img=kakao_img)
-                data_list.append(context)
+    
     return data_list
 
 
+# if __name__=='__main__':
+#     news_list = parse_daum()
+#     print('스크래핑 성공쓰')
+#     for news in news_list:
+#         time.sleep(1)
+#         print(news['press'])
+#         print(Press.objects.filter(name=news['press']))
+#         if Press.objects.filter(name=news['press']).first():
+#             print('여기까지는 성고오오오오오옹')
+#             if not Article.objects.filter(Q(title=news['title']) | Q(content=news['content'])):
+#                 article = Article.objects.create(
+#                     press=Press.objects.filter(name=news['press']).first(),
+#                     potal = Potal.objects.filter(name='다음').first(),
+#                     category=Category.objects.filter(name=news['news_category']).first(),
+#                     code=news['news_code'],
+#                     date=news['date'],
+#                     preview_img=news['preview_img'],
+#                     kakao_img =news['kakao_img'],
+#                     title=news['title'],
+#                     content=news['content'],
+#                     ref=news['ref'],
+#                     counted_at = 0,
+#                     created_at = news['created_at']
+#                 )
+#                 if not Like.objects.filter(article = article):
+#                     Like.objects.create(
+#                     article=article
+#                     )

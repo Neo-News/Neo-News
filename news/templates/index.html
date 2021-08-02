@@ -77,7 +77,7 @@ function categoryOpen(){
 // 페이징 처리한 기사 링크와 비교해서 카테고리 색상 포커스 주기
 let url = window.location.pathname;
 a_list  = document.querySelectorAll('.category-li > a')
-url = `http://127.0.0.1:8000${url}` 
+url = `http://3.38.80.84/${url}` 
 
 a_list.forEach(function(a){
   if(url == a['href']){
