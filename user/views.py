@@ -235,7 +235,7 @@ class Activate(View):
 
 
 class SignupDeatilView(LoginRequiredMixin,View):
-    login_url = 'user/login/'
+    login_url = '/user/login/'
     redirect_field_name='/'
 
     def get(self,request, *args, **kwargs):
