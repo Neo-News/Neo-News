@@ -226,7 +226,7 @@ class Activate(View):
         user = UserService.get_by_user(uid)
         token = jwt.decode(token,'secretkey',algorithm='HS256')
         result = UserService.verify_user_active(user,user.pk, token['user_pk'])
-        auth_login(request, user)
+        # auth_login(request, user)
         
         if result:
             return redirect('user:login')
@@ -312,7 +312,7 @@ class UserInforAddView(LoginRequiredMixin,View):
                     Keyword.objects.create(
                         name = keyword,
                     )
-            Keyword.objects.filter(name=keyword).first().users.add(request.user)
+                Keyword.objects.filter(name=keyword).first().users.add(request.user)
             User.objects.filter(pk=request.user.pk).update(
                 is_detailed = True
             )
