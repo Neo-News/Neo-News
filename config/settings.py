@@ -45,10 +45,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_celery_beat',
     'django_celery_results',
+    'tawkto',
     'news',
     'user',
     'social',
 ]
+
 DJANGO_CELERY_RESULTS_TASK_ID_MAX_LENGTH = 191
 
 MIDDLEWARE = [
