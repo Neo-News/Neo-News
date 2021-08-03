@@ -367,14 +367,12 @@
 .edit-profile-img{
   text-align: left;
   margin-bottom: 180px;
-  padding-left: 40px;
 }
 .edit-profile-pwd{
   margin-bottom: 100px;
   padding-top: 50px;
   padding-bottom: 50px;
   border-bottom: 1px solid #eee;
-  padding-left: 40px;
 }
 
 /* 이미지,닉네임 변경 레이아웃 */
@@ -723,7 +721,7 @@
   display: inline-block;
   color: tomato;
   font-weight: bold;
-  text-align: left;
+  text-align: center;
 }
 .return-home{
   font-size: .8rem;
@@ -784,7 +782,6 @@
   margin: 13px 0;
   border-radius: 3px;
   border: none;
-  box-shadow: 0px 0px 5px 0px rgb(219, 218, 218);
 }
 .valid-error{
   margin-top: 20px;
@@ -798,6 +795,15 @@
 }
 /* user responsive */
 @media screen and (max-width:576px){
+  .user-infor-ul{
+    width: 100%;
+  }
+  .user-infor-ul li a{
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin:0 auto;
+  }
   .user-infor-edit{
     flex-direction: column;
     text-align: center;
@@ -838,7 +844,7 @@
   
   /* 비밀번호 찾기 레이아웃 - 모바일 */
   .find-password-section{
-    padding-top: 150px;
+    padding-top: 80px;
   }
   .find-password-form{
     background-color: rgb(249, 247, 244);
@@ -883,7 +889,6 @@
     min-height: 100vh;
   }
   .registration-signup{
-    padding-top: 70px;
   }
   .category{
     padding: 0;
