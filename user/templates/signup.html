@@ -32,7 +32,7 @@
           {% endfor %}
 
           <div class="form-actions">
-            <input class="signup-btn" type="submit" value="SIGN UP" onclick="signupBtn(event)">
+            <input class="signup-btn" type="button" value="SIGN UP" onclick="signupBtn(event)">
           </div>
       </form>
 
@@ -149,7 +149,7 @@
       document.querySelector('.resend-div').innerHTML =
         `
      ${data['forms']}
-     <input type="submit" class="resend-input-btn" value="보내기" onclick="resendBtn(event)">
+     <input type="button" class="resend-input-btn" value="보내기" onclick="resendBtn(event)">
     `
     }).catch((error) => {
       console.log('error', error);
