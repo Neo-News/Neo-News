@@ -194,7 +194,7 @@ body.pc{
 .edit-category-ul{
   text-align: center;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   margin: 0 auto;
   flex-wrap: wrap;
 }
@@ -801,6 +801,7 @@ transform: translate(-50%,-50%);
   width: 100%;
   font-size: 2em;
   border: none;
+  display: flex;
 }
 .infor-ul li button i{
   width: 20%;
@@ -1206,6 +1207,7 @@ body > div > section.detail-section > section > div > p{
   }
   .infor-ul{
     margin:0px;
+    width: 100%;
   }
 
   /* news infor page - include infor-keyword page */
