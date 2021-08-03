@@ -69,7 +69,7 @@ class NewsDetailView(LoginRequiredMixin, DetailView):
     변경했습니다. url로 요청이 오는 로직이 get방식인듯 합니다(이부분 까먹었어요,,ㅋㅋㅋㅋ) 
     해당 기사의 Article 데이터를 filter해온뒤 템플릿에 context로 보냈습니다
     """
-    login_url = 'user/login/'
+    login_url = '/user/login/'
     redirect_field_name='/'
 
     def get(self, request, **kwargs):

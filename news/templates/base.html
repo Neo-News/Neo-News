@@ -10,12 +10,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="stylesheet" href="/static/css/style.css">
   <title>너뉴스</title>
   {% block head %}
   {% endblock head %}
   <!--Start of Tawk.to Script-->
-<!-- <script type="text/javascript">
+<script type="text/javascript">
   var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
   (function(){
   var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
@@ -24,14 +24,14 @@
   s1.charset='UTF-8';
   s1.setAttribute('crossorigin','*');
   s0.parentNode.insertBefore(s1,s0);
-  })(); -->
+  })();
   </script>
 </head>
 <body>
   <div class="container">
     <section class="main-section">
       <div class="main-div">
-        <img class="main-logo" src="{% static 'img/logo.png' %}" alt="로고이미지">
+        <img class="main-logo" src="/static/img/logo.png" alt="로고이미지">
         <a href="{% url 'index' %}"><h1 class="main-title">너뉴스</h1></a>
       </div>
       <div class="main-user">

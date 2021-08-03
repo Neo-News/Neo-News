@@ -13,8 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 from django.forms.widgets import DateTimeBaseInput
 import django_celery_beat
-import environ
-import my_settings
+import environ, os
 from datetime import timedelta
 
 env = environ.Env()
@@ -32,7 +31,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*',]
 
 
 # Application definition
@@ -86,10 +85,29 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = my_settings.DATABASES
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
 DATABASES = {
-    'default' : env.db()
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'neonews',
+        'USER': 'admin',
+        'PASSWORD': env('PASSWORD'),
+        'HOST': env('HOST'),
+        'PORT': '3306',
+        # 'OPTIONS': {
+        #     'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        #     'chrset' : 'utf8mb4',
+        #     'use_unicode' : True,
+        # },
+    }
 }
+
+
 
 AUTH_USER_MODEL = 'user.User'
 
@@ -130,6 +148,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'news', 'static')
+]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -163,17 +185,17 @@ EMAIL_USE_TLS=env('EMAIL_USE_TLS')
 from celery.schedules import crontab
 
 
-CELERY_beat_scheduler = 'django_celery_beat.schedulers:DatabaseScheduler'
-CELERYD_OPTS="--beat --scheduler=django_celery_beat.schedulers:DatabaseScheduler"
-CELERY_USER = 'heejung'
-CELERY_GROUP = 'heejung'
+# CELERY_beat_scheduler = 'django_celery_beat.schedulers:DatabaseScheduler'
+# CELERYD_OPTS="--beat --scheduler=django_celery_beat.schedulers:DatabaseScheduler"
+# CELERY_USER = 'heejung'
+# CELERY_GROUP = 'heejung'
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_BEAT_SCHEDULE = {
     'task-number-one': {
         'task': 'user.tasks.task_scrappy_daum', # 실행함수
-        'schedule': crontab(minute='*/3', hour='*,5-22')
+        'schedule': crontab(minute='*/5', hour='*,5-22')
     },
     'task-number-two': {
         'task': 'user.tasks.task_scrappy_naver', # 실행함수

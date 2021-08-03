@@ -15,6 +15,8 @@ django.setup()
 from user.models import Category
 from news.models import Potal, Press, Article
 from social.models import Like
+from django.db.models import Q 
+
 
 """
 author: Oh Ji Yun
@@ -56,18 +58,16 @@ naver_news_code = {
 
 
 def parse_naver():
-    time.sleep(3)
     category_list = [key for key in naver_news_code.keys()]
     headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.72 Safari/537.36'}
     
     news_info = []
     for naver_category in category_list:
-        time.sleep(2)
-        print('category이름임',naver_category)
         scraped_date = datetime.today().strftime("%Y%m%d")
         for sub_category in naver_news_code[naver_category]:
             for num in range(1,4):
-                print(f'{naver_category} - {num} 페이지 스크래핑 시작 -!')
+                time.sleep(1)
+                print(f'{naver_category} - {sub_category} - {num} 페이지 스크래핑 시작 -!')
                 url = f'https://news.naver.com/main/list.naver?mode=LS2D&mid=shm&sid2={sub_category}&sid1={naver_category}&date={scraped_date}&page={num}'
                 res = requests.get(url, headers=headers)
                 soup = BeautifulSoup(res.text, 'html.parser')
@@ -128,7 +128,7 @@ daum 뉴스 페이지 카테고리별로 하루치 스크래핑 하는 함수, �
 코드 리팩토링 필요함(코드 정리, 함수 class로 변경가능?)
 """
 
-insight_news_info = []
+
 
 # Dict형태로 변환 함수
 def dict_infor(**kwargs):
@@ -139,14 +139,13 @@ def dict_infor(**kwargs):
 # , 'politics', 'economic', 'foreign', 'culture', 'digital', 'entertain', 'sports'
 
 def parse_daum():
-    time.sleep(3)
-    category_list = ['society','economic','politics', 'foreign', 'culture', 'digital', 'entertain', 'sports']
-    data = {}
-    i = 0
+    # insight_news_info = None
+    category_list = ['society','economic','politics', 'economic', 'foreign', 'culture', 'digital', 'entertain', 'sports']
+    data_list = []
+    # i = 0
     for category in category_list:
-        time.sleep(2)
         for num in range(1,2):
-            time.sleep(5)
+            time.sleep(1)
             print(f'{category} - {num} 페이지 스크래핑 시작 -!')
             date = datetime.today().strftime("%Y%m%d")
             response = requests.get(f'https://news.daum.net/breakingnews/{category}?page={num}&regDate={date}')
@@ -160,30 +159,57 @@ def parse_daum():
                     code = ref.split('/')[4]
                     press = li.select_one('strong > span').text
                     press = press.split('·')
-                    press = press[0]
+                    press = press[0].strip()
                     preview_img = li.select_one('a > img')['src']
                     news_url = requests.get(ref)
                     news_url_html = BeautifulSoup(news_url.text, 'html.parser')
                     detail_ul = soup.select_one('#mArticle > ul')
-                    detail_li = detail_ul.select_one('#mArticle > ul > li.on > a').text.replace('선택됨','').replace('\n','')
-                    print(detail_li)
+                    detail_li = detail_ul.select_one('#mArticle > ul > li.on > a').text.replace('선택됨','').replace('\n','').strip()
+                    print('detail_li 네임임돠',detail_li, len(detail_li))
                     date = news_url_html.select_one('#cSub > div > span > span > span').text
                     date = date.strip()
                     date_list = date.replace(' ','.').split('.')
                     date_list = ' '.join(date_list).split()
                     date_list = date_list[0]+'-'+date_list[1]+'-'+date_list[2]+' '+date_list[3]
                     date_code = datetime.strptime(date_list,'%Y-%m-%d %H:%M')
-                    print(date_code)
                     kakao_img = news_url_html.select_one('#harmonyContainer > section > figure > p > img')['src']
-                    print(kakao_img)
                     timestamp = time.mktime(date_code.timetuple())
                     timestamp = str(timestamp)
                     content = news_url_html.select_one('#harmonyContainer > section')
-                    content = str(content)
+                    context = dict_infor( press=press,news_code=code, news_category=detail_li, date=date_code, preview_img=preview_img, title=title, content=str(content),ref=ref, created_at = timestamp, kakao_img=kakao_img)
+                    data_list.append(context)
                 except TypeError:
                     print('error')
                     pass
-                insight_news_info = dict_infor( press=press,news_code=code, news_category=detail_li, date=date_code, preview_img=preview_img, title=title, content=content,ref=ref, created_at = timestamp, kakao_img=kakao_img)
-                i += 1
-                data[i] = insight_news_info
-    return data
+    
+    return data_list
+
+
+# if __name__=='__main__':
+#     news_list = parse_daum()
+#     print('스크래핑 성공쓰')
+#     for news in news_list:
+#         time.sleep(1)
+#         print(news['press'])
+#         print(Press.objects.filter(name=news['press']))
+#         if Press.objects.filter(name=news['press']).first():
+#             print('여기까지는 성고오오오오오옹')
+#             if not Article.objects.filter(Q(title=news['title']) | Q(content=news['content'])):
+#                 article = Article.objects.create(
+#                     press=Press.objects.filter(name=news['press']).first(),
+#                     potal = Potal.objects.filter(name='다음').first(),
+#                     category=Category.objects.filter(name=news['news_category']).first(),
+#                     code=news['news_code'],
+#                     date=news['date'],
+#                     preview_img=news['preview_img'],
+#                     kakao_img =news['kakao_img'],
+#                     title=news['title'],
+#                     content=news['content'],
+#                     ref=news['ref'],
+#                     counted_at = 0,
+#                     created_at = news['created_at']
+#                 )
+#                 if not Like.objects.filter(article = article):
+#                     Like.objects.create(
+#                     article=article
+#                     )
