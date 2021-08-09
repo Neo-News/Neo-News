@@ -17,14 +17,14 @@
       <form action="" method="POST">
         {% csrf_token %}
         {{form.as_p}}
-        <input class="find-pwd-btn" type="submit" value="인증메일 보내기" onclick="FindPwdBtn(event)">
+        <button class="find-pwd-btn" type="submit" value="인증메일 보내기" onclick="FindPwdBtn(event)"></button>>
       </form>
 
       <span class="find-password-success-msg"></span>
       <form class="confirm-num non-clicked" action="" method="POST">
         {% csrf_token %}
         <input type="text" placeholder="인증번호를 입력해주세요." name="valid_num" class="valid-num-input">
-        <input class="valid-num-btn" type="submit" value="인증하기" onclick="ValidNumBtn(event)">
+        <button class="valid-num-btn" type="submit" value="인증하기" onclick="ValidNumBtn(event)"></button>>
       </form>
 
   </div>
