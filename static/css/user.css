@@ -895,11 +895,13 @@
   .category >.category-non-login{
     display: none;
   }
-  .registration{
-    padding-top: 100px;
+  .registration-signup{
+    padding-top:80px;
     min-height: 100vh;
   }
-  .registration-signup{
+  .registration-login{
+    padding-top: 130px;
+    min-height: 100vh;
   }
   .category{
     padding: 0;
