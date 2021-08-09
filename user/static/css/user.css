@@ -102,6 +102,17 @@
   color: white;
   background-color: rgb(248, 161, 104);
 }
+.signup-btn{
+  display: block;
+  width: 280px;
+  height: 40px;
+  margin: 3px 0px;
+  border: none;
+  border-radius: 3px;
+  font-weight: bold;
+  color: white;
+  background-color: rgb(248, 161, 104);
+}
 .login-btn:hover, 
 .signup-btn:hover {
   background-color: #F7B34F;
