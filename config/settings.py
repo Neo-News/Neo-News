@@ -182,5 +182,17 @@ EMAIL_HOST_PASSWORD=env('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS=env('EMAIL_USE_TLS')
 
 # celery 환경설정
+from celery.schedules import crontab
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
-
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+# CELERY_BEAT_SCHEDULE = {
+#     'add-every-5-minutes-naver':{
+#     'task':'user.tasks.task_scrappy_naver',
+#     'schedule':crontab(minute='*/5', hour='*,5-22')
+#     # 'schedule': timedelta(minutes=1),
+#     },
+#     'add-every-5-minutes-daum':{
+#     'task':'user.tasks.task_scrappy_daum',
+#     'schedule':crontab(minute='*/5', hour='*,5-22')
+#     }
+# }
