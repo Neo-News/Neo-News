@@ -14,12 +14,12 @@ app = Celery('config',
 app.config_from_object('django.conf:settings', namespace='CELERY')
 
 # app.conf.update(
-#     task_routes = {
-#         'user.tasks.send_email': {'queue':'email'},
-#         'user.tasks.task_scrappy_naver': {'queue':'naver'},
-#         'user.tasks.task_scrappy_daum': {'queue':'daum'},
+    # task_routes = {
+    #     'user.tasks.send_email': {'queue':'email'},
+    #     'user.tasks.task_scrappy_naver': {'queue':'naver'},
+    #     'user.tasks.task_scrappy_daum': {'queue':'daum'},
 
-#     },
+    # },
 # )
 # app.conf.beat_schedule ={
 #     'task-number-one': {
@@ -41,13 +41,12 @@ app.autodiscover_tasks()
 def debug_task(self):
     print('Request: {0!r}'.format(self.request))
 
-
 app.conf.beat_schedule = {
-    'add-every-3-minutes':{
+    'add-every-5-minutes-naver':{
     'task':'user.tasks.task_scrappy_naver',
     'schedule':crontab(minute='*/5', hour='*,5-22')
     },
-    'add-every-5-minutes':{
+    'add-every-5-minutes-daum':{
     'task':'user.tasks.task_scrappy_daum',
     'schedule':crontab(minute='*/5', hour='*,5-22')
     }
