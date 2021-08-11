@@ -182,23 +182,5 @@ EMAIL_HOST_PASSWORD=env('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS=env('EMAIL_USE_TLS')
 
 # celery 환경설정
-from celery.schedules import crontab
+CELERY_BROKER_URL = env('CELERY_BROKER_URL')
 
-
-# CELERY_beat_scheduler = 'django_celery_beat.schedulers:DatabaseScheduler'
-# CELERYD_OPTS="--beat --scheduler=django_celery_beat.schedulers:DatabaseScheduler"
-# CELERY_USER = 'heejung'
-# CELERY_GROUP = 'heejung'
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_ACCEPT_CONTENT = ['json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_BEAT_SCHEDULE = {
-    'task-number-one': {
-        'task': 'user.tasks.task_scrappy_daum', # 실행함수
-        'schedule': crontab(minute='*/5', hour='*,5-22')
-    },
-    'task-number-two': {
-        'task': 'user.tasks.task_scrappy_naver', # 실행함수
-        'schedule': crontab(minute='*/3', hour='*,5-22')
-    },
-}
