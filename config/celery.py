@@ -42,12 +42,12 @@ def debug_task(self):
     print('Request: {0!r}'.format(self.request))
 
 app.conf.beat_schedule = {
-    'add-every-15-minutes-naver':{
+    'add-every-minutes-naver':{
     'task':'user.tasks.task_scrappy_naver',
-    'schedule':crontab(minute='*/15', hour='*,5-22')
+    'schedule':crontab(minute=0, hour='8')
     },
-    'add-every-15-minutes-daum':{
+    'add-every-minutes-daum':{
     'task':'user.tasks.task_scrappy_daum',
-    'schedule':crontab(minute='*/15', hour='*,5-22')
+    'schedule':crontab(minute=0, hour='8')
     }
 }
