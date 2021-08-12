@@ -44,10 +44,10 @@ def debug_task(self):
 app.conf.beat_schedule = {
     'add-every-minutes-naver':{
     'task':'user.tasks.task_scrappy_naver',
-    'schedule':crontab(minute=0, hour='8')
+    'schedule':crontab(minute='*/15', hour='*,5-22')
     },
     'add-every-minutes-daum':{
     'task':'user.tasks.task_scrappy_daum',
-    'schedule':crontab(minute=0, hour='8')
+    'schedule':crontab(minute='*/15', hour='*,5-22')
     }
 }
