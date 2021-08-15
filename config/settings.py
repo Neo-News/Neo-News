@@ -31,7 +31,10 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*',]
+ALLOWED_HOSTS = [
+    '.ap-northeast-2.compute.amazonaws.com',
+    '.neonews.site,'
+]
 
 
 # Application definition
@@ -45,7 +48,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_celery_beat',
     'django_celery_results',
-    'django_crontab',
     'news',
     'user',
     'social',
@@ -197,10 +199,3 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 #     'schedule':crontab(minute='*/5', hour='*,5-22')
 #     }
 # }
-
-
-# crontab 환경설정
-CRONJOBS = [
-    ('*/10 * * * *', 'user.tasks.task_scrappy_naver', '>> /tmp/log/cron.log'),
-    ('*/10 * * * *', 'user.tasks.task_scrappy_daum', '>> /tmp/log/cron.log'),
-]
