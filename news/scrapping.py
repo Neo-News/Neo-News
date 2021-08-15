@@ -145,7 +145,6 @@ def parse_daum():
     # i = 0
     for category in category_list:
         for num in range(1,2):
-            time.sleep(1)
             print(f'{category} - {num} 페이지 스크래핑 시작 -!')
             date = datetime.today().strftime("%Y%m%d")
             response = requests.get(f'https://news.daum.net/breakingnews/{category}?page={num}&regDate={date}')
