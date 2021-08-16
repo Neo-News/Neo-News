@@ -32,7 +32,7 @@
 {% endblock content %}
 
 {% block script %}
-<script>
+<script defer>
   function sendPwd(e) {
     e.preventDefault();
     $password = document.querySelector('.password').value;
