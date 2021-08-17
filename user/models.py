@@ -33,7 +33,7 @@ class User(AbstractBaseUser, PermissionsMixin, TimeStampable, Deleteable):
     is_agreed : 사용자 정책 동의 관련 필드
     is_detailed : 사용자 부가 내용 작성 관련 필드
     """
-    image = models.TextField(verbose_name=('Profile image'),)
+    image = models.TextField(verbose_name=('Profile image'),default="https://neonews-s3.s3.ap-northeast-2.amazonaws.com/2021004434profile3.png")
     email = models.EmailField(verbose_name=('Email address'), max_length=255,unique=True,)
     nickname = models.CharField(verbose_name=('Nickname'), max_length=30,unique=True)
     is_active = models.BooleanField(verbose_name=('Is active'), default=False)
