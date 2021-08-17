@@ -266,6 +266,10 @@
   padding-bottom: 50px;
   border-bottom: 1px solid #eee;
 }
+.profile-errmsg {
+  color : rgb(248, 161, 104)
+}
+
 .edit-password{
   text-align: left;
 }
