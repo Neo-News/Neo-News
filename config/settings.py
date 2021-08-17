@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_celery_beat',
     'django_celery_results',
-    'pwa',
     'news',
     'user',
     'social',
@@ -191,52 +190,3 @@ from celery.schedules import crontab
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
 
-# pwa setting
-
-PWA_APP_NAME = 'neonews'
-PWA_APP_DESCRIPTION = "유저가 원하는 기사를 제공하는 웹사이트입니다"
-PWA_APP_THEME_COLOR = '#f8f7f3'
-PWA_APP_BACKGROUND_COLOR = '#f8f7f3'
-PWA_APP_DISPLAY = 'standalone'
-PWA_APP_SCOPE = '/'
-PWA_APP_ORIENTATION = 'any'
-PWA_APP_START_URL = '/'
-PWA_APP_STATUS_BAR_COLOR = 'default'
-PWA_APP_ICONS = [
-    {
-      "src": "static/img/icon_192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "static/img/icon_256.png",
-      "sizes": "256x256",
-      "type": "image/png"
-    },
-    {
-      "src": "static/img/icon_384.png",
-      "sizes": "384x384",
-      "type": "image/png"
-    },
-    {
-      "src": "static/img/icon_512.png",
-      "sizes": "512x512",
-      "type": "image/png"
-    }
-]
-PWA_APP_ICONS_APPLE = [
-    {
-        'src': "static/img/icon_192.png",
-        'sizes': '192x192'
-    }
-]
-PWA_APP_SPLASH_SCREEN = [
-    {
-        'src': 'static/img/icon_192.png',
-        'media': '(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)'
-    }
-]
-PWA_APP_DIR = 'ltr'
-PWA_APP_LANG = 'Asia/Seoul'
-PWA_SERVICE_WORKER_PATH = os.path.join(BASE_DIR, 'news/static/js', 'serviceworker.js')
