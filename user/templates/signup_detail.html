@@ -66,10 +66,19 @@ todo_list = []
 function clickSubmitBtn(e){
   e.preventDefault();
   todoInput = document.querySelector('.signup-detail-keyword-input')
+  todowords = document.querySelectorAll('.keyword')
+  
+  // 중복되는 키워드 추가하지 않는 로직
+  todoList = []
+  for(i=0 ; i<= todowords.length -1; i++){
+    todoList.push(todowords[i].innerText)
+  }
   todo = todoInput.value;
-  if (todoInput.value == ''){
+  if (todo == '' || todoList.includes(todo) ){
+    todoInput.value = '';
     return
   }
+
   todo_list.push(todo)
   document.querySelector('.keyword-input-ul').innerHTML +=  `
   <li class="keyword-list todo${i}">
@@ -99,6 +108,11 @@ let category_list = []
 chkList.forEach(function(ch){
   category_list.push(ch.value)
 });
+
+if (category_list == '' && todo_list == ''){
+  alert('관심있는 카테고리나 키워드를 입력해주세요 !!')
+  return
+}
 
 
   let CsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
