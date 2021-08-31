@@ -37,7 +37,9 @@
           <input type="text" class="infor-user-nickname" name="infor-user-nickname" value="{{user.nickname}}">
           <button class="user-nickname-btn" type="submit">변경하기</button>
           <strong class="update-msg"></strong>
-          <strong class="profile-errmsg"></strong>
+          {% if msg.state %}
+          <strong class="profile-errmsg">{{msg.text}}</strong>
+          {% endif %}
         </div>
       </form>
     </div>
@@ -236,14 +238,15 @@
   //   document.querySelector(".infor-user-nickname").placeholder ="닉네임을 입력해 주세요."
   //   console.log("You cannot submit an empty form")
   // }
-  function viewMessage(e) {
-    e.preventDefault()
-    const message = document.querySelector(".profile-errmsg");
-    message.innerText = "개인정보가 변경되었습니다.";
-  }
 
-  const changeBtn = document.querySelector(".user-nickname-btn");
-  changeBtn.addEventListener("click", viewMessage);
+  // function viewMessage(e) {
+  //   e.preventDefault()
+  //   const message = document.querySelector(".profile-errmsg");
+  //   message.innerText = "개인정보가 변경되었습니다.";
+  // }
+
+  // const changeBtn = document.querySelector(".user-nickname-btn");
+  // changeBtn.addEventListener("click", viewMessage);
 
 </script>
 {% endblock script %}

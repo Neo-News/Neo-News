@@ -281,7 +281,17 @@ class ChangeMyInforView(View):
                 User.objects.filter(pk=request.user.pk).update(
                     nickname=nickname
                 )
-            return redirect('user:mypage')
+            user = User.objects.filter(pk=request.user.pk).first()
+            context = {
+                'user' : user,
+                'msg' : {
+                    'state' : True,
+                    'text' : '개인정보가 변경되었습니다.'
+                }
+            }
+            return render(request, 'user-infor.html', context)    
+            # return redirect('user:mypage')
+
         
         # if self.request.is_ajax():
         #     data = json.loads(request.body)
@@ -646,6 +656,7 @@ class MypageView(LoginRequiredMixin, View):
         context = {
             'user' : user,
         }
+        
         return render(request, 'user-infor.html', context)    
 
     # def post(self, request, *args, **kwargs):
