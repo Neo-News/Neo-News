@@ -18,6 +18,11 @@
 
   <div class="user-infor-contents">
     <ul class="user-comment">
+      {% if not comments %}
+      <li class="user-comment-li">
+        <span class="user-comment-title">댓글 단 기사가 아직 없어요 !</span>
+      </li>
+      {% endif %}
       {% for comment in comments%}
       <li class="user-comment-li">
         <span class="user-comment-title"><a href="{% url 'news:detail' comment.article.pk %}">{{comment.article.title |truncatechars:42 }}</a></span>
