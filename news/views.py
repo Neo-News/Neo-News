@@ -105,13 +105,13 @@ class NewsInforEditView(LoginRequiredMixin, ListView):
     redirect_field_name='/'
     
     def get(self, request, **kwargs):
-        keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
+        # keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
         userpress = UserPress.objects.filter(user__pk = request.user.pk).first()
         press_list = Press.objects.all().order_by('name')
-        categories = Category.objects.exclude(name='속보').all()
+        # categories = Category.objects.exclude(name='속보').all()
         non_press = userpress.non_press.all()
         press = userpress.press.all()
-        user_categories = Category.objects.filter(users__pk = request.user.pk).all()
+        # user_categories = Category.objects.filter(users__pk = request.user.pk).all()
         if non_press is not None:
           non_press = userpress.non_press.all()
           press = userpress.press.all()
@@ -134,11 +134,31 @@ class NewsInforEditView(LoginRequiredMixin, ListView):
                                 page_range=page_range,
                                 in_press=press,
                                 non_press=non_press,
-                                keywords=keywords,
-                                categories=categories,
-                                user_categories=user_categories
+                                # keywords=keywords,
+                                # categories=categories,
+                                # user_categories=user_categories
                                 )    
         return render(request, 'infor-edit.html',context)
+
+    def post(self, request, **kwargs):
+        pass
+
+class NewsInforEditKeywordView(View):
+    def get(self, request, **kwargs):
+        keywords = Keyword.objects.filter(users__pk=request.user.pk).all()
+        context = context_infor(keywords=keywords)
+        return render(request, 'infor-keyword.html', context)
+
+    def post(self, request, **kwargs):
+        pass
+
+
+class NewsInforEditCategoryView(View):
+    def get(self, request, **kwargs):
+        categories = Category.objects.exclude(name='속보').all()
+        user_categories = Category.objects.filter(users__pk = request.user.pk).all()
+        context = context_infor(categories=categories, user_categories=user_categories)
+        return render(request, 'infor-category.html', context)
 
     def post(self, request, **kwargs):
         pass

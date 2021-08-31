@@ -204,15 +204,17 @@ body.pc{
   text-align: center;
 }
 .edit-category-ul{
-  text-align: center;
+  /* text-align: center; */
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   margin: 0 auto;
   flex-wrap: wrap;
+  width: 740px;
 }
 .edit-category-li{
   padding: 10px;
   margin: 0 10px;
+  width: 100px;
 }
 .edit-category-li > label{
   font-size: 1.3rem;
@@ -801,28 +803,27 @@ transform: translate(-50%,-50%);
   border-radius: 5px;
   transition: all 200ms;
 }
-.infor-ul li:hover button,
-.infor-ul li:focus button {
+.infor-ul li:hover a,
+.infor-ul li:focus a {
   border-radius: 5px;
   color: #eee;
-  background-color: rgb(248, 161, 104);
+  background-color: rgb(119, 118, 117);
   transition: all 200ms;
 }
-.infor-ul li button{
+.infor-ul li a{
   padding: 5px 10px;
-  width: 100%;
   font-size: 2em;
   border: none;
   display: flex;
 }
-.infor-ul li button i{
+.infor-ul li a i{
   width: 20%;
   /* margin-right: 20px; */
   text-align: left;
   display: inline-block;
   font-size: 1.3em;
 }
-.infor-ul li button span{
+.infor-ul li a span{
   font-size: 1em;
   width: 80%;
   margin-right: 20px;
@@ -1007,6 +1008,15 @@ body > div > section.detail-section > section > div > p{
 }
 
 /* responsive 반응형 layout */
+@media screen and (max-width:690px){
+.edit-category-ul{
+  width: 240px;
+}
+.edit-category-li{
+  width: 40px;
+}
+}
+
 @media screen and (max-width:576px){
   .main-logo{
     display: none;

@@ -10,9 +10,9 @@
   <div class="news-infor-div">
   <div class="news-infor">
     <ul class="infor-ul">
-      <li class="press-infor"><button class="clicked press-btn" onclick="pressInfor(event)" ;><i class="far fa-newspaper"></i><span>언론사 선택</span></button></li>
-      <li class="keyword-infor"><button class="keyword-btn" onclick="keywordInfor(event)" ;><i class="far fa-bell"></i><span>키워드 선택</span></button></li>
-      <li class="keyword-infor"><button class="category-btn" onclick="categoryInfor(event)" ;><i class="far fa-bell"></i><span>카테고리 선택</span></button></li>
+      <li class="press-infor"><a class="clicked press-btn" href="{% url 'news:infor-edit' %}"><i class="far fa-newspaper"></i><span>언론사 선택</span></a></li>
+      <li class="keyword-infor"><a class="keyword-btn" href="{% url 'news:infor-edit-keyword' %}"><i class="far fa-bell"></i><span>키워드 선택</span></a></li>
+      <li class="keyword-infor"><a class="category-btn" href="{% url 'news:infor-edit-category' %}"><i class="far fa-hand-pointer"></i><span>카테고리 선택</span></a></li>
       
     </ul>
   </div>
@@ -25,39 +25,82 @@
   </div>
 
   <div class="news-infor-contents">
-    {% include 'infor-press.html' %}
+    <ul class="infor-press-ul">
+      {% for press in press_list %}
+    
+      <li class="infor-press-li infor-press-li{{press.pk}}">
+        <div class="infor-press">
+          <img src="" alt=""><i class="fas fa-newspaper"></i>
+          <span>{{press.name}}</span>
+        </div>
+        <form action="" method='POST'>
+          {% csrf_token %}
+          <span>
+            {% for i in non_press.all %}
+      {% if press.name in i.name %}
+      <i class="press-check-btn{{press.pk}} non-press-check-btn far fa-check-square" onclick="PressChked('{{press.pk}}')"></i>
+      {% endif %}
+      {% endfor %}
+    
+      {% for i in in_press.all %}
+      {% if press.name in i.name %}
+      <i class="press-check-btn{{press.pk}} press-check-btn far fa-check-square" onclick="PressChked('{{press.pk}}')"></i>
+      {% endif %}
+      {% endfor %}
+        </span>
+        </form>
+      </li>
+      {% endfor %}
+    </ul>
+    
+    
+    <!-- 페이징 처리 -->
+    <ul class="page-ul">
+      {% if press_list.has_previous %}
+      <li class="page-li">
+        <a class="page-link" href="?page={{ press_list.previous_page_number}}"><i
+            class="page-icon fas fa-chevron-left"></i>이전</a>
+      </li>
+      {% else %}
+      <li class="page-li disabled">
+        <a class="page-link" tabindex="-1" aria-disabled="true" href="#"><i class="page-icon fas fa-chevron-left"></i>이전</a>
+      </li>
+      {% endif %}
+      <!-- 페이지리스트 -->
+      {% for page_number in page_range %}
+      {% if page_number == question_list.number %}
+      <li class="page-li active" aria-current="page">
+        <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+      </li>
+      {% else %}
+      <li class="page-li">
+        <a class="page-link" href="?page={{ page_number }}">{{ page_number }}</a>
+      </li>
+      {% endif %}
+      {% endfor %}
+      <!-- 다음페이지 -->
+      {% if press_list.has_next %}
+      <li class="page-li">
+        <a class="page-link" href="?page={{ press_list.next_page_number }}">다음<i
+            class="page-icon fas fa-chevron-right"></i></a>
+      </li>
+      {% else %}
+      <li class="page-li disabled">
+        <a class="page-link" tabindex="-1" aria-disabled="true" href="#">다음<i
+            class="page-icon fas fa-chevron-right"></i></a>
+      </li>
+      {% endif %}
+    </ul>
+    
+    <!-- 페이징처리 끝 -->
+    
+    
   </div>
 </section>
 {% endblock content %}
 
 {% block script %}
 <script defer>
-function pressInfor(e){
-  document.querySelector('.press-btn').classList.add('clicked');
-  document.querySelector('.keyword-btn').classList.remove('clicked');
-  document.querySelector('.category-btn').classList.remove('clicked');
-  document.querySelector('.news-infor-edit-title').innerText = '언론사 선택하기'
-  document.querySelector('.news-infor-edit-content').innerText="현재 기사를 받고 있는 언론사들이에요 ! 언론사 선택 해제시 해당 언론사에 관한 기사들은 제외돼요 :-) 보고싶지 않은 언론사가 있다면 선택을 해제해주세요."
-  document.querySelector('.news-infor-contents').innerHTML =`{% include 'infor-press.html' %}`
-}
-
-function keywordInfor(e){
-  document.querySelector('.press-btn').classList.remove('clicked');
-  document.querySelector('.keyword-btn').classList.add('clicked');
-  document.querySelector('.category-btn').classList.remove('clicked');
-  document.querySelector('.news-infor-edit-title').innerText = '키워드 선택하기'
-  document.querySelector('.news-infor-edit-content').innerText="키워드 삭제 시 키워드가 카테고리에서 사라져요 :-) 새롭게 추가할 키워드가 있다면 입력해주세요."
-  document.querySelector('.news-infor-contents').innerHTML =`{% include 'infor-keyword.html' %}`
-}
-function categoryInfor(e){
-  document.querySelector('.press-btn').classList.remove('clicked');
-  document.querySelector('.keyword-btn').classList.remove('clicked');
-  document.querySelector('.category-btn').classList.add('clicked');
-  document.querySelector('.news-infor-edit-title').innerText = '카테고리 선택하기'
-  document.querySelector('.news-infor-edit-content').innerText="기사를 카테고리별로 보여드려요 :-) 원하시는 카테고리를 선택/해제 해주세요."
-  document.querySelector('.news-infor-contents').innerHTML =`{% include 'infor-category.html' %}`
-
-}
 
 // infor-press 언론사 선택 ajax 통신
 function PressChked(press_pk){
@@ -94,99 +137,5 @@ function PressChked(press_pk){
     console.log('error', error);
   })
 }
-
-// 키워드 추가 ajax
-function clickSubmitBtn(e){
-  e.preventDefault();
-  todoInput = document.querySelector('.infor-keyword-input');
-  todo = todoInput.value;
-  console.log(todo)
-  if (todo == ''){
-    return
-  }
-let CsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
-let param = {
-  'todo':todo,
-}
-fetch("{% url 'user:keyword_create' %}", {
-  method: 'POST',
-  headers: {
-    "X-CSRFToken": CsrfValue,
-    "X-Requested-With": "XMLHttpRequest"
-  },
-  body: JSON.stringify(param),
-}).then(function (response) {
-  console.log('readdss', response)
-  return response.json()
-}).then(function (data) {
-  console.log(data)
-  keyword_pk = data['keyword_pk']
-  content = data['content']
-  document.querySelector('.infor-keyword-ul').innerHTML +=  `
-  <li class="infor-keyword-list infor-keyword-list${keyword_pk}">
-  ${content}
-  <i class="fas fa-times delete${keyword_pk}" onclick="clickDeleteBtn('${keyword_pk}')"></i>
-  </li>`
-
-  document.querySelector('.infor-keyword-input').value='';
-  document.querySelector('.infor-keyword-input').focus();
-
-}).catch((error) => {
-  console.log('error', error);
-})
-}
-
-// 키워드 삭제 ajax
-function clickDeleteBtn(keyword_pk){
-  event.preventDefault();
-
-let CsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
-let param = {
-  'keyword_pk':keyword_pk
-}
-fetch("{% url 'user:keyword_delete' %}", {
-  method: 'POST',
-  headers: {
-    "X-CSRFToken": CsrfValue,
-    "X-Requested-With": "XMLHttpRequest"
-  },
-  body: JSON.stringify(param),
-}).then(function (response) {
-  console.log('readdss', response)
-  return response.json()
-}).then(function (data) {
-
-document.querySelector(`.infor-keyword-list${keyword_pk}`).remove()
-
-}).catch((error) => {
-  console.log('error', error);
-})
-}
-
-// 카테고리 선택
-function categoryBtn(category_pk) {
-  // console.log('ga')
-  // event.preventDefault();
-
-  let CsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
-  let param = {
-    'category_pk':category_pk
-  }
-  fetch("{% url 'user:category_infor' %}", {
-    method: 'POST',
-    headers: {
-      "X-CSRFToken": CsrfValue,
-      "X-Requested-With": "XMLHttpRequest"
-    },
-    body: JSON.stringify(param),
-  }).then(function (response) {
-    console.log('readdss', response)
-    return response.json()
-  }).then(function (data) {
-
-  }).catch((error) => {
-    console.log('error', error);
-  })
-  }
 </script>
 {% endblock script %}
