@@ -34,7 +34,13 @@
 </section>
 
 <ul class="news-ul">
+  {% if not articles %}
+  <li class="news-li">
+    <div class="news-title" style="margin: 0 auto; font-size: 1.0rem;">아직 카테고리에 해당하는 기사가 없어요 !</div>
+  </li>
+  {% endif %}
   {% for article in articles %}
+
   <li class="news-li">
     <div class="news-img"><img src="{{article.preview_img}}" alt="">
     </div>
@@ -58,7 +64,6 @@
   {% endfor %}
 </ul>
 
-
 {% include 'pagination.html' %}
 {% endblock content %}
 
@@ -77,7 +82,7 @@ function categoryOpen(){
 // 페이징 처리한 기사 링크와 비교해서 카테고리 색상 포커스 주기
 let url = window.location.pathname;
 a_list  = document.querySelectorAll('.category-li > a')
-url = `http://neonews.site${url}` 
+url = `https://neonews.site${url}` 
 
 a_list.forEach(function(a){
   if(url == a['href']){
