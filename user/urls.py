@@ -2,7 +2,7 @@ from os import name
 from django.urls import path
 from django.contrib.auth.views import LogoutView
 from .views import (
-    UserLoginView, UserSignupView, SignupDeatilView, ImageUploadView,
+    UserLoginView, UserSignupView, SignupDeatilView, ChangeMyInforView,
     Activate, UserInforAddView, kakao_login, kakao_login_callback, ChangePasswordView,
     DeletePasswordView, FindPwView, PasswordCheckView, PasswordConfirmView,ValidChangePassword,
     LoginCallBackView, ResendEmailView,UserKeywordDeleteView,UserKeywordEditView,UserCategoryEditView, 
@@ -39,7 +39,7 @@ urlpatterns = [
     path('delete/', DeletePasswordView.as_view(), name='delete'),
 
     path('mypage/', MypageView.as_view(), name='mypage'),
-    path('infor/image/', ImageUploadView.as_view(), name='image-upload'),
+    path('infor/change/', ChangeMyInforView.as_view(), name='change-infor'),
     path('like/article/', LikeArticleView.as_view(), name='like-article'),
     path('comment/article/', CommentArticleView.as_view(), name='comment-article'),
 ]
