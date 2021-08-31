@@ -29,7 +29,8 @@
         {% if user.is_authenticated %}
         <span class="main-social">
           <a href="{% url 'news:infor-edit' %}"><i class="adjust-icon fas fa-sliders-h"></i></a>
-          <a href="{% url 'user:mypage' %}"><i class="user-icon fas fa-user"></i></a>
+          <!-- <a href="{% url 'user:mypage' %}"><i class="user-icon fas fa-user"></i></a> -->
+          <a href="{% url 'user:mypage' %}"><img class="user-icon" src="{{user.image}}" onerror="this.src=`{% static 'img/profile3.png' %}`"></a>
         </span>
         <span class="main-user-nickname"><strong>{{request.user.nickname}}</strong>님</span>
         <a href="{% url 'user:logout' %}"><button class="signout">로그아웃</button></a>
