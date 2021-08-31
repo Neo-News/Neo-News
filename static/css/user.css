@@ -411,7 +411,7 @@
   width: 0px;
 }
 .fa-image{
-  font-size: 5.5em;
+  font-size: 5.7em;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -420,11 +420,11 @@
 }
 .profile-upload-preview-img{
   position: absolute;
-  top: -4px;
-  left: -4px;
+  top: 0;
+  left: 0;
   display: inline-block;
   width: 200px;
-  height: 200px;
+  height: 210px;
 }
 .upload-img-div{
   text-overflow: ellipsis;

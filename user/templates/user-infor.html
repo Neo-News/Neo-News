@@ -7,93 +7,93 @@
 {% block content %}
 <section class="user-infor-edit">
   <div class="user-infor-div">
-  <div class="user-infor">
-    <ul class="user-infor-ul">
-      <li class="user-infor"><a href="{% url 'user:mypage' %}" class="clicked user-infor-btn"><i class="far fa-user"></i><span>내 계정</span></a></li>
-      <li class="user-like"><a href="{% url 'user:like-article' %}" class="user-like-btn"><i class="far fa-heart"></i><span>좋아요 한 기사</span></a></li>
-      <li class="user-comment"><a href="{% url 'user:comment-article' %}" class="user-comment-btn"><i class="far fa-comment"></i><span>댓글 단 기사</span></a></li>
-    </ul>
-  </div>
+    <div class="user-infor">
+      <ul class="user-infor-ul">
+        <li class="user-infor"><a href="{% url 'user:mypage' %}" class="clicked user-infor-btn"><i
+              class="far fa-user"></i><span>내 계정</span></a></li>
+        <li class="user-like"><a href="{% url 'user:like-article' %}" class="user-like-btn"><i
+              class="far fa-heart"></i><span>좋아요 한 기사</span></a></li>
+        <li class="user-comment"><a href="{% url 'user:comment-article' %}" class="user-comment-btn"><i
+              class="far fa-comment"></i><span>댓글 단 기사</span></a></li>
+      </ul>
+    </div>
   </div>
 
   <div class="user-infor-contents">
     <!-- <h2>내 닉네임 수정하기</h2> -->
     <div class="edit-profile-img">
-        <p class="edit-personal-infor"><i class="personal-icon fas fa-caret-right"></i>개인 정보</p>
-        <p class="edit-personal-infor-msg"><strong>닉네임</strong> 또는 <strong>프로필 사진</strong> 변경이 가능합니다.</p>
-        <form class="profile-image-form" action="{% url 'user:change-infor' %}" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div onclick="UploadImg(event)" class="profile-upload-img">
-                <input class="profile-image-file profile-upload-img-input" type="file" name="img" width="50"><br>
-                <i class="far fa-image"></i>
-                <img src="{{user.image}}" alt="" class="profile-upload-preview-img">
-            </div>
-            
-            <div class="edit-nickname">
-              <input type="text" class="infor-user-nickname" name="infor-user-nickname" value="{{user.nickname}}">
-              <button class="user-nickname-btn" type="submit">변경하기</button>
-              <strong class="update-msg"></strong>
-              {% if msg.state %}
-              <strong class="profile-errmsg">{{msg.text}}</strong>
-              {% endif %}
-            </div>
-        </form>
+      <p class="edit-personal-infor"><i class="personal-icon fas fa-caret-right"></i>개인 정보</p>
+      <p class="edit-personal-infor-msg"><strong>닉네임</strong> 또는 <strong>프로필 사진</strong> 변경이 가능합니다.</p>
+      <form class="profile-image-form" action="{% url 'user:change-infor' %}" method="POST"
+        enctype="multipart/form-data">
+        {% csrf_token %}
+        <div onclick="UploadImg(event)" class="profile-upload-img">
+          <input class="profile-image-file profile-upload-img-input" type="file" name="img" width="50"><br>
+          <i class="far fa-image"></i>
+          <img src="{{user.image}}" alt="" class="profile-upload-preview-img">
+        </div>
+
+        <div class="edit-nickname">
+          <input type="text" class="infor-user-nickname" name="infor-user-nickname" value="{{user.nickname}}">
+          <button class="user-nickname-btn" type="submit">변경하기</button>
+          <strong class="update-msg"></strong>
+          <strong class="profile-errmsg"></strong>
+        </div>
+      </form>
     </div>
-    
+
     <div class="edit-profile-pwd">
-        <p class="edit-personal-infor"><i class="personal-icon fas fa-caret-right"></i>비밀번호 설정</p>
-        <form class="profile-password-form" action="#" method="POST">
-            {% csrf_token %}
-            <div class="edit-password">
-                <button class="user-password-btn" onclick="editChangePwd(event)">비밀번호 변경</button>
-                <div class="edit-password-infor non-clicked">
-                    <input type="text" class="infor-user-password" name="infor-user-password"
-                        placeholder="인증받으실 이메일을 입력해주세요">
-                    <button class="resend-pwd" type="submit">보내기</button>
-                </div>
-            </div>
-        </form>
+      <p class="edit-personal-infor"><i class="personal-icon fas fa-caret-right"></i>비밀번호 설정</p>
+      <form class="profile-password-form" action="#" method="POST">
+        {% csrf_token %}
+        <div class="edit-password">
+          <button class="user-password-btn" onclick="editChangePwd(event)">비밀번호 변경</button>
+          <div class="edit-password-infor non-clicked">
+            <input type="text" class="infor-user-password" name="infor-user-password" placeholder="인증받으실 이메일을 입력해주세요">
+            <button class="resend-pwd" type="submit">보내기</button>
+          </div>
+        </div>
+      </form>
     </div>
-    
+
     <div class="edit-profile-pwd">
-        <p class="edit-personal-infor"><i class="personal-icon fas fa-caret-right"></i>일반회원 탈퇴</p>
-        <form class="profile-password-form" action="#" method="POST"
-            enctype="multipart/form-data">
-            {% csrf_token %}
-    
-            <div class="edit-password">
-                <button class="user-password-btn" onclick="changePwd(event)">탈퇴하기</button>
-                <!-- <div class="edit-password-infor non-clicked">
+      <p class="edit-personal-infor"><i class="personal-icon fas fa-caret-right"></i>일반회원 탈퇴</p>
+      <form class="profile-password-form" action="#" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="edit-password">
+          <button class="user-password-btn" onclick="changePwd(event)">탈퇴하기</button>
+          <!-- <div class="edit-password-infor non-clicked">
                     <input type="text" class="infor-user-password" name="infor-user-password"
                         placeholder="인증받으실 이메일을 입력해주세요">
                     <input class="resend-pwd" type="submit" value="보내기">
                 </div> -->
-            </div>
-        </form>
-    </div>
-    
-    <section class="delete-popup-section">
-        <div class="delete-popup">
-            <div class="delete-email-popup">
-                <span class="delete-email-popup-close"><i class="delete-popup-close" onclick="popupClose(event)"></i></span>
-                <p class="delete-popup-title"><i class="fas fa-user-check"></i>회원 탈퇴</p>
-                <p class="delete-popup-content2">정말 탈퇴하시겠어요 ? 탈퇴하시면 너뉴스의 서비스가 종료됩니다. 아래 정보를 입력해주세요</p>
-                <form class="delete-form" action="" method="POST">
-                    {% csrf_token %}
-                    {% for pwd_form in pwd_forms %}
-                    {{pwd_form_as.p}}
-                    {% endfor %}
-                    <div class="delete-popup-infor">
-                        <p class="delete-msg" ></p>
-                        <input class="delete-password" name="password" type="password" placeholder="비밀번호 확인">
-                    </div>
-                    <button type="submit" class="delete-ok">탈퇴하기</button>
-                </form>
-                <button type="submit" class="delete-cancel" onclick="deleteCancel(event)">취소하기</button>
-            </div>
         </div>
+      </form>
+    </div>
+
+    <section class="delete-popup-section">
+      <div class="delete-popup">
+        <div class="delete-email-popup">
+          <span class="delete-email-popup-close"><i class="delete-popup-close" onclick="popupClose(event)"></i></span>
+          <p class="delete-popup-title"><i class="fas fa-user-check"></i>회원 탈퇴</p>
+          <p class="delete-popup-content2">정말 탈퇴하시겠어요 ? 탈퇴하시면 너뉴스의 서비스가 종료됩니다. 아래 정보를 입력해주세요</p>
+          <form class="delete-form" action="" method="POST">
+            {% csrf_token %}
+            {% for pwd_form in pwd_forms %}
+            {{pwd_form_as.p}}
+            {% endfor %}
+            <div class="delete-popup-infor">
+              <p class="delete-msg"></p>
+              <input class="delete-password" name="password" type="password" placeholder="비밀번호 확인">
+            </div>
+            <button type="submit" class="delete-ok">탈퇴하기</button>
+          </form>
+          <button type="submit" class="delete-cancel" onclick="deleteCancel(event)">취소하기</button>
+        </div>
+      </div>
     </section>
-    
+
   </div>
 </section>
 {% endblock content %}
@@ -101,141 +101,149 @@
 
 {% block script %}
 <script defer>
-// profile user 미리보기 이미지 업로드 기능
-const $uploadImgInput = document.querySelector('.profile-upload-img-input');
-const $uploadPreviewImg = document.querySelector('.profile-upload-preview-img');
+  // profile user 미리보기 이미지 업로드 기능
+  const $uploadImgInput = document.querySelector('.profile-upload-img-input');
+  const $uploadPreviewImg = document.querySelector('.profile-upload-preview-img');
 
-$uploadImgInput.onchange = (e) => {
-// document.querySelector('.upload-img-div').innerHTML='';
-let image = event.target.files[0]
-  console.log(image)
-  let reader = new FileReader();
-  reader.onload = function (event) {
-    $uploadPreviewImg.setAttribute('src', event.target.result);
-    let title = e.target.value.split("\\")[2];
-    $uploadPreviewImg.setAttribute('title', title);
-    $uploadPreviewImg.setAttribute('alt', title);
-  }
-  reader.readAsDataURL(image);
-}
-
-function UploadImg(event){
-  $uploadImgInput.click();
-}
-
-function editChangePwd(event){
-  event.preventDefault();
-  console.log('d')
-  document.querySelector('.edit-password-infor').classList.toggle('non-clicked');
-}
-
-// 탈퇴하기 popup창 toggle
-function changePwd(e){
-  e.preventDefault()
-  document.querySelector('.delete-popup-section').style.display = 'flex';
-  document.querySelector('.delete-password').focus();
-}
-
-function popupClose(e){
-  document.querySelector('.delete-popup-section').style.display = 'none';
-}
-
-function deleteCancel(e){
-  e.preventDefault();
-  document.querySelector('.delete-popup-section').style.display = 'none';
-  document.querySelector('.delete-msg').innerText ='';
-  document.querySelector('.delete-password').value = '';
-  console.log('d')
-}
-  
-// 탈퇴 popup ajax 
-let deleteForm = document.querySelector('.delete-form');
-deleteForm.addEventListener('submit', DeleteUserSubmit);
-
-function DeleteUserSubmit(){
-  event.preventDefault();
-  
-  let $password = document.querySelector('.delete-password').value;
-
-  let CsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
-  
-  let param = {
-    'password':$password,
+  $uploadImgInput.onchange = (e) => {
+    // document.querySelector('.upload-img-div').innerHTML='';
+    let image = event.target.files[0]
+    console.log(image)
+    let reader = new FileReader();
+    reader.onload = function (event) {
+      $uploadPreviewImg.setAttribute('src', event.target.result);
+      let title = e.target.value.split("\\")[2];
+      $uploadPreviewImg.setAttribute('title', title);
+      $uploadPreviewImg.setAttribute('alt', title);
+    }
+    reader.readAsDataURL(image);
   }
 
-  fetch("{% url 'user:delete' %}", {
-    method: 'POST',
-    headers: {
-      "X-CSRFToken": CsrfValue,
-      "X-Requested-With": "XMLHttpRequest"
-    },
-    body: JSON.stringify(param),
-  }).then(function (response) {
-    return response.json()
-  }).then(function (data) {
-    console.log(data)
-    if(data['error'] == true){
-      document.querySelector('.delete-msg').innerText = `${data['msg']}`
-      document.querySelector('.delete-password').value='';
+  function UploadImg(event) {
+    $uploadImgInput.click();
+  }
+
+  function editChangePwd(event) {
+    event.preventDefault();
+    console.log('d')
+    document.querySelector('.edit-password-infor').classList.toggle('non-clicked');
+  }
+
+  // 탈퇴하기 popup창 toggle
+  function changePwd(e) {
+    e.preventDefault()
+    document.querySelector('.delete-popup-section').style.display = 'flex';
+    document.querySelector('.delete-password').focus();
+  }
+
+  function popupClose(e) {
+    document.querySelector('.delete-popup-section').style.display = 'none';
+  }
+
+  function deleteCancel(e) {
+    e.preventDefault();
+    document.querySelector('.delete-popup-section').style.display = 'none';
+    document.querySelector('.delete-msg').innerText = '';
+    document.querySelector('.delete-password').value = '';
+    console.log('d')
+  }
+
+  // 탈퇴 popup ajax 
+  let deleteForm = document.querySelector('.delete-form');
+  deleteForm.addEventListener('submit', DeleteUserSubmit);
+
+  function DeleteUserSubmit() {
+    event.preventDefault();
+
+    let $password = document.querySelector('.delete-password').value;
+
+    let CsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+
+    let param = {
+      'password': $password,
     }
-    else{
-      document.querySelector('.delete-popup-section').style.backdropFilter="blur(8px)";
-      document.querySelector('.delete-popup').style.display='none';
-      setTimeout(function(){window.alert('회원 탈퇴에 성공하셨습니다');window.location.href=data['url'];},500);
-    }
-    return data
-  }).catch((error) => {
-    console.log('error', error);
-  })
-}
 
-// 닉네임 수정
-// function editNickname(userNickname) {
-//   console.log("edit personal information");
-//   let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    fetch("{% url 'user:delete' %}", {
+      method: 'POST',
+      headers: {
+        "X-CSRFToken": CsrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param),
+    }).then(function (response) {
+      return response.json()
+    }).then(function (data) {
+      console.log(data)
+      if (data['error'] == true) {
+        document.querySelector('.delete-msg').innerText = `${data['msg']}`
+        document.querySelector('.delete-password').value = '';
+      }
+      else {
+        document.querySelector('.delete-popup-section').style.backdropFilter = "blur(8px)";
+        document.querySelector('.delete-popup').style.display = 'none';
+        setTimeout(function () { window.alert('회원 탈퇴에 성공하셨습니다'); window.location.href = data['url']; }, 500);
+      }
+      return data
+    }).catch((error) => {
+      console.log('error', error);
+    })
+  }
 
-//   let param = {
-//       'user_pk' : '{{user.pk}}',
-//       'nickname' : userNickname,
-//   }
-//   fetch("{% url 'user:mypage' %}", {
-//       method: "POST",
-//       headers: {
-//       "X-CSRFToken": csrfValue,
-//       "X-Requested-With": "XMLHttpRequest"
-//       },
-//       body: JSON.stringify(param)
-//   }).then(function (response) {
-//       return response.json();
-//   }).then(function (data) {
-//       let nickname = data['nickname'];
-//       let msg = data['msg'];
-//       userNickname.innerText = `${nickname}`;
-//       document.querySelector(".update-msg").innerText = `${msg}`;
-//       document.querySelector(".update-msg").style.color = 'rgb(248, 161, 104)';
+  // 닉네임 수정
+  // function editNickname(userNickname) {
+  //   console.log("edit personal information");
+  //   let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
 
-//   }).catch(error => {
-//       console.log("Error", error);
-//   })
-// }
+  //   let param = {
+  //       'user_pk' : '{{user.pk}}',
+  //       'nickname' : userNickname,
+  //   }
+  //   fetch("{% url 'user:mypage' %}", {
+  //       method: "POST",
+  //       headers: {
+  //       "X-CSRFToken": csrfValue,
+  //       "X-Requested-With": "XMLHttpRequest"
+  //       },
+  //       body: JSON.stringify(param)
+  //   }).then(function (response) {
+  //       return response.json();
+  //   }).then(function (data) {
+  //       let nickname = data['nickname'];
+  //       let msg = data['msg'];
+  //       userNickname.innerText = `${nickname}`;
+  //       document.querySelector(".update-msg").innerText = `${msg}`;
+  //       document.querySelector(".update-msg").style.color = 'rgb(248, 161, 104)';
 
-// function submitPersonalInfor(e) {
-//   e.preventDefault();
-//     editNickname(userNickname);
-//   }
+  //   }).catch(error => {
+  //       console.log("Error", error);
+  //   })
+  // }
 
-// const changeForm = document.querySelector(".profile-image-form");
-// const userNickname = document.querySelector(".infor-user-nickname").placeholder;
-// const changedUserNickname = document.querySelector(".infor-user-nickname").value;
-// console.log(changedUserNickname)
+  // function submitPersonalInfor(e) {
+  //   e.preventDefault();
+  //     editNickname(userNickname);
+  //   }
 
-// if (userNickname !== changedUserNickname) {
-//   console.log(userNickname)
-//   changeForm.addEventListener("submit", submitPersonalInfor)
-// }else {
-//   document.querySelector(".infor-user-nickname").placeholder ="닉네임을 입력해 주세요."
-//   console.log("You cannot submit an empty form")
-// }
+  // const changeForm = document.querySelector(".profile-image-form");
+  // const userNickname = document.querySelector(".infor-user-nickname").placeholder;
+  // const changedUserNickname = document.querySelector(".infor-user-nickname").value;
+  // console.log(changedUserNickname)
+
+  // if (userNickname !== changedUserNickname) {
+  //   console.log(userNickname)
+  //   changeForm.addEventListener("submit", submitPersonalInfor)
+  // }else {
+  //   document.querySelector(".infor-user-nickname").placeholder ="닉네임을 입력해 주세요."
+  //   console.log("You cannot submit an empty form")
+  // }
+  function viewMessage(e) {
+    e.preventDefault()
+    const message = document.querySelector(".profile-errmsg");
+    message.innerText = "개인정보가 변경되었습니다.";
+  }
+
+  const changeBtn = document.querySelector(".user-nickname-btn");
+  changeBtn.addEventListener("click", viewMessage);
 
 </script>
 {% endblock script %}
