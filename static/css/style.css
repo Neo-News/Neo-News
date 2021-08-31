@@ -372,7 +372,7 @@ body > div > section.detail-section > section > table{
   text-align: left;
   flex-wrap: wrap;
   margin-left: 25px;
-  width: 80%;
+  width: 400px;
   justify-content: center;
   margin: 0 auto;
 }
@@ -1259,6 +1259,9 @@ body > div > section.detail-section > section > div > p{
   }
   .signup-detail-category-ul{
     width: 100%;
+  }
+  .category-div{
+    width: 200px;
   }
 
   /* 다음 Detail 모바일 레이아웃 */

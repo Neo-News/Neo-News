@@ -53,11 +53,19 @@
 function clickSubmitBtn(e){
   e.preventDefault();
   todoInput = document.querySelector('.infor-keyword-input');
+  todowords = document.querySelectorAll('.infor-keyword-list')
+  
+  // 중복되는 키워드 추가하지 않는 로직
+  todoList = []
+  for(i=0 ; i<= todowords.length -1; i++){
+    todoList.push(todowords[i].innerText)
+  }
   todo = todoInput.value;
-  console.log(todo)
-  if (todo == ''){
+  if (todo == '' || todoList.includes(todo) ){
+    todoInput.value = '';
     return
   }
+  
 let CsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
 let param = {
   'todo':todo,
