@@ -60,10 +60,21 @@ body.pc{
   font-weight: bold;
   margin-right: 5px;
 }
-.adjust-icon,
+.adjust-icon {
+  font-size: 1.5rem;
+  margin-right: 10px;
+  position: relative;
+  top: 3px;
+}
+
 .user-icon{
   font-size: 1.5rem;
-  margin-left: 15px;
+  margin: 0 -10px 0 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  position: relative;
+  top: 9px;
 }
 .signin,
 .signup,
