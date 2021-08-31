@@ -374,6 +374,7 @@ class UserKeywordEditView(LoginRequiredMixin,View):
 
     def post(self, request, **kwargs):
         if request.is_ajax():
+            
             data = json.loads(request.body)
             content = data.get('todo')
             keyword = Keyword.objects.filter(name=content).first()
@@ -415,8 +416,10 @@ class UserCategoryEditView(LoginRequiredMixin, View):
 
     def post(self, request, **kwargs):
         if request.is_ajax():
+            print('에헤에헤')
             data = json.loads(request.body)
             category_pk = data.get('category_pk')
+            print(category_pk)
             category = Category.objects.filter(pk=category_pk).first()
             if request.user in category.users.all():
                 category.users.remove(request.user)

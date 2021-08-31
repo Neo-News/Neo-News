@@ -1,23 +1,78 @@
-<div class="edit-category-div">
-  <form action="" method="POST">
-    {% csrf_token %}
+{% extends 'base.html' %}
+{% block head %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+{% endblock head %}
 
-    <ul class="edit-category-ul">
-      <!-- <div class="edit-category-ul-div"> -->
-        {% for category in categories %}
-        {% if category in user_categories %}
-        <li class="edit-category-li"><label for="{{category}}"><input id="{{category}}" class="{{category}} edit-category-input" name='category'
-          type="checkbox" value="{{category}}" checked="checked" onclick="categoryBtn('{{category.pk}}')">{{category}}</label></li>
-        <!-- </div> -->
-          {% else %}
-        <li class="edit-category-li"><label for="{{category}}"><input id="{{category}}" class="{{category}} edit-category-input" name='category'
-          type="checkbox" value="{{category}}" onclick="categoryBtn('{{category.pk}}')">{{category}}</label></li>
-        {% endif %}
-        {% endfor %}
-      <!-- </div> -->
-    </ul>
-    </form>
+{% block content %}
+<section class="news-infor-edit">
+  <a href="{% url 'index' %}" class="news-infor-back"><i class="fas fa-chevron-left"></i></a>
+  <div class="news-infor-div">
+    <div class="news-infor">
+      <ul class="infor-ul">
+        <li class="press-infor"><a class="press-btn" href="{% url 'news:infor-edit' %}"><i class="far fa-newspaper"></i><span>언론사 선택</span></a></li>
+        <li class="keyword-infor"><a class="keyword-btn" href="{% url 'news:infor-edit-keyword' %}"><i class="far fa-bell"></i><span>키워드 선택</span></a></li>
+        <li class="keyword-infor"><a class="clicked category-btn" href="{% url 'news:infor-edit-category' %}"><i class="far fa-hand-pointer"></i><span>카테고리 선택</span></a></li>
+      </ul>
+    </div>
+    <div class="news-infor-description">
+      <p class="news-infor-edit-title">카테고리 선택하기</p>
+      <p class="news-infor-edit-content">기사를 카테고리별로 보여드려요 :-) 원하시는 카테고리를 선택/해제 해주세요.
+      </p>
+    </div>
+  </div>
+  <div class="news-infor-contents">
 
+    <div class="edit-category-div">
+      <form action="" method="POST">
+        {% csrf_token %}
+    
+        <ul class="edit-category-ul">
+          <!-- <div class="edit-category-ul-div"> -->
+            {% for category in categories %}
+            {% if category in user_categories %}
+            <li class="edit-category-li"><label for="{{category}}"><input id="{{category}}" class="{{category}} edit-category-input" name='category'
+              type="checkbox" value="{{category}}" checked="checked" onclick="categoryBtn('{{category.pk}}')">{{category}}</label></li>
+            <!-- </div> -->
+              {% else %}
+            <li class="edit-category-li"><label for="{{category}}"><input id="{{category}}" class="{{category}} edit-category-input" name='category'
+              type="checkbox" value="{{category}}" onclick="categoryBtn('{{category.pk}}')">{{category}}</label></li>
+            {% endif %}
+            {% endfor %}
+          <!-- </div> -->
+        </ul>
+        </form>
+    
+    
+      </ul>
+    </div><br>
+  </div>
+</section>
+{% endblock content %}
 
-  </ul>
-</div><br>
+{% block script %}
+<script>
+  // 카테고리 선택
+  function categoryBtn(category_pk) {
+    let CsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    let param = {
+      'category_pk': category_pk
+    }
+    fetch("{% url 'user:category_infor' %}", {
+      method: 'POST',
+      headers: {
+        "X-CSRFToken": CsrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param),
+    }).then(function (response) {
+      console.log('readdss', response)
+      return response.json()
+    }).then(function (data) {
+
+    }).catch((error) => {
+      console.log('error', error);
+    })
+  }
+</script>
+{% endblock script %}
