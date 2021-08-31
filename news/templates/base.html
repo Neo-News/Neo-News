@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   {% load static %}
+
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/static/css/style.css">
+ 
   <title>너뉴스</title>
   {% block head %}
   {% endblock head %}
@@ -27,7 +29,8 @@
         {% if user.is_authenticated %}
         <span class="main-social">
           <a href="{% url 'news:infor-edit' %}"><i class="adjust-icon fas fa-sliders-h"></i></a>
-          <a href="{% url 'user:mypage' %}"><i class="user-icon fas fa-user"></i></a>
+          <!-- <a href="{% url 'user:mypage' %}"><i class="user-icon fas fa-user"></i></a> -->
+          <a href="{% url 'user:mypage' %}"><img class="user-icon" src="{{user.image}}" onerror="this.src=`{% static 'img/profile3.png' %}`"></a>
         </span>
         <span class="main-user-nickname"><strong>{{request.user.nickname}}</strong>님</span>
         <a href="{% url 'user:logout' %}"><button class="signout">로그아웃</button></a>

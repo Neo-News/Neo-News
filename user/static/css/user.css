@@ -266,6 +266,10 @@
   padding-bottom: 50px;
   border-bottom: 1px solid #eee;
 }
+.profile-errmsg {
+  color : rgb(248, 161, 104)
+}
+
 .edit-password{
   text-align: left;
 }
@@ -407,7 +411,7 @@
   width: 0px;
 }
 .fa-image{
-  font-size: 5.5em;
+  font-size: 5.7em;
   position: absolute;
   top: 50%;
   left: 50%;
@@ -420,7 +424,7 @@
   left: 0;
   display: inline-block;
   width: 200px;
-  height: 210px;
+  height: 200px;
 }
 .upload-img-div{
   text-overflow: ellipsis;

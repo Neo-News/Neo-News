@@ -81,7 +81,7 @@ def kakao_login(request):
             raise SocialLoginException("User arleady logged in")
 
         client_id = os.environ.get("KAKAO_CLIENT_ID")
-        redirect_uri = "http://3.38.80.84/user/login/social/kakao/callback/"
+        redirect_uri = "http://neonews.site/user/login/social/kakao/callback/"
     
         return redirect(
             f"https://kauth.kakao.com/oauth/authorize?response_type=code&client_id={client_id}&redirect_uri={redirect_uri}"
@@ -117,7 +117,7 @@ def kakao_login_callback(request):
             KakaoException("Can't get code")
 
         client_id = os.environ.get("KAKAO_CLIENT_ID")
-        redirect_uri = "http://3.38.80.84/user/login/social/kakao/callback/"
+        redirect_uri = "http://neonews.site/user/login/social/kakao/callback/"
         client_secret = os.environ.get("KAKAO_SECRET_KEY")
         request_access_token = requests.post(
             f"https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id={client_id}&redirect_uri={redirect_uri}&code={code}&client_secret={client_secret}",
@@ -145,7 +145,7 @@ def kakao_login_callback(request):
         if created:
           user.set_password(None)
           user.nickname = nickname
-          user.image = "default.png"
+        #   user.image = "default.png"
           user.is_active = True
           user.is_detailed = True
           user.save()
@@ -247,42 +247,78 @@ class SignupDeatilView(LoginRequiredMixin,View):
         pass
 
 
-# 프로필 이미지 등록하는 함수
-class ImageUploadView(View):
+class ChangeMyInforView(View):
     """
     author: Oh Ji Yun
     date: 0711
     description: 
-    
+    개인정보(이미지 또는 닉네임) 수정함
     """
     def post(self, request, *args, **kwargs):
-        if self.request.is_ajax():
-            print("image - ajax 요청 성공")
-            data = json.loads(request.body)
-            image = data.get('imageURL')
-            title = data.get('title')
+        if request.method == 'POST':
+            print("이미지 요청")
+            file = request.FILES.get('img')
+            if file:
+                session = Session(
+                    aws_access_key_id=AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+                    region_name=AWS_S3_REGION_NAME
+                )
 
-            # file = request.FILES.get('img')
-            session = Session(
-                aws_access_key_id=AWS_ACCESS_KEY_ID,
-                aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
-                region_name=AWS_S3_REGION_NAME
-            )
-            s3 = session.resource('s3')
-            now = datetime.now().strftime('%Y%H%M%S')
-            img_object = s3.Bucket(AWS_STORAGE_BUCKET_NAME).put_object(
-                Key = now+title,
-                Body = image
-            )
-            s3_url = "https://neonews-s3.s3.ap-northeast-2.amazonaws.com/"
-            User.objects.filter(pk=request.user.pk).update(
-                # image=now+title
-                image=image
-            )
-            context = { 'msg' : '유저 이미지 수정 성공' }
-            return JsonResponse(context, status=200)
-        else:
-            return JsonResponse({"error" : "Error occured during request"}, status=400)
+                s3 = session.resource('s3')
+                now = datetime.now().strftime('%Y%H%M%S')
+                img_object = s3.Bucket(AWS_STORAGE_BUCKET_NAME).put_object(
+                    Key = now+file.name,
+                    Body = file
+                )
+                s3_url = "https://neonews-s3.s3.ap-northeast-2.amazonaws.com/"
+                User.objects.filter(pk=request.user.pk).update(
+                    image=s3_url+now+file.name
+                )
+                
+            nickname = request.POST['infor-user-nickname']
+            if nickname:
+                User.objects.filter(pk=request.user.pk).update(
+                    nickname=nickname
+                )
+            user = User.objects.filter(pk=request.user.pk).first()
+            context = {
+                'user' : user,
+                'msg' : {
+                    'state' : True,
+                    'text' : '개인정보가 변경되었습니다.'
+                }
+            }
+            return render(request, 'user-infor.html', context)    
+            # return redirect('user:mypage')
+
+        
+        # if self.request.is_ajax():
+        #     data = json.loads(request.body)
+        #     image = data.get('imageURL')
+        #     title = data.get('title')
+
+        #     # file = request.FILES.get('img')
+        #     session = Session(
+        #         aws_access_key_id=AWS_ACCESS_KEY_ID,
+        #         aws_secret_access_key=AWS_SECRET_ACCESS_KEY,
+        #         region_name=AWS_S3_REGION_NAME
+        #     )
+        #     s3 = session.resource('s3')
+        #     now = datetime.now().strftime('%Y%H%M%S')
+        #     img_object = s3.Bucket(AWS_STORAGE_BUCKET_NAME).put_object(
+        #         Key = now+title,
+        #         Body = image
+        #     )
+        #     s3_url = "https://neonews-s3.s3.ap-northeast-2.amazonaws.com/"
+        #     User.objects.filter(pk=request.user.pk).update(
+        #         # image=now+title
+        #         image=image
+        #     )
+        #     context = { 'msg' : '유저 이미지 수정 성공' }
+        #     return JsonResponse(context, status=200)
+        # else:
+        #     return JsonResponse({"error" : "Error occured during request"}, status=400)
 
 
 class UserInforAddView(LoginRequiredMixin,View):
@@ -325,7 +361,7 @@ class UserInforAddView(LoginRequiredMixin,View):
             
             return JsonResponse({
                 'success':True,
-                'url': 'http://3.38.80.84/'
+                'url': 'http://neonews.site/'
                 })
       
 
@@ -446,7 +482,7 @@ class DeletePasswordView(LoginRequiredMixin ,View):
         logout(request)
         messages.success(request, '회원탈퇴 완료 !')
         error = False
-        url = 'http://3.38.80.84/'
+        url = 'http://neonews.site/'
         context = context_infor(error=error,url=url)
         return JsonResponse(context)
 
@@ -562,7 +598,7 @@ class ValidChangePassword(View):
                 current_user.set_password(new_password)
                 current_user.save()
                 logout(request)
-                context=context_infor(error=False, url='http://3.38.80.84/user/login/callback/')
+                context=context_infor(error=False, url='http://neonews.site/user/login/callback/')
                 return JsonResponse(context)
             else:
                 logout(request)
@@ -616,22 +652,27 @@ class MypageView(LoginRequiredMixin, View):
     redirect_field_name='/'
 
     def get(self, request, **kwargs):
-        return render(request, 'user-infor.html')
+        user = User.objects.filter(pk=request.user.pk).first()
+        context = {
+            'user' : user,
+        }
+        
+        return render(request, 'user-infor.html', context)    
 
-    def post(self, request, *args, **kwargs):
-        if self.request.is_ajax():
-            print("ajax 요청 받기 성공")
-            data = json.loads(request.body)
-            nickname = data.get('nickname')
-            user = UserService.update_nickname(request, nickname)
-            print("유저 닉네임 수정 완료")
-            context = {
-                'nickname' : user.nickname,
-                'msg' : '개인정보가 변경되었습니다.'
-            }
-            return JsonResponse(context, status=200)
-        else:
-            return JsonResponse({"error" : "Error occured during request"}, status=400)
+    # def post(self, request, *args, **kwargs):
+    #     if self.request.is_ajax():
+    #         print("ajax 요청 받기 성공")
+    #         data = json.loads(request.body)
+    #         nickname = data.get('nickname')
+    #         user = UserService.update_nickname(request, nickname)
+    #         print("유저 닉네임 수정 완료")
+    #         context = {
+    #             'nickname' : user.nickname,
+    #             'msg' : '개인정보가 변경되었습니다.'
+    #         }
+    #         return JsonResponse(context, status=200)
+    #     else:
+    #         return JsonResponse({"error" : "Error occured during request"}, status=400)
 
 
 class LikeArticleView(LoginRequiredMixin, View):

@@ -21,17 +21,6 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 
     # },
 # )
-# app.conf.beat_schedule ={
-#     'task-number-one': {
-#         'task': 'user.tasks.task_scrappy_daum', # 실행함수
-#         'schedule': crontab(minute='*/4', hour='*,5-22')
-#     },
-#     'task-number-two': {
-#         'task': 'user.tasks.task_scrappy_naver', # 실행함수
-#         'schedule': crontab(minute='*/3', hour='*,5-22')
-#     },
-# }
-
 
 app.autodiscover_tasks()
 

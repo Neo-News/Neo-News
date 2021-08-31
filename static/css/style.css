@@ -60,10 +60,21 @@ body.pc{
   font-weight: bold;
   margin-right: 5px;
 }
-.adjust-icon,
+.adjust-icon {
+  font-size: 1.5rem;
+  margin-right: 10px;
+  position: relative;
+  top: 3px;
+}
+
 .user-icon{
   font-size: 1.5rem;
-  margin-left: 15px;
+  margin: 0 -10px 0 0;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  position: relative;
+  top: 9px;
 }
 .signin,
 .signup,
@@ -122,6 +133,7 @@ body.pc{
 }
 .banner-img{
   width: 200px;
+  height: 200px;
   animation: balloon 1.5s infinite;
   background-color: #fff;
 }
@@ -226,8 +238,8 @@ body.pc{
   font-size: 1.2rem;
 }
 .news-img img{
-  width: 130px;
-  height: 130px;
+  /* width: 130px; */
+  /* height: 130px; */
 }
 .news-contents{
   margin-left: 20px;
@@ -1024,6 +1036,7 @@ body > div > section.detail-section > section > div > p{
   }
   .banner-img{
     width: 150px;
+    height: auto;
   }
 
   /* signout */
@@ -1107,8 +1120,8 @@ body > div > section.detail-section > section > div > p{
     margin: 0 auto;
   }
   .news-img img{
-    width: 100px;
-    height: 100px;
+    /* width: 100px; */
+    /* height: 100px; */
   }
   .news-title{
     font-size: 1.1rem;

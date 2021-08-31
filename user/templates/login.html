@@ -60,7 +60,7 @@
 {% endblock content %}
 
 {% block script%}
-<script>
+<script defer>
   function submitLogin(e) {
     e.preventDefault();
     let email = document.getElementById("#id_username").value;

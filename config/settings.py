@@ -29,9 +29,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*',]
+ALLOWED_HOSTS = [
+    # '.ap-northeast-2.compute.amazonaws.com',
+    'neonews.site',
+    '127.0.0.1',
+]
 
 
 # Application definition
@@ -45,7 +49,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django_celery_beat',
     'django_celery_results',
-    'django_crontab',
     'news',
     'user',
     'social',
@@ -186,21 +189,4 @@ EMAIL_USE_TLS=env('EMAIL_USE_TLS')
 from celery.schedules import crontab
 CELERY_BROKER_URL = env('CELERY_BROKER_URL')
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
-# CELERY_BEAT_SCHEDULE = {
-#     'add-every-5-minutes-naver':{
-#     'task':'user.tasks.task_scrappy_naver',
-#     'schedule':crontab(minute='*/5', hour='*,5-22')
-#     # 'schedule': timedelta(minutes=1),
-#     },
-#     'add-every-5-minutes-daum':{
-#     'task':'user.tasks.task_scrappy_daum',
-#     'schedule':crontab(minute='*/5', hour='*,5-22')
-#     }
-# }
 
-
-# crontab 환경설정
-CRONJOBS = [
-    ('*/10 * * * *', 'user.tasks.task_scrappy_naver', '>> /tmp/log/cron.log'),
-    ('*/10 * * * *', 'user.tasks.task_scrappy_daum', '>> /tmp/log/cron.log'),
-]
