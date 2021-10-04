@@ -12,10 +12,10 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
-from user.models import Category
-from news.models import Potal, Press, Article
-from social.models import Like
-from django.db.models import Q 
+# from user.models import Category
+# from news.models import Potal, Press, Article
+# from social.models import Like
+# from django.db.models import Q 
 
 
 """
