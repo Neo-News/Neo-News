@@ -5,12 +5,12 @@
 <br>
 
 ## 목차 | Contents
-1. [너뉴스 소개]()
-2. [개요]()
-3. [요구사항 및 업무 분배]()
-4. [주요 기능]()
-5. [ERD]()
-6. [History]()
+1. [너뉴스 소개](https://github.com/Neo-News/Neo-News/tree/develop#-%EB%84%88%EB%89%B4%EC%8A%A4-%EC%86%8C%EA%B0%9C)   
+2. [개요](https://github.com/Neo-News/Neo-News/tree/develop#-%EA%B0%9C%EC%9A%94)   
+3. [요구사항 및 업무 분배](https://github.com/Neo-News/Neo-News/tree/develop#-%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD-%EB%B0%8F-%EC%97%85%EB%AC%B4-%EB%B6%84%EB%B0%B0)   
+4. [주요 기능](https://github.com/Neo-News/Neo-News/tree/develop#-%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5)     
+5. [ERD](https://github.com/Neo-News/Neo-News/tree/develop#-erd)   
+6. [History](https://github.com/Neo-News/Neo-News/tree/develop#-history)   
 
 <br>
 
@@ -34,7 +34,7 @@
 <br>
 
 ## ➗ 요구사항 및 업무 분배
-팀 노션을 이용해 요구사항을 작성하였고 새로운 기술에 대한 정보를 공유하였습니다. github의 [issue]()와 [projects]()를 활용해 개발 진행사항을 공유하였으며 개발과정에서 발생한 이슈와 이슈 해결과정 등을 공유했습니다.
+팀 노션을 이용해 요구사항을 작성하였고 새로운 기술에 대한 정보를 공유하였습니다. github의 [issue](https://github.com/Neo-News/Neo-News/issues)와 [projects](https://github.com/Neo-News/Neo-News/projects)를 활용해 개발 진행사항을 공유하였으며 개발과정에서 발생한 이슈와 이슈 해결과정 등을 공유했습니다.
 
 ![요구사항](https://user-images.githubusercontent.com/64240637/135860718-f99ed25f-be96-4793-a210-169727184138.png)
 
