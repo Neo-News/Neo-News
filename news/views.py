@@ -1,19 +1,16 @@
-import json
-import re
-from django.http.response import JsonResponse
-from django.shortcuts import redirect, render
+from django.shortcuts import render
 from django.views.generic import DetailView,View
 from django.db.models import Q
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.views.generic import ListView
-from utils import context_infor, get_time_passed
+from utils import context_infor
 
-from user.models import Category, Keyword, User
-from social.models import Comment, ReComment, Like
-from .models import Article, Press,Potal,UserPress
+from user.models import Category, Keyword
+from social.models import Comment, Like
+from .models import Article, Press, UserPress
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-# templateview로 변경가능 할 것 같음 일단은 detailview -> view로 변경함 
+# templateview로 변경가능 할 것 같음 일단get_time_passed은 detailview -> view로 변경함 
 class IndexView(View):
   """
   참고하셨으면 지우셔도 됩니당 :-)
