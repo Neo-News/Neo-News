@@ -277,6 +277,10 @@ body.pc{
   display: inline-block;
   margin-right: 3px;
 }
+.news-none-msg{
+  font-size: 1.5em;
+  text-align: center;
+}
 .detail-content > img{
   width: 70%;
   height: 400px;

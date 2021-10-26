@@ -1,10 +1,8 @@
 import json
-from django.http.response import JsonResponse
-from django.shortcuts import render
-from django.views.generic import View
 from django.forms.models import model_to_dict
-from utils import context_infor, get_time_passed_comment
-from user.models import User
+from utils import context_infor
+from django.http.response import JsonResponse
+from django.views.generic import View
 from news.models import Press, UserPress, Article
 from .dto import CommentCreateDto, ReCommentCreateDto
 from .models import Comment, ReComment, Like
@@ -17,12 +15,8 @@ class PressEditView(View):
             data = json.loads(request.body)
             press_pk = data.get('press_pk')
             press = Press.objects.filter(pk=press_pk).first()
-            # print(press.name)
             user = request.user
-            # press = Press.objects.filter(pk=press_pk).first()
             userpress = UserPress.objects.filter(user__pk = user.pk).first()
-            print('userpress',userpress)
-            # print(userpress)
             is_deleted = False
             if userpress is not None:
                 if press not in userpress.press.all():
@@ -74,13 +68,10 @@ class CommentCreateView(View):
 
         
 class ReCommentCreateView(View):
-    def get(self, request, *args, **kwargs):
-        pass
 
     def post(self, request, *args, **kwargs):
         if self.request.is_ajax():
             data = json.loads(request.body)
-
             recomment_dto = self._build_recomment_dto(request, data)
             recomment = ReCommentService.create(recomment_dto)
             context = {

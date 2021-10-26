@@ -17,3 +17,4 @@ class ReCommentCreateDto():
    writer : User
    content : str
    pk : str
+

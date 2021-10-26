@@ -1,9 +1,7 @@
 from django.db import models
 from user.models import User
 from behaviors import TimeStampable, Countable, Deleteable
-from user.models import User,Category, Keyword
-import time
-import datetime
+from user.models import User,Category
 from utils import get_time_passed
 
 

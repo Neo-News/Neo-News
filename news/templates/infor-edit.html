@@ -8,26 +8,26 @@
 <section class="news-infor-edit">
   <a href="{% url 'index' %}" class="news-infor-back"><i class="fas fa-chevron-left"></i></a>
   <div class="news-infor-div">
-  <div class="news-infor">
-    <ul class="infor-ul">
-      <li class="press-infor"><a class="clicked press-btn" href="{% url 'news:infor-edit' %}"><i class="far fa-newspaper"></i><span>언론사 선택</span></a></li>
-      <li class="keyword-infor"><a class="keyword-btn" href="{% url 'news:infor-edit-keyword' %}"><i class="far fa-bell"></i><span>키워드 선택</span></a></li>
-      <li class="keyword-infor"><a class="category-btn" href="{% url 'news:infor-edit-category' %}"><i class="far fa-hand-pointer"></i><span>카테고리 선택</span></a></li>
-      
-    </ul>
+    <div class="news-infor">
+      <ul class="infor-ul">
+        <li class="press-infor"><a class="clicked press-btn" href="{% url 'news:infor-edit' %}"><i
+              class="far fa-newspaper"></i><span>언론사 선택</span></a></li>
+        <li class="keyword-infor"><a class="keyword-btn" href="{% url 'news:infor-edit-keyword' %}"><i
+              class="far fa-bell"></i><span>키워드 선택</span></a></li>
+        <li class="keyword-infor"><a class="category-btn" href="{% url 'news:infor-edit-category' %}"><i
+              class="far fa-hand-pointer"></i><span>카테고리 선택</span></a></li>
+      </ul>
+    </div>
+    <div class="news-infor-description">
+      <p class="news-infor-edit-title">언론사 선택하기</p>
+      <p class="news-infor-edit-content">현재 기사를 받고 있는 언론사들이에요 ! 언론사 선택 해제시 해당 언론사에 관한 기사들은 제외돼요 :-)
+        보고싶지 않은 언론사가 있다면 선택을 해제해주세요.
+      </p>
+    </div>
   </div>
-  <div class="news-infor-description">
-    <p class="news-infor-edit-title">언론사 선택하기</p>
-    <p class="news-infor-edit-content">현재 기사를 받고 있는 언론사들이에요 ! 언론사 선택 해제시 해당 언론사에 관한 기사들은 제외돼요 :-) 
-      보고싶지 않은 언론사가 있다면 선택을 해제해주세요.
-    </p>
-  </div>
-  </div>
-
   <div class="news-infor-contents">
     <ul class="infor-press-ul">
-      {% for press in press_list %}
-    
+      {% for press in presses %}
       <li class="infor-press-li infor-press-li{{press.pk}}">
         <div class="infor-press">
           <img src="" alt=""><i class="fas fa-newspaper"></i>
@@ -36,34 +36,35 @@
         <form action="" method='POST'>
           {% csrf_token %}
           <span>
-            {% for i in non_press.all %}
-      {% if press.name in i.name %}
-      <i class="press-check-btn{{press.pk}} non-press-check-btn far fa-check-square" onclick="PressChked('{{press.pk}}')"></i>
-      {% endif %}
-      {% endfor %}
-    
-      {% for i in in_press.all %}
-      {% if press.name in i.name %}
-      <i class="press-check-btn{{press.pk}} press-check-btn far fa-check-square" onclick="PressChked('{{press.pk}}')"></i>
-      {% endif %}
-      {% endfor %}
-        </span>
+            {% for p in non_press.all %}
+            {% if press.name in p.name %}
+            <i class="press-check-btn{{press.pk}} non-press-check-btn far fa-check-square"
+              onclick="PressChked('{{press.pk}}')"></i>
+            {% endif %}
+            {% endfor %}
+            {% for p in in_press.all %}
+            {% if press.name in p.name %}
+            <i class="press-check-btn{{press.pk}} press-check-btn far fa-check-square"
+              onclick="PressChked('{{press.pk}}')"></i>
+            {% endif %}
+            {% endfor %}
+          </span>
         </form>
       </li>
       {% endfor %}
     </ul>
-    
-    
+
     <!-- 페이징 처리 -->
     <ul class="page-ul">
-      {% if press_list.has_previous %}
+      {% if presses.has_previous %}
       <li class="page-li">
-        <a class="page-link" href="?page={{ press_list.previous_page_number}}"><i
+        <a class="page-link" href="?page={{ presses.previous_page_number}}"><i
             class="page-icon fas fa-chevron-left"></i>이전</a>
       </li>
       {% else %}
       <li class="page-li disabled">
-        <a class="page-link" tabindex="-1" aria-disabled="true" href="#"><i class="page-icon fas fa-chevron-left"></i>이전</a>
+        <a class="page-link" tabindex="-1" aria-disabled="true" href="#"><i
+            class="page-icon fas fa-chevron-left"></i>이전</a>
       </li>
       {% endif %}
       <!-- 페이지리스트 -->
@@ -79,9 +80,9 @@
       {% endif %}
       {% endfor %}
       <!-- 다음페이지 -->
-      {% if press_list.has_next %}
+      {% if presses.has_next %}
       <li class="page-li">
-        <a class="page-link" href="?page={{ press_list.next_page_number }}">다음<i
+        <a class="page-link" href="?page={{ presses.next_page_number }}">다음<i
             class="page-icon fas fa-chevron-right"></i></a>
       </li>
       {% else %}
@@ -91,51 +92,48 @@
       </li>
       {% endif %}
     </ul>
-    
     <!-- 페이징처리 끝 -->
-    
-    
+
   </div>
 </section>
 {% endblock content %}
 
 {% block script %}
 <script defer>
+  // infor-press 언론사 선택 ajax 통신
+  function PressChked(press_pk) {
+    event.preventDefault();
 
-// infor-press 언론사 선택 ajax 통신
-function PressChked(press_pk){
-  event.preventDefault();
-  
-  let CsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
-  let param = {
-    'press_pk': press_pk,
+    let CsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+    let param = {
+      'press_pk': press_pk,
+    }
+    fetch("{% url 'social:press' %}", {
+      method: 'POST',
+      headers: {
+        "X-CSRFToken": CsrfValue,
+        "X-Requested-With": "XMLHttpRequest"
+      },
+      body: JSON.stringify(param),
+    }).then(function (response) {
+      console.log('readdss', response)
+      return response.json()
+    }).then(function (data) {
+      console.log(data['is_deleted'])
+      console.log(data['press_pk'])
+      if (data['is_deleted'] == false) {
+
+        document.querySelector(`.press-check-btn${press_pk}`).classList.add('non-press-check-btn')
+        document.querySelector(`.press-check-btn${press_pk}`).classList.remove('press-check-btn')
+      }
+      else {
+        document.querySelector(`.press-check-btn${press_pk}`).classList.remove('non-press-check-btn')
+        document.querySelector(`.press-check-btn${press_pk}`).classList.add('press-check-btn')
+      }
+
+    }).catch((error) => {
+      console.log('error', error);
+    })
   }
-  fetch("{% url 'social:press' %}", {
-    method: 'POST',
-    headers: {
-      "X-CSRFToken": CsrfValue,
-      "X-Requested-With": "XMLHttpRequest"
-    },
-    body: JSON.stringify(param),
-  }).then(function (response) {
-    console.log('readdss', response)
-    return response.json()
-  }).then(function (data) {
-    console.log(data['is_deleted'])
-    console.log(data['press_pk'])
-    if(data['is_deleted'] == false){
-     
-      document.querySelector(`.press-check-btn${press_pk}`).classList.add('non-press-check-btn')
-      document.querySelector(`.press-check-btn${press_pk}`).classList.remove('press-check-btn')
-    }
-    else{
-      document.querySelector(`.press-check-btn${press_pk}`).classList.remove('non-press-check-btn')
-      document.querySelector(`.press-check-btn${press_pk}`).classList.add('press-check-btn')
-    }
-
-  }).catch((error) => {
-    console.log('error', error);
-  })
-}
 </script>
 {% endblock script %}

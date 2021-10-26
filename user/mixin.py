@@ -24,7 +24,7 @@ class VerifyEmailMixin():
         if not user:
           context = context_infor(msg='회원가입부터 해주세요',error=True)
           return context
-          
+
         if another_user and another_user != user:
           context = context_infor(msg='이미 회원가입된 이메일입니다. 다른 이메일을 입력해주세요', error=True)
           return context
@@ -40,7 +40,6 @@ class VerifyEmailMixin():
               )
           return context
         
-
     error = signup_form.non_field_errors()
     if error:
       context = context_infor(

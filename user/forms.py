@@ -1,19 +1,15 @@
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, ReadOnlyPasswordHashField, SetPasswordForm
-from django.forms.widgets import EmailInput
 from django.utils.translation import ugettext_lazy as _
 from user.models import User, UserManager
 from django import forms
 from django.forms.fields import EmailField
-from . import models
-from django.contrib.auth import get_user_model
 from django.contrib.auth.hashers import check_password
 from utils import pwd_regex, email_regex
 
+
 class UserCreationForm(forms.ModelForm):
-    """
-    변경 필요 -!!
-    """
+
     # 사용자 생성 폼
     email = forms.EmailField(
         label=_('Email'),
@@ -63,7 +59,6 @@ class UserCreationForm(forms.ModelForm):
         fields = ('email', 'nickname')
 
     def clean_password2(self):
-        # 두 비밀번호 입력 일치 확인
         password1 = self.cleaned_data.get("password1")
         password2 = self.cleaned_data.get("password2")
         if password1 and password2 and password1 != password2:
@@ -71,7 +66,6 @@ class UserCreationForm(forms.ModelForm):
         return password2
 
     def save(self, commit=True):
-        # Save the provided password in hashed format
         user = super(UserCreationForm, self).save(commit=False)
         user.email = UserManager.normalize_email(self.cleaned_data['email'])
         user.set_password(self.cleaned_data["password1"])
@@ -81,7 +75,6 @@ class UserCreationForm(forms.ModelForm):
 
 
 class UserChangeForm(forms.ModelForm):
-    # 비밀번호 변경 폼
     password = ReadOnlyPasswordHashField(
         label=_('Password')
     )
@@ -91,32 +84,15 @@ class UserChangeForm(forms.ModelForm):
         fields = ('email', 'password', 'is_active', 'is_superuser')
 
     def clean_password(self):
-        # Regardless of what the user provides, return the initial value.
-        # This is done here, rather than on the field, because the
-        # field does not have access to the initial value
         return self.initial["password"]
 
 
 class LoginForm(AuthenticationForm):
-    """
-    author: Oh Ji Yun
-    date: 0715
-    description: 
-    authenticate가 있는 authentication form 상속
-    기본적으로 email, password를 렌더링하는데 username=forms.TextInput()이 기본이라 EmailField로 변경
-    clean 메서드 안에서 authenticate해주는 로직 있음
-    """
-
     username = EmailField(widget=forms.EmailInput(attrs={'autofocus':True, 'placeholder': _('email'), }))
 
 
 class SignupForm(forms.Form):
-    """
-    author: Son Hee Jung
-    date: 0713
-    description: 
-    회원가입 form 커스터마이징, 데이터에 대한 유효성 검증(clean)
-    """
+
     email = forms.CharField(
       label='email',
       required=True,
@@ -160,8 +136,6 @@ class SignupForm(forms.Form):
       }
     ),)
   
-
-    # 회원가입 로직 유효성 검사
     def clean(self):
         cleaned_data = super().clean()
         email = cleaned_data.get('email')
@@ -200,12 +174,7 @@ class SignupForm(forms.Form):
 
 
 class UserDeleteForm(forms.Form):
-    """
-    author: Son Hee Jung
-    date: 0723
-    description: 
-    회원 탈퇴 클래스 관련 Form
-    """
+
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class':'user-password'}))
 
     def __init__(self, user, *args, **kwargs):
@@ -222,17 +191,8 @@ class UserDeleteForm(forms.Form):
                 raise forms.ValidationError('비밀번호가 일치하지 않아요')
 
 
-class VerifyEmailForm(forms.Form):
-    pass
-
-
 class FindPwForm(forms.Form):
-    """
-    author: Son Hee Jung
-    date: 0726
-    description: 
-    패스워드 찾기 관련 Form
-    """
+
     email = forms.CharField(
       label='',
       widget=forms.EmailInput(
@@ -248,19 +208,13 @@ class FindPwForm(forms.Form):
     def clean(self):
         cleaned_data = super.clean()
         email = cleaned_data.get('user-email')
-        print(email,'clean 패스워드 찾기 clean')
 
         if not email:
            raise forms.ValidationError('이메일을 입력해주세요')
 
 
 class ChangeSetPwdForm(SetPasswordForm):
-    """
-    author: Son Hee Jung
-    date: 0726
-    description: 
-    패스워드 변경 확인 폼
-    """
+
     def __init__(self, *args, **kwargs):
         super(ChangeSetPwdForm, self).__init__(*args, **kwargs)
         self.fields['new_password1'].label = '새 비밀번호'
@@ -286,7 +240,6 @@ class ChangeSetPwdForm(SetPasswordForm):
 
 
 class VerificationEmailForm(forms.Form):
-
   email = forms.CharField(
     label='',
     required=True,
@@ -297,17 +250,9 @@ class VerificationEmailForm(forms.Form):
     }
   ),)
   
-
-#   class Meta:
-    # model = get_user_model()
-    # fields = ['email']
-
   def clean(self):
     cleaned_data = super().clean()
-    print(cleaned_data)
-    print('제발 엉엉')
     email = cleaned_data.get('email')
-
 
     if not email:
         raise forms.ValidationError('이메일을 입력해주세요 !')
@@ -315,6 +260,4 @@ class VerificationEmailForm(forms.Form):
     elif User.objects.filter(email=email, is_active=True).first():
         raise forms.ValidationError('이미 가입되어 있는 이메일입니다. 다른 이메일을 입력해주세요 !')
 
-
     self.email = email
-    print('유효성 검증 성공했어 너')

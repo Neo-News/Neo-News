@@ -1,31 +1,21 @@
-import datetime
 from celery import shared_task
 from django.core.mail import EmailMessage
 from news.models import Press, Article, Potal, Category
 from social.models import Like  
 from news.scrapping import parse_daum, parse_naver, convert_datetime_to_timestamp
-from django_celery_beat.models import PeriodicTask, IntervalSchedule
 from django.db.models import Q 
-import time
 
 
 @shared_task
 def send_email(mail_title, message_data, mail_to):
-  """
-  유저에게 이메일 인증 링크를 보내는 메서드
-  """
-  # print('제발 이게 작동해야 한다규.. 제발...')
   email = EmailMessage(mail_title, message_data, to=[mail_to])
-  print(email)
   email.send()
-  print('보내졌는디요...?')
   return None
 
 
 @shared_task
 def task_scrappy_naver():
     scrappy_list = parse_naver()
-    print("스크래핑 성공")
     for news in scrappy_list:
         date_list = news['date'].replace(".", " ").replace(":", " ").split(" ")
         time_obj = convert_datetime_to_timestamp(date_list)
@@ -57,25 +47,18 @@ def task_scrappy_naver():
                         counted_at = 0,
                         created_at=time_obj,
                         )
-                    print("기사 DB 넣기 성공")
                     if not Like.objects.filter(article = article):
                         Like.objects.create(
                             article=article
                         )
-                        print("좋아요 인스턴스 생성")
-
     return None
 
 
 @shared_task
 def task_scrappy_daum():
     news_list = parse_daum()
-    print('스크래핑 성공쓰')
     for news in news_list:
-        print(news['press'])
-        print(Press.objects.filter(name=news['press']))
         if Press.objects.filter(name=news['press']).first():
-            print('여기까지는 성고오오오오오옹')
             if not Article.objects.filter(Q(title=news['title']) | Q(content=news['content'])):
                 article = Article.objects.create(
                     press=Press.objects.filter(name=news['press']).first(),

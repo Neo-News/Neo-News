@@ -1,5 +1,6 @@
 amqp==5.0.6
 asgiref==3.4.1
+autopep8==1.5.7
 beautifulsoup4==4.9.3
 billiard==3.6.4.0
 boto3==1.17.109
@@ -25,6 +26,7 @@ mysqlclient==2.0.3
 pip-autoremove==0.9.1
 prompt-toolkit==3.0.19
 protobuf==3.17.3
+pycodestyle==2.7.0
 PyJWT==1.7.1
 python-crontab==2.5.1
 python-dateutil==2.8.1
@@ -35,6 +37,7 @@ s3transfer==0.4.2
 six==1.16.0
 soupsieve==2.2.1
 sqlparse==0.4.1
+toml==0.10.2
 urllib3==1.26.6
 vine==5.0.0
 wcwidth==0.2.5
