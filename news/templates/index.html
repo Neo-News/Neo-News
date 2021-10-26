@@ -44,6 +44,7 @@
     {% for article in articles %}
     <li class="news-li">
       <div class="news-img"><img src="{{article.preview_img}}" alt="">
+
       </div>
       <a href="{% url 'news:detail' article.pk %}">
         <div class="news-contents">
@@ -69,7 +70,6 @@
     {% endfor %}
 </ul>
 
-
 {% include 'pagination.html' %}
 {% endblock content %}
 
@@ -89,6 +89,7 @@
   let url = window.location.pathname;
   a_list = document.querySelectorAll('.category-li > a')
   url = `http://neonews.site${url}`
+
 
   a_list.forEach(function (a) {
     if (url == a['href']) {

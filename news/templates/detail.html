@@ -5,7 +5,7 @@
 
 <link rel="stylesheet" href="{% static 'css/style.css' %}">
 <!-- 카카오톡 공유 api -->
-<script src="//developers.kakao.com/sdk/js/kakao.min.js" defer></script>
+<script src="//developers.kakao.com/sdk/js/kakao.min.js"></script>
 {% endblock head %}
 
 {% block content %}
@@ -123,27 +123,6 @@
     let btnEditDelete = document.querySelector(`.btn-${btnNum}`);
     btnEditDelete.classList.toggle("non-clicked");
   }
-  // $commentEditDiv = document.querySelector('.ellipsis');
-  // let bool = false
-  // $commentEditDiv.addEventListener('click', function (e) {
-  //   if (bool == true) {
-  //     document.querySelector('.comment-edit-div').classList.add('non-clicked');
-  //     bool = false;
-  //     console.log(bool)
-  //   }
-  //   else {
-  //     document.querySelector('.comment-edit-div').classList.remove('non-clicked');
-  //     bool = true;
-  //     console.log(bool)
-  //   }
-  // });
-  // document.onmousedown = () => {
-  //   bool = false;
-  //   if (window.event.path[0].classList[0] != 'ellipsis') {
-  //     document.querySelector('.comment-edit-div').classList.add('non-clicked');
-  //   }
-  // }
-
 
   // 댓글기능 스크립트
   function createComment(content) {
@@ -301,36 +280,10 @@
   }
 
 
-  // 공유하기 스크립트
-  Kakao.init('32cbd11246656adc34f9add26b2a772b');
-  function sendLinkKakao() {
-    Kakao.Link.sendDefault({
-      objectType: 'feed',
-      content: {
-        title: '{{ article.title|get_hangul_num }}',
-        description: '{{ article.content|get_hangul|slice:"65:"}}',
-        // 컨텐츠 이미지 가져오는거 필요해보임
-        imageUrl: '{{article.kakao_img}}',
-        link: {
-          mobileWebUrl: '{{ request.build_absolute_uri }}',
-          webUrl: '{{ request.build_absolute_uri }}'
-        }
-      },
-      buttons: [
-        {
-          title: '링크 열기',
-          link: {
-            mobileWebUrl: '{{ request.build_absolute_uri }}',
-            webUrl: '{{ request.build_absolute_uri }}'
-          }
-        }
-      ]
-    });
-  }
-
-// 좋아요 스크립트 
+  
+  // 좋아요 스크립트 
   function toggleLike(e) {
-
+    
     e.preventDefault();
     console.log("toggle like")
     let csrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
@@ -358,12 +311,34 @@
       else{
         socialHeart.classList.remove("change-color");
       }
-      //  socialHeartBtn.innerHTML += `${count}
-
-      //  `;
-
     })
   }
+// 공유하기 스크립트
+Kakao.init('22164b2dc3ffb2d6a5de6f0688868b34');
+function sendLinkKakao() {
+  Kakao.Link.sendDefault({
+    objectType: 'feed',
+    content: {
+      title: '{{ article.title|get_hangul_num }}',
+      description: '{{ article.content|get_hangul|slice:"65:"}}',
+      // 컨텐츠 이미지 가져오는거 필요해보임
+      imageUrl: '{{article.kakao_img}}',
+      link: {
+        mobileWebUrl: '{{ request.build_absolute_uri }}',
+        webUrl: '{{ request.build_absolute_uri }}'
+      }
+    },
+    buttons: [
+      {
+        title: '링크 열기',
+        link: {
+          mobileWebUrl: '{{ request.build_absolute_uri }}',
+          webUrl: '{{ request.build_absolute_uri }}'
+        }
+      }
+    ]
+  });
+}
 </script>
 
 {% endblock script %}

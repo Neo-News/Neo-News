@@ -12,16 +12,6 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings")
 django.setup()
 
 
-
-"""
-author: Oh Ji Yun
-date: 0720
-description: 
-네이버 뉴스 카테고리별로 하루치 스크래핑 하는 함수
-스크래핑한 데이터 DB에 넣어주기
-for문 때문에 depth가 깊어서 리팩토링 필요
-"""
-
 # datetime -> time 객체로 만들어줌
 def convert_datetime_to_timestamp(date_list):
     if date_list[4] == "오전":

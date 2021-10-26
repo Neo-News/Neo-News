@@ -114,7 +114,6 @@ def kakao_login_callback(request):
           user.set_password(None)
           user.nickname = nickname
           user.is_active = True
-          user.is_detailed = True
           user.save()
           auth_login(request, user)
           return redirect("user:signup_detail")
