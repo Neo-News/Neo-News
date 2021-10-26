@@ -8,9 +8,10 @@
 1. [너뉴스 소개](https://github.com/Neo-News/Neo-News/tree/develop#-%EB%84%88%EB%89%B4%EC%8A%A4-%EC%86%8C%EA%B0%9C)   
 2. [개요](https://github.com/Neo-News/Neo-News/tree/develop#-%EA%B0%9C%EC%9A%94)   
 3. [요구사항 및 업무 분배](https://github.com/Neo-News/Neo-News/tree/develop#-%EC%9A%94%EA%B5%AC%EC%82%AC%ED%95%AD-%EB%B0%8F-%EC%97%85%EB%AC%B4-%EB%B6%84%EB%B0%B0)   
-4. [주요 기능](https://github.com/Neo-News/Neo-News/tree/develop#-%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5)     
-5. [ERD](https://github.com/Neo-News/Neo-News/tree/develop#-erd)   
-6. [History](https://github.com/Neo-News/Neo-News/tree/develop#-history)   
+4. [개발환경 및 기술스택]()
+5. [주요 기능](https://github.com/Neo-News/Neo-News/tree/develop#-%EC%A3%BC%EC%9A%94-%EA%B8%B0%EB%8A%A5)     
+6. [ERD](https://github.com/Neo-News/Neo-News/tree/develop#-erd)   
+7. [History](https://github.com/Neo-News/Neo-News/tree/develop#-history)   
 
 <br>
 
@@ -39,6 +40,37 @@
 ![요구사항](https://user-images.githubusercontent.com/64240637/135860718-f99ed25f-be96-4793-a210-169727184138.png)
 
 <br>
+
+## 개발환경 및 기술스택
+
+|종류|이름|
+|---|---|
+|IDE|Visual Studio Code|
+|OS|Ubuntu20.04|
+
+<br>
+
+|Stack|Role|
+|---|---|
+|HTML|프론트 구현|
+|CSS|프론트 구현|
+|JavaScript|프론트 구현, Ajax요청|
+|Django 3.2.6|프레임워크|
+|Ajax|좋아요, 댓글등 비동기처리|
+|OAuth|회원가입|
+|RabbitMQ|메시지 브로커|
+|Celery 5.1.2|이메일,인증 비동기처리|
+|bs4, requests|기사 스크래핑|
+|Django-celery-beat 2.2.1|스크래핑 자동화처리|
+|PyJWT 1.7.1|이메일 암호화|
+|ORM|DB조작, 관리|
+|AWS RDS|데이터베이스|
+|AWS S3|이미지 저장공간|
+|AWS 53|DNS서비스|
+
+
+<br>
+
 
 ## 🌟 주요 기능
 
@@ -142,5 +174,5 @@
 
 ## 🐥 History
 ### [WIKI](https://github.com/Neo-News/Neo-News/wiki/NeoNews)    
-### [v1.0]()
+### [v1.0](https://github.com/Neo-News/Neo-News/wiki/v1.0)
 ### [v2.0]()
