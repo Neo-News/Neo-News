@@ -173,6 +173,6 @@
 <br>
 
 ## 🐥 History
-### [WIKI](https://github.com/Neo-News/Neo-News/wiki)    
+
+### [WIKI](https://github.com/Neo-News/Neo-News/wiki)      
 ### [v1.0](https://github.com/Neo-News/Neo-News/wiki/v1.0)
-### [v2.0]()
