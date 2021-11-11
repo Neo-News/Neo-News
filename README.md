@@ -26,7 +26,7 @@
 
 ## 📌 개요
 
-- 기간 : 2021.08.01 ~ 2021.09.07
+- 기간 : 2021.07.01 ~ 2021.08.08
 - 팀원
   - Back-end & Front-end : [오지윤](https://github.com/Odreystella)
   - Back-end & Front-end : [손희정](https://github.com/heejung-gjt)
