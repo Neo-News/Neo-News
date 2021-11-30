@@ -3,32 +3,42 @@ import os
 import jwt
 import json
 import requests
-from django.contrib.auth import authenticate, login as auth_login, logout
-from django.utils.decorators import method_decorator
-from django.utils.encoding import force_text
-from django.utils.http import urlsafe_base64_decode
-from django.views.decorators.csrf import csrf_exempt
+from datetime import datetime
+
 from django.shortcuts import render, redirect
+from django.utils.http import urlsafe_base64_decode
+from django.contrib import messages
+from django.contrib.auth import logout, authenticate, login as auth_login
+from django.views.generic import View, FormView, TemplateView
+from django.http.response import JsonResponse
+from django.utils.encoding import force_text
+from django.utils.decorators import method_decorator
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.decorators.csrf import csrf_exempt
+
+from boto3.session import Session
+from config.settings import (
+    AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY,
+    AWS_STORAGE_BUCKET_NAME, AWS_S3_REGION_NAME
+    )
+
+from utils import context_infor, email_valid_num
+from user.dto import (
+    AuthDto, SignupDto, ResendDto,
+    UserDto, UserPkDto, VaildEmailDto, UserConfirmDto
+    )
+from user.forms import (
+    FindPwForm, SignupForm, LoginForm, 
+    ChangeSetPwdForm,VerificationEmailForm
+    )
+from user.tasks import send_email
+from user.mixin import VerifyEmailMixin
+from user.models import User, Category
+from user.services import UserService, UserEmailVerifyService
+from user.exception import SocialLoginException, KakaoException
+from news.dto import KeywordInforDto, KeywordDto, CategoryDto
 from news.services import CategoryService, KeyWordsService
 from social.services import CommentService
-from utils import context_infor
-from utils import email_valid_num
-from .tasks import send_email
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib import messages
-from datetime import datetime
-from django.http.response import JsonResponse
-from django.views.generic.base import TemplateView
-from django.views.generic import View, FormView
-from boto3.session import Session
-from config.settings import AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_STORAGE_BUCKET_NAME, AWS_S3_REGION_NAME
-from .dto import AuthDto, SignupDto, ResendDto, UserDto, UserPkDto, VaildEmailDto, UserConfirmDto
-from news.dto import KeywordInforDto, KeywordDto, CategoryDto
-from .exception import SocialLoginException, KakaoException
-from .forms import FindPwForm, SignupForm, LoginForm, ChangeSetPwdForm,VerificationEmailForm
-from .models import User, Category
-from .mixin import VerifyEmailMixin
-from .services import UserService, UserEmailVerifyService
 
 
 class UserLoginView(FormView):
@@ -135,6 +145,7 @@ class UserSignupView(View):
     def get(self, request, *args, **kwargs):
         forms = SignupForm()
         context = context_infor(forms=forms)
+
         return render(request, 'signup.html',context)
   
     def post(self, request, *args, **kwargs):
@@ -142,7 +153,7 @@ class UserSignupView(View):
             signup_form = SignupForm(json.loads(request.body))
 
         if signup_form.is_valid():
-            data = self._build_signup_dto(signup_form)
+            data = self._build_signup_dto(request)
             user = UserService.create(data)
             mail_title, message_data, mail_to = UserEmailVerifyService.verify_email_user(request, user.pk, signup_form.email)
             send_email.delay(mail_title, message_data, mail_to)
@@ -436,25 +447,25 @@ class ResendEmailView(VerifyEmailMixin, View):
     def get(self, request, *args, **kwargs):
         forms = VerificationEmailForm()
         forms = str(forms)
+        
         context = context_infor(forms=forms)
+        
         return JsonResponse(context)
 
     def post(self, request, *args, **kwargs):
         if request.is_ajax():
             data = self._build_resend_dto(request)
             forms = VerificationEmailForm(json.loads(request.body))
-            context = self.send_verification_email(
-                        request, forms ,resent_email = data.email,
-                        change_email = data.recent_email, 
-                        email = 'again'
-                        )
+            
+            context = self.send_verify_email(request, data, forms, 'again')
+            
             return JsonResponse(context)
 
     def _build_resend_dto(self, request):
         data = json.loads(request.body)
         return ResendDto(
-            email = data['email'],
-            recent_email = data['recent-email']
+            resend_email = data['resend-email'],
+            email = data['email']
         )
 
 
