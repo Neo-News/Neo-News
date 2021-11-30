@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.views.generic import DetailView,View
 from django.views.generic import ListView
-from utils import context_infor
+from utils import context_info
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView, ListView, View
 from social.services import CommentService, LikeService
@@ -24,7 +24,7 @@ class IndexView(View):
                 article_list = ArticleService.get_articles_in_userpress(press_list)
 
         page_range, article_obj = paging(request.GET.get('page','1'), article_list, 20)
-        context = context_infor(
+        context = context_info(
                                 categories=categories,
                                 keywords=keywords, 
                                 articles=article_obj,
@@ -48,7 +48,7 @@ class NewsDetailView(LoginRequiredMixin, DetailView):
         comments = CommentService.get_filter_comment(data.pk)
         like = LikeService.get_like(data.pk)
         is_liked = LikeService.get_like_state(like, request.user)
-        context = context_infor(
+        context = context_info(
                                 article=article, 
                                 comments=comments, 
                                 like=like, 
@@ -73,7 +73,7 @@ class NewsInforEditPressView(LoginRequiredMixin, ListView):
         non_press = PressService.get_non_presses(userpress)
         press = PressService.get_presses_in_userpress(userpress)
         page_range, press_obj = paging(request.GET.get('page','1'), presses, 10)
-        context = context_infor(presses=press_obj, 
+        context = context_info(presses=press_obj, 
                                 page_range=page_range,
                                 in_press=press,
                                 non_press=non_press,
@@ -90,7 +90,7 @@ class NewsInforEditKeywordView(View):
     def get(self, request, **kwargs):
         data = self._build_article_pk(request)
         keywords = KeyWordsService.get_filter_keywords(data.pk)
-        context = context_infor(keywords=keywords)
+        context = context_info(keywords=keywords)
         return render(request, 'infor-keyword.html', context)
 
     def _build_article_pk(self, request):
@@ -104,7 +104,7 @@ class NewsInforEditCategoryView(View):
         data = self._build_article_pk(request)
         categories = CategoryService.get_exclude_categories('속보')
         user_categories = CategoryService.get_filter_categories(data.pk)
-        context = context_infor(categories=categories, user_categories=user_categories)
+        context = context_info(categories=categories, user_categories=user_categories)
         return render(request, 'infor-category.html', context)
 
     def _build_article_pk(self, request):
@@ -127,7 +127,7 @@ class CategoryView(View):
                 press_list = PressService.get_presses_name(userpress)
                 article_list = ArticleService.get_all_filters_articles(press_list, category_name)
             page_range, article_obj = paging(request.GET.get('page','1'), article_list, 20)
-            context = context_infor(
+            context = context_info(
                                     categories=categories,
                                     keywords=keywords, 
                                     articles=article_obj,
@@ -163,7 +163,7 @@ class KeywordIndexView(View):
                 article_list = ArticleService.get_include_and_or_filters_articles(keyword_name, press_list)
 
         page_range, article_obj = paging(request.GET.get('page','1'), article_list, 20)                 
-        context = context_infor(
+        context = context_info(
                                 articles=article_obj, 
                                 categories=categories, 
                                 keywords=keywords, 

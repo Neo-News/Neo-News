@@ -1,7 +1,8 @@
-from re import S
+from django.db.models import Q
+
 from news.models import Article, Press, UserPress
 from user.models import Category, Keyword
-from django.db.models import Q
+
 
 class ArticleService():
     
@@ -53,6 +54,10 @@ class CategoryService():
         return Category.objects.get(pk = pk)
 
     @staticmethod
+    def filter_category_name(value):
+        return Category.objects.get(name=value)
+
+    @staticmethod
     def get_filter_category_users(request, category):
         if request.user in category.users.all():
             category.users.remove(request.user)
@@ -71,7 +76,7 @@ class KeyWordsService():
 
     @staticmethod
     def get_keyword_name(keyword):
-        return Keyword.objects.get(name = keyword)
+        return Keyword.objects.filter(name = keyword).first()
 
     @staticmethod
     def create(keyword):

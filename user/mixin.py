@@ -1,4 +1,6 @@
-from utils import context_infor
+
+from utils import context_info
+
 from user.tasks import send_email
 from user.models import User
 from user.services import UserService, UserEmailVerifyService
@@ -17,7 +19,7 @@ class VerifyEmailMixin():
                     resend_email_user = User.objects.get(email=dto.resend_email)
                     
                     if user != resend_email_user:
-                        context = context_infor(msg='이메일을 확인해주세요 !', error=True)
+                        context = context_info(msg='이메일을 확인해주세요 !', error=True)
                         
                         return context
 
@@ -28,7 +30,8 @@ class VerifyEmailMixin():
             
                 send_email.delay(mail_title, message_data, mail_to)
             
-                context = context_infor(msg='이메일을 인증해 회원가입을 완료하세요!', error=False)
+
+                context = context_info(msg='이메일을 인증해 회원가입을 완료하세요!', error=False)
             
                 return context
 
@@ -36,12 +39,12 @@ class VerifyEmailMixin():
 
             if error:
                 print(error)
-                context = context_infor(msg=error, error=True)
+
+                context = context_info(msg=error, error=True)
                 
                 return context
 
         except User.DoesNotExist:
-            context = context_infor(msg='회원가입부터 해주세요', error=True)
+            context = context_info(msg='회원가입부터 해주세요', error=True)
                         
             return context
-

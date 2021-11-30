@@ -1,11 +1,11 @@
-import time
-import datetime
 import re
-import string
+import time
 import random
+import string
+import datetime
 
 
-def context_infor(**kwargs):
+def context_info(**kwargs):
   a = {}
   for k,v in kwargs.items():
     a[k] = v
@@ -32,6 +32,7 @@ def get_time_passed(created_at):
         return str(int(time_passed//(60*60*24))) + '일 전'
     if time_passed//(60*60*24*30) < 12:
         return str(int(time_passed//(60*60*24*30))) + '달 전'
+    
     else:
         return '오래 전'  
 
@@ -52,24 +53,28 @@ def get_time_passed_comment(created_at):
         return str(int(time_passed//(60*60*24))) + '일 전'
     if time_passed//(60*60*24*30) < 12:
         return str(int(time_passed//(60*60*24*30))) + '달 전'
+    
     else:
         return '오래 전'  
 
 
 def pwd_regex(string):
     pwd = re.compile("^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$")
+    
     return pwd.match(string)
 
 
 def email_regex(string):
     email = re.compile("^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+    
     return email.match(string)
 
 
-def email_valid_num():
+def email_auth_num():
   LENGTH = 4
   valid_str = string.ascii_letters
   valid_num = ''
   for _ in range(LENGTH):
       valid_num += random.choice(valid_str)
+  
   return valid_num
