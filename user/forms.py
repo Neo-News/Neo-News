@@ -144,7 +144,6 @@ class SignupForm(forms.Form):
         password_chk = cleaned_data.get('password_chk')
         email_type = email_regex(email)
         pwd_type = pwd_regex(password)
-
         if not email or not nickname or not password_chk or not password:
             raise forms.ValidationError('모든 정보를 입력해주세요')
 
@@ -240,24 +239,27 @@ class ChangeSetPwdForm(SetPasswordForm):
 
 
 class VerificationEmailForm(forms.Form):
-  email = forms.CharField(
+    email = forms.CharField(
     label='',
     required=True,
     widget=forms.EmailInput(
     attrs={
-      'class':'resend-input',
-      'placeholder': '이메일을 입력하세요'
+        'class':'resend-input',
+        'placeholder': '이메일을 입력하세요'
     }
-  ),)
+    ),)
   
-  def clean(self):
-    cleaned_data = super().clean()
-    email = cleaned_data.get('email')
+    def clean(self):
+        cleaned_data = super().clean()
+        email = cleaned_data.get('email')
 
-    if not email:
-        raise forms.ValidationError('이메일을 입력해주세요 !')
+        if not email:
+            raise forms.ValidationError('재인증 받고 싶은 이메일을 위쪽에 먼저 입력해주세요 !')
 
-    elif User.objects.filter(email=email, is_active=True).first():
-        raise forms.ValidationError('이미 가입되어 있는 이메일입니다. 다른 이메일을 입력해주세요 !')
+        elif not User.objects.filter(email=email).exists():
+            raise forms.ValidationError('회원가입 되지 않은 이메일입니다. 회원가입부터 해주세요 !')
 
-    self.email = email
+        elif User.objects.filter(email=email, is_active=True).first():
+            raise forms.ValidationError('이미 가입되어 있는 이메일입니다. 다른 이메일을 입력해주세요 !')
+
+        self.email = email

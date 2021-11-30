@@ -38,12 +38,9 @@ class UserService():
         return User.objects.get(email=dto.email, auth=dto.valid_num)
 
     @staticmethod
-    def update(dto, recent_email):
-        User.objects.filter(email=recent_email).update(
-            email = dto.email
-        )
-        user = User.objects.get(email=dto.email)
-        return user
+    def update(email, resend_email):
+        User.objects.filter(email=email).update(email=resend_email)
+        return User.objects.get(email=resend_email)
 
     @staticmethod
     def update_nickname(request, nickname):
@@ -86,15 +83,15 @@ class UserService():
 
 class UserEmailVerifyService():
     @staticmethod
-    def verify_email_user(request, pk, email):
-        data ={'email': email}  
-        current_site = get_current_site(request)
-        domain = current_site.domain
+    def verify_email_user(request, pk, email):  
+        domain = get_current_site(request).domain
         uidb64 = urlsafe_base64_encode(force_bytes(pk))
         token = jwt.encode({'user_pk' : pk}, 'secretkey', algorithm = 'HS256').decode('utf-8')
+        
         message_data = message(domain, uidb64, token)
         mail_title = '이메일 인증을 완료해주세요'
-        mail_to = data['email']
+        mail_to = email
+        
         return (mail_title, message_data, mail_to)
 
     @staticmethod

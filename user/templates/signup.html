@@ -141,11 +141,8 @@
       },
       // body: JSON.stringify(param),
     }).then(function (response) {
-      console.log('sdafjalfja')
       return response.json()
     }).then(function (data) {
-      console.log(data['forms'])
-      console.log(data)
       document.querySelector('.resend-div').innerHTML =
         `
      ${data['forms']}
@@ -157,20 +154,15 @@
   }
 
   function resendBtn(e) {
-    console.log('hahahah')
     e.preventDefault();
-    $email = document.querySelector('.resend-input').value;
-    $recent_email = document.querySelector('.user-email').value;
+    $resend_email = document.querySelector('.resend-input').value;
+    $email = document.querySelector('.user-email').value;
     let resendCsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
-    console.log($email)
-    console.log($recent_email)
     let param = {
-      'email': $email,
-      'recent-email': $recent_email
-
+      'resend-email': $resend_email,
+      'email': $email
     }
-    // document.querySelector('.resend-form').style.display='none';
-
+    console.log("움움움", param)
     fetch("{% url 'user:resend' %}", {
       method: 'POST',
       headers: {
@@ -181,15 +173,12 @@
     }).then(function (response) {
       return response.json()
     }).then(function (data) {
-      console.log(data['error'], data['msg'])
       // 회원가입 유효성 검사시 발생하는 Error문 템플릿에 출력
       if (data['error'] == true) {
-        console.log(`${data['msg']}`)
         document.querySelector('.valid-error').innerHTML = `${data['msg']}`
 
       }
       if (data['error'] == false) {
-        console.log(`${data['msg'[0]]}`)
         document.querySelector('.valid-error').innerText = `${data['msg']}`
         // document.querySelector('.resend-email').classList.toggle('clicked');
       }

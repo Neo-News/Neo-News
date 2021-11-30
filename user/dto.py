@@ -13,7 +13,7 @@ class SignupDto():
 @dataclass
 class ResendDto():
     email:str
-    recent_email:str
+    resend_email:str
 
 
 @dataclass
