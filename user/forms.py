@@ -138,12 +138,15 @@ class SignupForm(forms.Form):
   
     def clean(self):
         cleaned_data = super().clean()
+
         email = cleaned_data.get('email')
         nickname = cleaned_data.get('nickname')
         password = cleaned_data.get('password')
         password_chk = cleaned_data.get('password_chk')
+        
         email_type = email_regex(email)
         pwd_type = pwd_regex(password)
+
         if not email or not nickname or not password_chk or not password:
             raise forms.ValidationError('모든 정보를 입력해주세요')
 
@@ -162,9 +165,8 @@ class SignupForm(forms.Form):
         elif len(nickname) <= 1:
             raise forms.ValidationError('닉네임을 2자리 이상 지어주세요')
 
-        elif User.objects.filter(nickname=nickname):
+        elif User.objects.filter(nickname=nickname).exists():
             raise forms.ValidationError('닉네임이 이미 존재해요')
-
 
         self.email = email
         self.nickname = nickname
@@ -237,7 +239,6 @@ class ChangeSetPwdForm(SetPasswordForm):
             raise forms.ValidationError('값을 전부 입력해주세요')
 
 
-
 class VerificationEmailForm(forms.Form):
     email = forms.CharField(
     label='',
@@ -251,6 +252,7 @@ class VerificationEmailForm(forms.Form):
   
     def clean(self):
         cleaned_data = super().clean()
+        
         email = cleaned_data.get('email')
 
         if not email:
