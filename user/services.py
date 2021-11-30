@@ -1,4 +1,7 @@
 import jwt
+
+from config.settings import SECRET_KEY, ALGORITHM
+
 from utils import context_infor
 from user.dto import SignupDto, UserDto, VaildEmailDto, UserConfirmDto
 from user.models import User
@@ -86,7 +89,7 @@ class UserEmailVerifyService():
     def verify_email_user(request, pk, email):  
         domain = get_current_site(request).domain
         uidb64 = urlsafe_base64_encode(force_bytes(pk))
-        token = jwt.encode({'user_pk' : pk}, 'secretkey', algorithm = 'HS256').decode('utf-8')
+        token = jwt.encode({'user_pk' : pk}, SECRET_KEY, ALGORITHM).decode('utf-8')
         
         message_data = message(domain, uidb64, token)
         mail_title = '이메일 인증을 완료해주세요'
@@ -103,8 +106,8 @@ class UserEmailVerifyService():
         return (mail_title, message_data, mail_to)
 
     @staticmethod
-    def verify_user_active(user,user_pk, token):
-        if user_pk == token:
+    def verify_user_active(user, token):
+        if user.pk == token:
             user.is_active = True
             user.save()
 

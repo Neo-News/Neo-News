@@ -70,7 +70,7 @@
 <script>
 
   function signupBtn(e) {
-    document.querySelector('.resend-form ').classList.remove('non-clicked')
+    document.querySelector('.resend-form ').classList.remove('non-clicked');
     // 회원가입 ajax 통신
     e.preventDefault();
     // 회원가입 정보 서버로 전송/ 문제점 : password 평문으로 전송됨
@@ -104,19 +104,18 @@
       return response.json()
     }).then(function (data) {
       // 회원가입 유효성 검사시 발생하는 Error문 템플릿에 출력
-      if (data['is_error'] == 1) {
-        document.querySelector('.error').innerHTML = `<span class="error-word">${data['error'][0]}</span>`
+      if (data['error'] == true) {
+        document.querySelector('.error').innerHTML = `<span class="error-word">${data['msg']}</span>`
         document.querySelector('.user-pwd').value = '';
         document.querySelector('.user-pwd-chk').value = '';
         document.querySelector('.user-nickname').value = '';
       }
-      if (data['is_error'] == 0) {
-        document.querySelector('.error').innerHTML = `<span class="error-word">${data['error']}</span>`
+      else if (data['error'] == false) {
+        document.querySelector('.error').innerHTML = `<span class="error-word">${data['msg']}</span>`
         document.querySelector('.user-pwd').value = '';
         document.querySelector('.user-pwd-chk').value = '';
         document.querySelector('.user-nickname').value = '';
       }
-      return data
     }).catch((error) => {
       console.log('error', error);
     })
@@ -124,7 +123,6 @@
 
   //이메일 재인증하기 
   function resendEmail(e) {
-    console.log('움움우뭉')
     e.preventDefault();
     let resendCsrfValue = document.getElementsByName("csrfmiddlewaretoken")[0].value;
 
@@ -162,7 +160,6 @@
       'resend-email': $resend_email,
       'email': $email
     }
-    console.log("움움움", param)
     fetch("{% url 'user:resend' %}", {
       method: 'POST',
       headers: {

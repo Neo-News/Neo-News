@@ -19,7 +19,9 @@ from django.views.decorators.csrf import csrf_exempt
 from boto3.session import Session
 from config.settings import (
     AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY,
-    AWS_STORAGE_BUCKET_NAME, AWS_S3_REGION_NAME
+    AWS_STORAGE_BUCKET_NAME, AWS_S3_REGION_NAME,
+    SECRET_KEY, ALGORITHM
+    
     )
 
 from utils import context_infor, email_valid_num
@@ -39,6 +41,79 @@ from user.exception import SocialLoginException, KakaoException
 from news.dto import KeywordInforDto, KeywordDto, CategoryDto
 from news.services import CategoryService, KeyWordsService
 from social.services import CommentService
+
+
+class UserSignupView(VerifyEmailMixin, View):
+
+    def get(self, request, *args, **kwargs):
+        forms = SignupForm()
+        context = context_infor(forms=forms)
+
+        return render(request, 'signup.html', context)
+  
+    def post(self, request, *args, **kwargs):
+        if request.is_ajax():
+            signup_form = SignupForm(json.loads(request.body))
+            data = self._build_signup_dto(request)
+            
+            context = self.send_verify_email(request, data, signup_form, 'new')
+            
+            return JsonResponse(context)
+
+    def _build_signup_dto(self, request):
+        data = json.loads(request.body)
+        return SignupDto(
+            email = data['email'],
+            nickname = data['nickname'],
+            password = data['password']
+        )
+        
+
+class SignupRedirectView(View):
+    def get(self, request, uidb64, token):
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = UserService.get_user(uid)
+        token = jwt.decode(token, SECRET_KEY, ALGORITHM)
+        
+        UserEmailVerifyService.verify_user_active(user, token['user_pk'])
+        
+        return redirect('user:login')
+
+
+class SignupDeatilView(LoginRequiredMixin,View):
+    login_url = '/user/login/'
+    redirect_field_name='/'
+
+    def get(self,request, *args, **kwargs):
+        categories = CategoryService.get_exclude_categories('속보')
+        context = context_infor(categories=categories)
+        return render(request, 'signup_detail.html', context)
+
+
+class ResendEmailView(VerifyEmailMixin, View):
+    def get(self, request, *args, **kwargs):
+        forms = VerificationEmailForm()
+        forms = str(forms)
+        
+        context = context_infor(forms=forms)
+        
+        return JsonResponse(context)
+
+    def post(self, request, *args, **kwargs):
+        if request.is_ajax():
+            data = self._build_resend_dto(request)
+            forms = VerificationEmailForm(json.loads(request.body))
+            
+            context = self.send_verify_email(request, data, forms, 'again')
+            
+            return JsonResponse(context)
+
+    def _build_resend_dto(self, request):
+        data = json.loads(request.body)
+        return ResendDto(
+            resend_email = data['resend-email'],
+            email = data['email']
+        )
 
 
 class UserLoginView(FormView):
@@ -138,60 +213,6 @@ def kakao_login_callback(request):
     except SocialLoginException as error:
         messages.error(request, error)
         return redirect("index")
-
-
-class UserSignupView(View):
-
-    def get(self, request, *args, **kwargs):
-        forms = SignupForm()
-        context = context_infor(forms=forms)
-
-        return render(request, 'signup.html',context)
-  
-    def post(self, request, *args, **kwargs):
-        if request.is_ajax():
-            signup_form = SignupForm(json.loads(request.body))
-
-        if signup_form.is_valid():
-            data = self._build_signup_dto(request)
-            user = UserService.create(data)
-            mail_title, message_data, mail_to = UserEmailVerifyService.verify_email_user(request, user.pk, signup_form.email)
-            send_email.delay(mail_title, message_data, mail_to)
-            context = context_infor(error='이메일을 인증해 회원가입을 완료하세요!', is_error=False)
-            return JsonResponse(context)
-
-        error = signup_form.non_field_errors()
-        if error:
-            context = context_infor(error=error, is_error=1)
-            return JsonResponse(context) 
-
-    def _build_signup_dto(self, request):
-        data = json.loads(request.body)
-        return SignupDto(
-            email = data['email'],
-            nickname = data['nickname'],
-            password = data['password']
-        )
-        
-
-class Activate(View):
-
-    def get(self, request, uidb64, token):
-        uid = force_text(urlsafe_base64_decode(uidb64))
-        user = UserService.get_user(uid)
-        token = jwt.decode(token,'secretkey',algorithm='HS256')
-        UserEmailVerifyService.verify_user_active(user,user.pk, token['user_pk'])
-        return redirect('user:login')
-
-
-class SignupDeatilView(LoginRequiredMixin,View):
-    login_url = '/user/login/'
-    redirect_field_name='/'
-
-    def get(self,request, *args, **kwargs):
-        categories = CategoryService.get_exclude_categories('속보')
-        context = context_infor(categories=categories)
-        return render(request, 'signup_detail.html', context)
 
 
 class ChangeMyInforView(View):
@@ -441,32 +462,6 @@ class LoginCallBackView(TemplateView):
     def get(self, request, *args, **kwargs):
         context = {}
         return self.render_to_response(context)
-
-
-class ResendEmailView(VerifyEmailMixin, View):
-    def get(self, request, *args, **kwargs):
-        forms = VerificationEmailForm()
-        forms = str(forms)
-        
-        context = context_infor(forms=forms)
-        
-        return JsonResponse(context)
-
-    def post(self, request, *args, **kwargs):
-        if request.is_ajax():
-            data = self._build_resend_dto(request)
-            forms = VerificationEmailForm(json.loads(request.body))
-            
-            context = self.send_verify_email(request, data, forms, 'again')
-            
-            return JsonResponse(context)
-
-    def _build_resend_dto(self, request):
-        data = json.loads(request.body)
-        return ResendDto(
-            resend_email = data['resend-email'],
-            email = data['email']
-        )
 
 
 class MypageView(LoginRequiredMixin, View):
