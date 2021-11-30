@@ -24,7 +24,7 @@ from config.settings import (
     
     )
 
-from utils import context_infor, email_valid_num
+from utils import context_info, email_auth_num
 from user.dto import (
     AuthDto, SignupDto, ResendDto,
     UserDto, UserPkDto, VaildEmailDto, UserConfirmDto
@@ -33,13 +33,13 @@ from user.forms import (
     FindPwForm, SignupForm, LoginForm, 
     ChangeSetPwdForm,VerificationEmailForm
     )
-from user.tasks import send_email
 from user.mixin import VerifyEmailMixin
-from user.models import User, Category
+from user.models import User, Category, Keyword
+from news.models import UserPress
 from user.services import UserService, UserEmailVerifyService
 from user.exception import SocialLoginException, KakaoException
 from news.dto import KeywordInforDto, KeywordDto, CategoryDto
-from news.services import CategoryService, KeyWordsService
+from news.services import CategoryService, KeyWordsService, PressService
 from social.services import CommentService
 
 
@@ -47,7 +47,7 @@ class UserSignupView(VerifyEmailMixin, View):
 
     def get(self, request, *args, **kwargs):
         forms = SignupForm()
-        context = context_infor(forms=forms)
+        context = context_info(forms=forms)
 
         return render(request, 'signup.html', context)
   
@@ -86,7 +86,9 @@ class SignupDeatilView(LoginRequiredMixin,View):
 
     def get(self,request, *args, **kwargs):
         categories = CategoryService.get_exclude_categories('속보')
-        context = context_infor(categories=categories)
+
+        context = context_info(categories=categories)
+        
         return render(request, 'signup_detail.html', context)
 
 
@@ -95,7 +97,7 @@ class ResendEmailView(VerifyEmailMixin, View):
         forms = VerificationEmailForm()
         forms = str(forms)
         
-        context = context_infor(forms=forms)
+        context = context_info(forms=forms)
         
         return JsonResponse(context)
 
@@ -130,7 +132,7 @@ class UserLoginView(FormView):
 
         if User.objects.filter(pk=self.request.user.pk).first().is_detailed == False:
             categories = Category.objects.all()
-            context = context_infor(categories=categories)
+            context = context_info(categories=categories)
             return render(self.request,'signup_detail.html',context)
         return super().form_valid(form)
 
@@ -267,7 +269,7 @@ class UserKeywordEditView(LoginRequiredMixin,View):
                 keyword = KeyWordsService.create(data.keyword)
 
             keyword.users.add(data.user)
-            context = context_infor(keyword_pk=keyword.pk, content=keyword.name)
+            context = context_info(keyword_pk=keyword.pk, content=keyword.name)
             return JsonResponse(context)
 
     def _build_keyword_dto(self, request):
@@ -290,7 +292,7 @@ class UserKeywordDeleteView(LoginRequiredMixin, View):
             if keyword :
                 keyword.users.remove(request.user)
 
-            context = context_infor(is_completed=True)
+            context = context_info(is_completed=True)
             return JsonResponse(context)
 
     def _build_keyword_dto(self, request):
@@ -313,7 +315,7 @@ class UserCategoryEditView(LoginRequiredMixin, View):
             CategoryService.get_filter_category_users(request, category)
             categories = CategoryService.get_filter_categories(data.user_pk)
             category_list = [category.name for category in categories]
-            context = context_infor(category_list=category_list)
+            context = context_info(category_list=category_list)
             return JsonResponse(context)
     
     def _build_category_dto(self, request):
@@ -322,6 +324,38 @@ class UserCategoryEditView(LoginRequiredMixin, View):
             user_pk = request.user.pk,
             category_pk = data.get('category_pk')
         )
+
+class UserInforAddView(LoginRequiredMixin, View):
+    login_url = '/user/login/'
+    redirect_field_name = '/'
+
+    def post(self, request, *args, **kwargs):
+        if request.is_ajax():
+            data = json.loads(request.body)
+
+            for category in data.get('category_list'):
+                CategoryService.filter_category_name(category).users.add(request.user)
+
+            for keyword in data.get('todo_list'):
+                if not KeyWordsService.get_keyword_name(keyword):
+                    Keyword.objects.create(name=keyword)
+
+                KeyWordsService.get_keyword_name(keyword).users.add(request.user)
+            
+            user = User.objects.get(pk=data['user_pk'])
+            user.is_detailed = True
+            user.save()
+
+            presses = PressService.get_presses()
+            userpress = UserPress.objects.create(user=user)
+
+            [userpress.press.add(press) for press in presses]
+            
+            return JsonResponse({
+                'success':True,
+                # 'url': 'http://neonews.site/'
+                'url': 'http://127.0.0.1:8000/'
+                })
 
 
 class ChangePasswordView(LoginRequiredMixin ,View):
@@ -353,7 +387,7 @@ class DeletePasswordView(LoginRequiredMixin ,View):
             UserService.update_active(data.user_pk)
             logout(request)
             messages.success(request, '회원탈퇴 완료 !')
-            context = context_infor(error=error, url='http://neonews.site/')
+            context = context_info(error=error, url='http://neonews.site/')
             return JsonResponse(context)
 
     def _build_user_dto(self, request):
@@ -371,85 +405,99 @@ class FindPwView(View):
 
     def get(self, request):
         form = self.find_pw(None)
-        context = context_infor(form=form)
+        context = context_info(form=form)
         return render(request, self.template_name, context)
 
 
-class PasswordCheckView(View):
-
+class FindPasswordEmailView(View):
+    '''
+    description: 비밀번호 찾으려는 유저의 이메일 유효성 검증, 검증 후 인증번호 이메일로 발송
+    '''
     def post(self, request, *args, **kwargs):
         if request.is_ajax():
             data = self._build_vaild_email(request)
             result = UserService.vaildate_user_email(data)
+
             if result['error']:
-                return JsonResponse(result) 
-            auth_num = email_valid_num()
+                return JsonResponse(result)
+
+            auth_num = email_auth_num()
+
             result['user'].auth = auth_num
             result['user'].save()
-            mail_title, message_data, mail_to = UserEmailVerifyService.verify_pwd_user(data.email, auth_num)
-            send_email.delay(mail_title, message_data, mail_to)
-            context = context_infor(
-                    msg='이메일에 인증번호를 발송했습니다!', 
-                    error=False, 
-                    auth_num=auth_num
-                    )
+
+            context = UserEmailVerifyService.send_email_with_auth_num(data.email, auth_num)
+
             return JsonResponse(context)
 
     def _build_vaild_email(self, request):
         data = json.loads(request.body)
+
         return VaildEmailDto(
             email = data.get('email')
         )
 
 
-class PasswordConfirmView(View):
-
+class AuthNumConfirmView(View):
+    '''
+    description: 인증번호 유효성 검증, 검증 후 비밀번호 변경 view로 이동
+    '''
     def get(self, request, *args, **kwargs):
-        context = context_infor(name = request.user.nickname)
+        context = context_info(name=request.user.nickname)
+
         return render(request,'change-password.html',context)
 
     def post(self, request, *args, **kwargs):
         if request.is_ajax():
-            data = self._build_user_confirm_infor(request)
-            result = UserEmailVerifyService.certify_num(data.valid_num)
-            if result:
+            data = self._build_user_confirm_info(request)
+            result = UserEmailVerifyService.verify_num(data)
+
+            if not result['success']:
                 return JsonResponse(result)
-            user = UserService.get_filters_user(data)
 
-            if user:
-                user.auth = ''
-                user.save()
-                request.session['auth'] = user.email
-                result = json.dumps({'result': user.email})
-                context = context_infor(result=result, success=True) 
-                return JsonResponse(context)
+            user = UserService.get_filter_auth_user(data)
 
-    def _build_user_confirm_infor(self, request):
+            user.auth = ''
+            user.save()
+
+            request.session['auth'] = user.email
+            context = context_info(result=user.email, success=True) 
+
+            return JsonResponse(context)
+
+    def _build_user_confirm_info(self, request):
         data = json.loads(request.body)
+
         return UserConfirmDto(
             email=data.get('email'),
             valid_num=data.get('valid_num')
         )
 
 
-@method_decorator(csrf_exempt, name='dispatch')
-class ValidChangePassword(View):
-
+@method_decorator(csrf_exempt, name='dispatch') 
+class ValidChangePwdView(View):
+    '''
+    description: 변경된 비밀번호 유효성 검증, 검증후 유저의 비밀번호 변경
+    '''
     def get(self, request, *args, **kwargs):
         reset_pwd_form = ChangeSetPwdForm(None)
-        return render(request, 'valid-change-pwd.html', {'forms':reset_pwd_form})
+        context = context_info(forms=reset_pwd_form)
+
+        return render(request, 'valid-change-pwd.html', context)
 
     def post(self, request, *args, **kwargs):
         if request.is_ajax():
-            data = self._build_vaild_pwd_infor(request)
-
+            data = self._build_vaild_pwd_info(request)
             current_user = UserService.get_email_user(data.auth)
+            
             auth_login(request, current_user)
-            reset_pwd_form = ChangeSetPwdForm(request.user, json.loads(request.body))
-            result = UserEmailVerifyService.verify_change_pwd(request, reset_pwd_form, current_user, data.auth)
+
+            reset_pwd_form = ChangeSetPwdForm(current_user, json.loads(request.body))
+            result = UserEmailVerifyService.verify_change_pwd(reset_pwd_form, current_user)
+            
             return JsonResponse(result)
 
-    def _build_vaild_pwd_infor(self, request):
+    def _build_vaild_pwd_info(self, request):
         return AuthDto(
             auth = request.session.get('auth'),
             user = request.user
@@ -460,7 +508,7 @@ class LoginCallBackView(TemplateView):
     template_name = 'login_callback.html'
 
     def get(self, request, *args, **kwargs):
-        context = {}
+        context = {'message': 'SUCCESS'}
         return self.render_to_response(context)
 
 
@@ -469,12 +517,12 @@ class MypageView(LoginRequiredMixin, View):
     redirect_field_name='/'
 
     def get(self, request, **kwargs):
-        data = self._build_user_infor(request)
+        data = self._build_user_info(request)
         user = UserService.get_user(data.pk)
-        context = context_infor(user=user)
+        context = context_info(user=user)
         return render(request, 'user-infor.html', context)  
 
-    def _build_user_infor(self, request):
+    def _build_user_info(self, request):
         return UserPkDto(
             pk = request.user.pk
         )
@@ -485,13 +533,13 @@ class LikeArticleView(LoginRequiredMixin, View):
     redirect_field_name='/'
 
     def get(self, request, **kwargs):
-        data = self._build_user_infor(request)
+        data = self._build_user_info(request)
         user = UserService.get_user(data.pk)
         likes = UserService.get_user_like(user)
-        context = context_infor(likes=likes)
+        context = context_info(likes=likes)
         return render(request, 'user-like.html', context)
 
-    def _build_user_infor(self, request):
+    def _build_user_info(self, request):
         return UserPkDto(
             pk = request.user.pk
         )
@@ -502,12 +550,12 @@ class CommentArticleView(LoginRequiredMixin, View):
     redirect_field_name='/'
 
     def get(self, request, **kwargs):
-        data = self._build_user_infor(request)
+        data = self._build_user_info(request)
         comments = CommentService.get_user_comment(data.pk)
-        context = context_infor(comments=comments)
+        context = context_info(comments=comments)
         return render(request, 'user-comment.html', context)
     
-    def _build_user_infor(self, request):
+    def _build_user_info(self, request):
         return UserPkDto(
             pk = request.user.pk
         )

@@ -3,10 +3,11 @@ from django.contrib.auth.views import LogoutView
 from .views import (
     UserLoginView, UserSignupView, SignupDeatilView, ChangeMyInforView,
     SignupRedirectView, kakao_login, kakao_login_callback, ChangePasswordView,
-    DeletePasswordView, FindPwView, PasswordCheckView, PasswordConfirmView,ValidChangePassword,
-    LoginCallBackView, ResendEmailView,UserKeywordDeleteView,UserKeywordEditView,UserCategoryEditView, 
-    MypageView, LikeArticleView, CommentArticleView)
-
+    DeletePasswordView, FindPwView, FindPasswordEmailView, AuthNumConfirmView,
+    ValidChangePwdView, LoginCallBackView, ResendEmailView,
+    UserKeywordDeleteView, UserKeywordEditView, UserCategoryEditView, 
+    MypageView, LikeArticleView, CommentArticleView, UserInforAddView
+    )
 
 app_name = 'user'
 
@@ -24,12 +25,14 @@ urlpatterns = [
     path('logout/', LogoutView.as_view(), name='logout'),
     
     path('password/',FindPwView.as_view(), name='password'),
-    path('password/check',PasswordCheckView.as_view(), name='password_check'),
+
+    path('password/check/',FindPasswordEmailView.as_view(), name='password_check'),
     path('password/change/', ChangePasswordView.as_view(), name='change_password'),
-    path('password/valid/change/', ValidChangePassword.as_view(), name='valid_change_pwd'),
-    path('password/confirm/', PasswordConfirmView.as_view(), name='confirm_password'),
+    path('password/valid/change/', ValidChangePwdView.as_view(), name='valid_change_pwd'),
+    path('password/confirm/', AuthNumConfirmView.as_view(), name='confirm_password'),
     path('delete/', DeletePasswordView.as_view(), name='delete'),
     
+    path('infor/', UserInforAddView.as_view(), name='infor'),
     path('infor/category/', UserCategoryEditView.as_view() ,name='category_infor'),
     path('infor/change/', ChangeMyInforView.as_view(), name='change-infor'),
     

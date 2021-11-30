@@ -1,6 +1,6 @@
 import json
 from django.forms.models import model_to_dict
-from utils import context_infor
+from utils import context_info
 from django.http.response import JsonResponse
 from django.views.generic import View
 from news.models import Press, UserPress, Article
@@ -28,7 +28,7 @@ class PressEditView(View):
                     userpress.non_press.add(press)
                     is_deleted=False
 
-            context = context_infor(is_deleted=is_deleted,press_pk=press_pk,press_obj=model_to_dict(press))
+            context = context_info(is_deleted=is_deleted,press_pk=press_pk,press_obj=model_to_dict(press))
             return JsonResponse(context)
 
 
