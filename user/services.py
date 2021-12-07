@@ -82,7 +82,7 @@ class UserService():
 
         if not user:
             msg = '존재하지 않는 이메일이에요'
-            context = context_info(error=False, msg=msg)
+            context = context_info(error=True, msg=msg)
 
             return context
 
@@ -142,7 +142,7 @@ class UserEmailVerifyService():
             new_password = form.cleaned_data['new_password1']
             current_user.set_password(new_password)
             current_user.save()
-            context=context_info(error=False, url='http://127.0.0.1:8000/user/login/callback/')
+            context=context_info(error=False, url='https://neonews.site/user/login/callback/')
             
             return context
 
