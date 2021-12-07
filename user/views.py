@@ -5,9 +5,9 @@ import json
 import requests
 from datetime import datetime
 
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.utils.http import urlsafe_base64_decode
-from django.contrib import messages
 from django.contrib.auth import logout, authenticate, login as auth_login
 from django.views.generic import View, FormView, TemplateView
 from django.http.response import JsonResponse
@@ -33,13 +33,13 @@ from user.forms import (
     FindPwForm, SignupForm, LoginForm, 
     ChangeSetPwdForm,VerificationEmailForm
     )
+from news.dto import KeywordInforDto, KeywordDto, CategoryDto
 from user.mixin import VerifyEmailMixin
 from user.models import User, Category, Keyword
 from news.models import UserPress
 from user.services import UserService, UserEmailVerifyService
-from user.exception import SocialLoginException, KakaoException
-from news.dto import KeywordInforDto, KeywordDto, CategoryDto
 from news.services import CategoryService, KeyWordsService, PressService
+from user.exception import SocialLoginException, KakaoException
 from social.services import CommentService
 
 
@@ -55,9 +55,16 @@ class UserSignupView(VerifyEmailMixin, View):
         if request.is_ajax():
             signup_form = SignupForm(json.loads(request.body))
             data = self._build_signup_dto(request)
+
+            form_info = self.verify_form(signup_form)
             
-            context = self.send_verify_email(request, data, signup_form, 'new')
+            if form_info["error"]:
+                return JsonResponse(form_info)
+
+            mail_info = self.verify_email(data)
             
+            context = self.send_user_email(request, mail_info)
+
             return JsonResponse(context)
 
     def _build_signup_dto(self, request):
@@ -104,10 +111,20 @@ class ResendEmailView(VerifyEmailMixin, View):
     def post(self, request, *args, **kwargs):
         if request.is_ajax():
             data = self._build_resend_dto(request)
-            forms = VerificationEmailForm(json.loads(request.body))
+            resend_signup_form = VerificationEmailForm(json.loads(request.body))
+
+            form_info = self.verify_form(resend_signup_form)
             
-            context = self.send_verify_email(request, data, forms, 'again')
+            if form_info["error"]:
+                return JsonResponse(form_info)
+
+            mail_info = self.verify_resend_email(data)
             
+            if mail_info["error"]:
+                return JsonResponse(mail_info)
+
+            context = self.send_user_email(request, mail_info)
+
             return JsonResponse(context)
 
     def _build_resend_dto(self, request):

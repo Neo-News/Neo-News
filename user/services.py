@@ -106,7 +106,7 @@ class UserEmailVerifyService():
         return context
     
     @staticmethod
-    def verify_email_user(request, pk, email):  
+    def user_email(request, pk, email):  
         domain = get_current_site(request).domain
         uidb64 = urlsafe_base64_encode(force_bytes(pk))
         token = jwt.encode({'user_pk' : pk}, SECRET_KEY, ALGORITHM).decode('utf-8')
